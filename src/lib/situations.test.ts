@@ -12,7 +12,7 @@ import {
 	getPickableRetainers,
 	getAvailableClasses
 } from './situations';
-import { SLOT_COUNT, SOCIAL_CLASSES, DEATH_STATUSES } from './types';
+import { SLOT_COUNT, SOCIAL_CLASSES, DEATH_STATUSES, LOONY_STATUSES } from './types';
 import type { CharacterSlot } from './types';
 
 describe('data integrity', () => {
@@ -126,6 +126,13 @@ describe('data integrity', () => {
 		}
 	});
 
+	it('situation startingLoonyStatus is a valid loony status', () => {
+		const validStatuses = new Set<string>(LOONY_STATUSES);
+		for (const sit of SITUATIONS) {
+			expect(validStatuses.has(sit.startingLoonyStatus)).toBe(true);
+		}
+	});
+
 	it('dice pool length matches max trait slots', () => {
 		for (const sit of SITUATIONS) {
 			// dicePool length = max number of trait slots (total slots minus required retainers)
@@ -172,6 +179,10 @@ describe('Knight situation', () => {
 
 	it('starts on Mr. Neutron death status', () => {
 		expect(knight.startingDeathStatus).toBe('mr_neutron');
+	});
+
+	it('starts on Reginald Maudling loony status', () => {
+		expect(knight.startingLoonyStatus).toBe('daft');
 	});
 });
 

@@ -1,4 +1,4 @@
-import type { CharacterData, CharacterSlot, DeathStatus, DieSize, Modifier, SheetContext, SocialClass } from './types';
+import type { CharacterData, CharacterSlot, DeathStatus, DieSize, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
@@ -19,6 +19,7 @@ export function createCharacter(initial?: CharacterData) {
 	let situationId = $state(initial?.situation ?? '');
 	let socialClass = $state<SocialClass | ''>(initial?.socialClass ?? '');
 	let deathStatus = $state<DeathStatus | ''>(initial?.deathStatus ?? '');
+	let loonyStatus = $state<LoonyStatus | ''>(initial?.loonyStatus ?? '');
 	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
 	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
 	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
@@ -62,9 +63,10 @@ export function createCharacter(initial?: CharacterData) {
 		const classes = getAvailableClasses(id);
 		socialClass = classes.length === 1 ? classes[0] : '';
 
-		// Set starting death status from the situation
+		// Set starting status tracks from the situation
 		const situation = SITUATION_MAP.get(id);
 		deathStatus = situation?.startingDeathStatus ?? '';
+		loonyStatus = situation?.startingLoonyStatus ?? '';
 
 		if (id) {
 			const effects = getEffects('situation', id);
@@ -81,6 +83,11 @@ export function createCharacter(initial?: CharacterData) {
 	// --- Death status management ---
 	function setDeathStatus(status: DeathStatus) {
 		deathStatus = status;
+	}
+
+	// --- Loony status management ---
+	function setLoonyStatus(status: LoonyStatus) {
+		loonyStatus = status;
 	}
 
 	// --- Slot management ---
@@ -187,6 +194,7 @@ export function createCharacter(initial?: CharacterData) {
 			situation: situationId,
 			socialClass,
 			deathStatus,
+			loonyStatus,
 			slots: slots.map((s) => ({ ...s })),
 			traitValues: { ...traitValues },
 			accoutrements: { ...accoutrements },
@@ -209,6 +217,9 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		get deathStatus() {
 			return deathStatus;
+		},
+		get loonyStatus() {
+			return loonyStatus;
 		},
 		get availableClasses() {
 			return availableClasses;
@@ -282,6 +293,7 @@ export function createCharacter(initial?: CharacterData) {
 		setSituation,
 		setSocialClass,
 		setDeathStatus,
+		setLoonyStatus,
 		addSlot,
 		removeSlot,
 		setTraitValue,

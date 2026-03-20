@@ -63,7 +63,8 @@ export const SITUATIONS: SituationDef[] = [
 		dicePool: [18, 12, 12, 6],
 		availableClasses: ['upper'],
 		indifferentTrait: 'subtlety',
-		startingDeathStatus: 'mr_neutron'
+		startingDeathStatus: 'mr_neutron',
+		startingLoonyStatus: 'daft'
 	}
 ];
 

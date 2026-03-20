@@ -28,6 +28,7 @@ export type SituationDef = {
 	availableClasses: SocialClass[]; // which social classes the player can pick
 	indifferentTrait: string; // trait ID the situation is indifferent to (display only)
 	startingDeathStatus: DeathStatus; // where on the Death Status track the character begins
+	startingLoonyStatus: LoonyStatus; // where on the Loony Status track the character begins
 };
 
 /** A Trait definition */
@@ -88,6 +89,26 @@ export const DEATH_STATUS_LABELS: Record<DeathStatus, string> = {
 	no_more: 'No More'
 };
 
+/** Loony Status track — ordered from sanest to maddest */
+export const LOONY_STATUSES = [
+	'reginald_maudling',
+	'sensible',
+	'daft',
+	'barmy',
+	'crackers',
+	'coconuts'
+] as const;
+export type LoonyStatus = (typeof LOONY_STATUSES)[number];
+
+export const LOONY_STATUS_LABELS: Record<LoonyStatus, string> = {
+	reginald_maudling: 'Reginald Maudling',
+	sensible: 'Sensible',
+	daft: 'Daft',
+	barmy: 'Barmy',
+	crackers: 'Crackers',
+	coconuts: 'Coconuts'
+};
+
 export const SLOT_COUNT = 5;
 
 /** Valid die sizes for traits */
@@ -129,6 +150,7 @@ export type CharacterData = {
 	situation: string;
 	socialClass: SocialClass | '';
 	deathStatus: DeathStatus | '';
+	loonyStatus: LoonyStatus | '';
 	slots: CharacterSlot[];
 	traitValues: Record<string, DieSize>; // trait ID → die size (e.g. 20 for d20)
 	accoutrements: Record<string, string>; // trait ID → accoutrement ID
