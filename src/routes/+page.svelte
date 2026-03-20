@@ -2,7 +2,7 @@
 	import { createCharacter } from '$lib/character.svelte';
 	import { SITUATIONS, TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
 	import { getAvailableAccoutrements, ACCOUTREMENT_MAP } from '$lib/accoutrements';
-	import { DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, LOONY_STATUSES, LOONY_STATUS_LABELS, type CharacterSlot, type DieSize, type SocialClass } from '$lib/types';
+	import { CURRENCIES, CURRENCY_LABELS, DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, LOONY_STATUSES, LOONY_STATUS_LABELS, type CharacterSlot, type Currency, type DieSize, type SocialClass } from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
 
 	let character = createCharacter();
@@ -342,6 +342,31 @@
 				</div>
 			</div>
 		{/if}
+
+		<!-- Currencies -->
+		<div class="mb-6">
+			<h2 class="mb-3 text-xl font-semibold">Currencies</h2>
+			<div class="grid grid-cols-2 gap-2">
+				{#each CURRENCIES as currency}
+					<div class="flex items-center gap-2">
+						<label class="w-48 text-sm font-medium" for="currency-{currency}">
+							{CURRENCY_LABELS[currency]}
+						</label>
+						<input
+							id="currency-{currency}"
+							type="number"
+							min="0"
+							value={character.currencies[currency] ?? 0}
+							onchange={(e) => {
+								const input = e.target as HTMLInputElement;
+								character.setCurrency(currency, Math.max(0, parseInt(input.value) || 0));
+							}}
+							class="w-20 rounded border border-gray-300 px-2 py-1 text-center"
+						/>
+					</div>
+				{/each}
+			</div>
+		</div>
 
 		<!-- Debug: serialized state -->
 		<details class="mt-8">

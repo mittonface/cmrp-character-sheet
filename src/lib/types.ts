@@ -109,6 +109,34 @@ export const LOONY_STATUS_LABELS: Record<LoonyStatus, string> = {
 	coconuts: 'Coconuts'
 };
 
+/** Currency types available in the game */
+export const CURRENCIES = [
+	'acorns',
+	'cheese',
+	'eggs',
+	'gemstones',
+	'gold',
+	'lupins',
+	'naughty_pictures',
+	'plague_dead_bodies',
+	'upper_class_twit_trading_cards',
+	'whizzo_butter'
+] as const;
+export type Currency = (typeof CURRENCIES)[number];
+
+export const CURRENCY_LABELS: Record<Currency, string> = {
+	acorns: 'Acorns',
+	cheese: 'Cheese',
+	eggs: 'Eggs',
+	gemstones: 'Gemstones',
+	gold: 'Gold',
+	lupins: 'Lupins',
+	naughty_pictures: 'Naughty Pictures',
+	plague_dead_bodies: 'Plague-Dead Bodies',
+	upper_class_twit_trading_cards: 'Upper-Class Twit Trading Cards',
+	whizzo_butter: 'Whizzo Butter'
+};
+
 export const SLOT_COUNT = 5;
 
 /** Valid die sizes for traits */
@@ -154,5 +182,6 @@ export type CharacterData = {
 	slots: CharacterSlot[];
 	traitValues: Record<string, DieSize>; // trait ID → die size (e.g. 20 for d20)
 	accoutrements: Record<string, string>; // trait ID → accoutrement ID
+	currencies: Partial<Record<Currency, number>>; // currency amounts
 	selections: Record<string, string>; // other selections
 };

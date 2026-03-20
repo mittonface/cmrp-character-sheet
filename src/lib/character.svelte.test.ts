@@ -22,6 +22,7 @@ describe('createCharacter', () => {
 			slots: [{ type: 'trait', traitId: 'valour', required: true }],
 			traitValues: { valour: 12 },
 			accoutrements: {},
+			currencies: {},
 			selections: {}
 		});
 		expect(char.name).toBe('Sir Lancelot');
@@ -419,6 +420,81 @@ describe('final values with modifiers', () => {
 		// Die size stays 12 — the +1 is a roll modifier, not a die size change
 		expect(char.finalTraits['valour']).toBe(12);
 		expect(char.rollModifiers['valour']).toBe(1);
+	});
+});
+
+describe('currency management', () => {
+	it('starts with no currencies', () => {
+		const char = createCharacter();
+		expect(char.currencies).toEqual({});
+	});
+
+	it('sets a currency amount', () => {
+		const char = createCharacter();
+		char.setCurrency('gold', 10);
+		flushSync();
+
+		expect(char.currencies['gold']).toBe(10);
+	});
+
+	it('sets multiple currencies independently', () => {
+		const char = createCharacter();
+		char.setCurrency('gold', 5);
+		char.setCurrency('eggs', 12);
+		flushSync();
+
+		expect(char.currencies['gold']).toBe(5);
+		expect(char.currencies['eggs']).toBe(12);
+	});
+
+	it('removes currency when set to zero', () => {
+		const char = createCharacter();
+		char.setCurrency('gold', 10);
+		flushSync();
+
+		char.setCurrency('gold', 0);
+		flushSync();
+
+		expect(char.currencies['gold']).toBeUndefined();
+	});
+
+	it('removes currency when set to negative', () => {
+		const char = createCharacter();
+		char.setCurrency('gold', 10);
+		flushSync();
+
+		char.setCurrency('gold', -1);
+		flushSync();
+
+		expect(char.currencies['gold']).toBeUndefined();
+	});
+
+	it('loads currencies from initial data', () => {
+		const char = createCharacter({
+			name: '',
+			situation: '',
+			socialClass: '',
+			deathStatus: '',
+			loonyStatus: '',
+			slots: [],
+			traitValues: {},
+			accoutrements: {},
+			currencies: { gold: 5, cheese: 3 },
+			selections: {}
+		});
+
+		expect(char.currencies['gold']).toBe(5);
+		expect(char.currencies['cheese']).toBe(3);
+	});
+
+	it('serializes currencies', () => {
+		const char = createCharacter();
+		char.setCurrency('lupins', 7);
+		char.setCurrency('gemstones', 2);
+		flushSync();
+
+		const data = char.serialize();
+		expect(data.currencies).toEqual({ lupins: 7, gemstones: 2 });
 	});
 });
 

@@ -1,4 +1,4 @@
-import type { CharacterData, CharacterSlot, DeathStatus, DieSize, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
+import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
@@ -23,6 +23,7 @@ export function createCharacter(initial?: CharacterData) {
 	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
 	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
 	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
+	let currencies = $state<Partial<Record<Currency, number>>>(initial?.currencies ?? {});
 	let selections = $state<Record<string, string>>(initial?.selections ?? {});
 	let modifiers = $state<Modifier[]>([]);
 
@@ -169,6 +170,15 @@ export function createCharacter(initial?: CharacterData) {
 		return result;
 	});
 
+	// --- Currency management ---
+	function setCurrency(currency: Currency, amount: number) {
+		if (amount <= 0) {
+			delete currencies[currency];
+		} else {
+			currencies[currency] = amount;
+		}
+	}
+
 	// --- Selection management (for non-situation selections) ---
 	function setSelection(category: string, choice: string) {
 		modifiers = removeBySource(modifiers, `${category}:`);
@@ -198,6 +208,7 @@ export function createCharacter(initial?: CharacterData) {
 			slots: slots.map((s) => ({ ...s })),
 			traitValues: { ...traitValues },
 			accoutrements: { ...accoutrements },
+			currencies: { ...currencies },
 			selections: { ...selections }
 		};
 	}
@@ -269,6 +280,9 @@ export function createCharacter(initial?: CharacterData) {
 		get accoutrements() {
 			return accoutrements;
 		},
+		get currencies() {
+			return currencies;
+		},
 		get hasRetainer() {
 			return hasRetainer;
 		},
@@ -299,6 +313,7 @@ export function createCharacter(initial?: CharacterData) {
 		setTraitValue,
 		setAccoutrement,
 		clearAccoutrement,
+		setCurrency,
 		setSelection,
 		serialize
 	};
