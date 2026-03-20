@@ -4,6 +4,7 @@
 	import { getAvailableAccoutrements, ACCOUTREMENT_MAP } from '$lib/accoutrements';
 	import { CURRENCIES, CURRENCY_LABELS, DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, LOONY_STATUSES, LOONY_STATUS_LABELS, type CharacterSlot, type Currency, type DieSize, type SocialClass } from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
+	import { formatDiceExpression } from '$lib/dice';
 
 	let character = createCharacter();
 
@@ -348,9 +349,13 @@
 			<h2 class="mb-3 text-xl font-semibold">Currencies</h2>
 			<div class="grid grid-cols-2 gap-2">
 				{#each CURRENCIES as currency}
-					<div class="flex items-center gap-2">
-						<label class="w-48 text-sm font-medium" for="currency-{currency}">
+					{@const isStarting = character.startingCurrency?.currency === currency}
+					<div class="flex items-center gap-2 rounded px-1 py-0.5" class:bg-amber-100={isStarting} class:ring-1={isStarting} class:ring-amber-400={isStarting}>
+						<label class="w-48 text-sm font-medium" class:text-amber-800={isStarting} for="currency-{currency}">
 							{CURRENCY_LABELS[currency]}
+							{#if isStarting && character.startingCurrency}
+								<span class="text-xs text-amber-600">(roll {formatDiceExpression(character.startingCurrency.roll)})</span>
+							{/if}
 						</label>
 						<input
 							id="currency-{currency}"
@@ -361,7 +366,9 @@
 								const input = e.target as HTMLInputElement;
 								character.setCurrency(currency, Math.max(0, parseInt(input.value) || 0));
 							}}
-							class="w-20 rounded border border-gray-300 px-2 py-1 text-center"
+							class="w-20 rounded border px-2 py-1 text-center"
+							class:border-amber-400={isStarting}
+							class:border-gray-300={!isStarting}
 						/>
 					</div>
 				{/each}

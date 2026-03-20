@@ -29,6 +29,7 @@ export type SituationDef = {
 	indifferentTrait: string; // trait ID the situation is indifferent to (display only)
 	startingDeathStatus: DeathStatus; // where on the Death Status track the character begins
 	startingLoonyStatus: LoonyStatus; // where on the Loony Status track the character begins
+	startingCurrency: { currency: Currency; roll: DiceExpression }; // which currency and what to roll for the starting amount
 };
 
 /** A Trait definition */

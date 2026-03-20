@@ -64,7 +64,8 @@ export const SITUATIONS: SituationDef[] = [
 		availableClasses: ['upper'],
 		indifferentTrait: 'subtlety',
 		startingDeathStatus: 'mr_neutron',
-		startingLoonyStatus: 'daft'
+		startingLoonyStatus: 'daft',
+		startingCurrency: { currency: 'gold', roll: { count: 1, sides: 30 } }
 	}
 ];
 

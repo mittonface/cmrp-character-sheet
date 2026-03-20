@@ -12,7 +12,7 @@ import {
 	getPickableRetainers,
 	getAvailableClasses
 } from './situations';
-import { SLOT_COUNT, SOCIAL_CLASSES, DEATH_STATUSES, LOONY_STATUSES } from './types';
+import { SLOT_COUNT, SOCIAL_CLASSES, DEATH_STATUSES, LOONY_STATUSES, CURRENCIES } from './types';
 import type { CharacterSlot } from './types';
 
 describe('data integrity', () => {
@@ -133,6 +133,15 @@ describe('data integrity', () => {
 		}
 	});
 
+	it('situation startingCurrency references a valid currency with a valid roll', () => {
+		const validCurrencies = new Set<string>(CURRENCIES);
+		for (const sit of SITUATIONS) {
+			expect(validCurrencies.has(sit.startingCurrency.currency)).toBe(true);
+			expect(sit.startingCurrency.roll.count).toBeGreaterThan(0);
+			expect(sit.startingCurrency.roll.sides).toBeGreaterThan(0);
+		}
+	});
+
 	it('dice pool length matches max trait slots', () => {
 		for (const sit of SITUATIONS) {
 			// dicePool length = max number of trait slots (total slots minus required retainers)
@@ -183,6 +192,10 @@ describe('Knight situation', () => {
 
 	it('starts on Reginald Maudling loony status', () => {
 		expect(knight.startingLoonyStatus).toBe('daft');
+	});
+
+	it('starts with gold (1d30)', () => {
+		expect(knight.startingCurrency).toEqual({ currency: 'gold', roll: { count: 1, sides: 30 } });
 	});
 });
 

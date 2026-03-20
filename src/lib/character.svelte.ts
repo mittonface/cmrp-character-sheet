@@ -46,6 +46,9 @@ export function createCharacter(initial?: CharacterData) {
 	// --- Indifferent trait (display only) ---
 	let indifferentTrait = $derived(SITUATION_MAP.get(situationId)?.indifferentTrait ?? '');
 
+	// --- Starting currency from the situation (for highlighting) ---
+	let startingCurrency = $derived(SITUATION_MAP.get(situationId)?.startingCurrency ?? null);
+
 	// --- Pickable options for free slots ---
 	let pickableTraits = $derived(getPickableTraits(situationId, slots));
 	let pickableRetainers = $derived(getPickableRetainers(situationId, slots));
@@ -64,10 +67,13 @@ export function createCharacter(initial?: CharacterData) {
 		const classes = getAvailableClasses(id);
 		socialClass = classes.length === 1 ? classes[0] : '';
 
-		// Set starting status tracks from the situation
+		// Set starting status tracks and currency from the situation
 		const situation = SITUATION_MAP.get(id);
 		deathStatus = situation?.startingDeathStatus ?? '';
 		loonyStatus = situation?.startingLoonyStatus ?? '';
+
+		// Reset currencies (player will roll for starting amount)
+		currencies = {};
 
 		if (id) {
 			const effects = getEffects('situation', id);
@@ -237,6 +243,9 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		get indifferentTrait() {
 			return indifferentTrait;
+		},
+		get startingCurrency() {
+			return startingCurrency;
 		},
 		get slots() {
 			return slots;

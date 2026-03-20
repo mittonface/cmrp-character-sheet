@@ -93,6 +93,40 @@ describe('setSituation', () => {
 		expect(char.loonyStatus).toBe('daft');
 	});
 
+	it('exposes starting currency from situation', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		expect(char.startingCurrency).toEqual({ currency: 'gold', roll: { count: 1, sides: 30 } });
+	});
+
+	it('resets currencies when situation changes', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		char.setCurrency('eggs', 5);
+		flushSync();
+
+		char.setSituation('knight');
+		flushSync();
+
+		expect(char.currencies).toEqual({});
+	});
+
+	it('clears starting currency when situation cleared', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		char.setSituation('');
+		flushSync();
+
+		expect(char.currencies).toEqual({});
+		expect(char.startingCurrency).toBeNull();
+	});
+
 	it('resets loony status when situation changes', () => {
 		const char = createCharacter();
 		char.setSituation('knight');
