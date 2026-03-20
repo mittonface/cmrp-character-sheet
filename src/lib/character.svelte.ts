@@ -1,0 +1,278 @@
+import type { CharacterData, CharacterSlot, DieSize, Modifier, SheetContext, SocialClass } from './types';
+import { SLOT_COUNT } from './types';
+import { applyModifiers, removeBySource } from './modifiers';
+import { getEffects } from './effects';
+import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, SITUATION_MAP } from './situations';
+import { ACCOUTREMENT_MAP, getAvailableAccoutrements } from './accoutrements';
+
+/**
+ * Creates a reactive character sheet state using Svelte 5 runes.
+ *
+ * Usage:
+ *   let character = createCharacter();
+ *   character.setSituation('knight');
+ *   character.addSlot({ type: 'trait', traitId: 'valour', required: false });
+ *   character.setTraitValue('valour', 5);
+ */
+export function createCharacter(initial?: CharacterData) {
+	let name = $state(initial?.name ?? '');
+	let situationId = $state(initial?.situation ?? '');
+	let socialClass = $state<SocialClass | ''>(initial?.socialClass ?? '');
+	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
+	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
+	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
+	let selections = $state<Record<string, string>>(initial?.selections ?? {});
+	let modifiers = $state<Modifier[]>([]);
+
+	// --- Derived from slots ---
+	let traitSlots = $derived(slots.filter((s) => s.type === 'trait'));
+	let retainerSlots = $derived(slots.filter((s) => s.type === 'retainer'));
+	let traitIds = $derived(traitSlots.map((s) => s.traitId));
+	let freeSlotCount = $derived(SLOT_COUNT - slots.filter((s) => s.required).length);
+	let chosenSlotCount = $derived(slots.filter((s) => !s.required).length);
+	let remainingChoices = $derived(freeSlotCount - chosenSlotCount);
+	let slotsComplete = $derived(slots.length === SLOT_COUNT);
+
+	// --- Dice pool from the situation ---
+	let dicePool = $derived(SITUATION_MAP.get(situationId)?.dicePool ?? []);
+	let traitCount = $derived(traitSlots.length);
+
+	// --- Available social classes from the situation ---
+	let availableClasses = $derived(getAvailableClasses(situationId));
+
+	// --- Indifferent trait (display only) ---
+	let indifferentTrait = $derived(SITUATION_MAP.get(situationId)?.indifferentTrait ?? '');
+
+	// --- Pickable options for free slots ---
+	let pickableTraits = $derived(getPickableTraits(situationId, slots));
+	let pickableRetainers = $derived(getPickableRetainers(situationId, slots));
+
+	// --- Situation management ---
+	function setSituation(id: string) {
+		modifiers = removeBySource(modifiers, 'situation:');
+		situationId = id;
+
+		// Reset to just the required slots
+		slots = getRequiredSlots(id);
+		traitValues = {};
+		accoutrements = {};
+
+		// Auto-set class if only one option
+		const classes = getAvailableClasses(id);
+		socialClass = classes.length === 1 ? classes[0] : '';
+
+		if (id) {
+			const effects = getEffects('situation', id);
+			modifiers = [...modifiers, ...effects];
+		}
+	}
+
+	// --- Social class management ---
+	function setSocialClass(cls: SocialClass | '') {
+		if (cls && !availableClasses.includes(cls)) return;
+		socialClass = cls;
+	}
+
+	// --- Slot management ---
+	function addSlot(slot: CharacterSlot) {
+		if (slots.length >= SLOT_COUNT) return;
+		slots = [...slots, slot];
+	}
+
+	function removeSlot(index: number) {
+		const slot = slots[index];
+		if (!slot || slot.required) return; // can't remove required slots
+
+		// Clean up trait value and accoutrement if removing a trait
+		if (slot.type === 'trait') {
+			delete traitValues[slot.traitId];
+			clearAccoutrement(slot.traitId);
+		}
+
+		slots = slots.filter((_, i) => i !== index);
+	}
+
+	function setTraitValue(traitId: string, value: DieSize) {
+		traitValues[traitId] = value;
+	}
+
+	// --- Accoutrement management ---
+	let hasRetainer = $derived(retainerSlots.length > 0);
+	let requiredTraitIds = $derived(
+		new Set(
+			slots
+				.filter((s): s is CharacterSlot & { type: 'trait' } => s.type === 'trait' && s.required)
+				.map((s) => s.traitId)
+		)
+	);
+
+	function setAccoutrement(traitId: string, accoutrementId: string) {
+		if (accoutrementId) {
+			accoutrements[traitId] = accoutrementId;
+		} else {
+			delete accoutrements[traitId];
+		}
+	}
+
+	function clearAccoutrement(traitId: string) {
+		delete accoutrements[traitId];
+	}
+
+	// --- Roll modifiers derived from accoutrements ---
+	// These are bonuses/penalties applied to dice rolls, NOT to the die size itself.
+	// e.g. Knightly Armour gives +1 valour and +1 authority as roll modifiers.
+	let rollModifiers = $derived.by(() => {
+		const mods: Record<string, number> = {};
+		for (const [, accId] of Object.entries(accoutrements)) {
+			const acc = ACCOUTREMENT_MAP.get(accId);
+			if (!acc) continue;
+			for (const m of acc.modifiers) {
+				mods[m.target] = (mods[m.target] ?? 0) + m.value;
+			}
+		}
+		return mods;
+	});
+
+	// --- Computed values with modifiers ---
+	let baseValues = $derived.by(() => {
+		const values: Record<string, number | string> = {};
+		for (const id of traitIds) {
+			values[id] = traitValues[id] ?? 0;
+		}
+		return values;
+	});
+
+	let finalValues = $derived(applyModifiers(baseValues, modifiers));
+
+	let finalTraits = $derived.by(() => {
+		const result: Record<string, number> = {};
+		for (const id of traitIds) {
+			result[id] = (finalValues[id] as number) ?? 0;
+		}
+		return result;
+	});
+
+	// --- Selection management (for non-situation selections) ---
+	function setSelection(category: string, choice: string) {
+		modifiers = removeBySource(modifiers, `${category}:`);
+		if (choice) {
+			selections[category] = choice;
+			const effects = getEffects(category, choice);
+			modifiers = [...modifiers, ...effects];
+		} else {
+			delete selections[category];
+		}
+	}
+
+	let context: SheetContext = $derived({
+		baseValues,
+		finalValues,
+		modifiers,
+		slots
+	});
+
+	function serialize(): CharacterData {
+		return {
+			name,
+			situation: situationId,
+			socialClass,
+			slots: slots.map((s) => ({ ...s })),
+			traitValues: { ...traitValues },
+			accoutrements: { ...accoutrements },
+			selections: { ...selections }
+		};
+	}
+
+	return {
+		get name() {
+			return name;
+		},
+		set name(v: string) {
+			name = v;
+		},
+		get situationId() {
+			return situationId;
+		},
+		get socialClass() {
+			return socialClass;
+		},
+		get availableClasses() {
+			return availableClasses;
+		},
+		get indifferentTrait() {
+			return indifferentTrait;
+		},
+		get slots() {
+			return slots;
+		},
+		get traitSlots() {
+			return traitSlots;
+		},
+		get retainerSlots() {
+			return retainerSlots;
+		},
+		get traitIds() {
+			return traitIds;
+		},
+		get traitValues() {
+			return traitValues;
+		},
+		get finalTraits() {
+			return finalTraits;
+		},
+		get freeSlotCount() {
+			return freeSlotCount;
+		},
+		get remainingChoices() {
+			return remainingChoices;
+		},
+		get slotsComplete() {
+			return slotsComplete;
+		},
+		get pickableTraits() {
+			return pickableTraits;
+		},
+		get pickableRetainers() {
+			return pickableRetainers;
+		},
+		get dicePool() {
+			return dicePool;
+		},
+		get traitCount() {
+			return traitCount;
+		},
+		get accoutrements() {
+			return accoutrements;
+		},
+		get hasRetainer() {
+			return hasRetainer;
+		},
+		get requiredTraitIds() {
+			return requiredTraitIds;
+		},
+		get selections() {
+			return selections;
+		},
+		get rollModifiers() {
+			return rollModifiers;
+		},
+		get modifiers() {
+			return modifiers;
+		},
+		get finalValues() {
+			return finalValues;
+		},
+		get context() {
+			return context;
+		},
+		setSituation,
+		setSocialClass,
+		addSlot,
+		removeSlot,
+		setTraitValue,
+		setAccoutrement,
+		clearAccoutrement,
+		setSelection,
+		serialize
+	};
+}
