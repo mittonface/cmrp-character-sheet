@@ -12,7 +12,7 @@ import {
 	getPickableRetainers,
 	getAvailableClasses
 } from './situations';
-import { SLOT_COUNT, SOCIAL_CLASSES } from './types';
+import { SLOT_COUNT, SOCIAL_CLASSES, DEATH_STATUSES } from './types';
 import type { CharacterSlot } from './types';
 
 describe('data integrity', () => {
@@ -119,6 +119,13 @@ describe('data integrity', () => {
 		}
 	});
 
+	it('situation startingDeathStatus is a valid death status', () => {
+		const validStatuses = new Set<string>(DEATH_STATUSES);
+		for (const sit of SITUATIONS) {
+			expect(validStatuses.has(sit.startingDeathStatus)).toBe(true);
+		}
+	});
+
 	it('dice pool length matches max trait slots', () => {
 		for (const sit of SITUATIONS) {
 			// dicePool length = max number of trait slots (total slots minus required retainers)
@@ -161,6 +168,10 @@ describe('Knight situation', () => {
 
 	it('is indifferent to subtlety', () => {
 		expect(knight.indifferentTrait).toBe('subtlety');
+	});
+
+	it('starts on Mr. Neutron death status', () => {
+		expect(knight.startingDeathStatus).toBe('mr_neutron');
 	});
 });
 

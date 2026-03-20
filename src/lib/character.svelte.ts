@@ -1,4 +1,4 @@
-import type { CharacterData, CharacterSlot, DieSize, Modifier, SheetContext, SocialClass } from './types';
+import type { CharacterData, CharacterSlot, DeathStatus, DieSize, Modifier, SheetContext, SocialClass } from './types';
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
@@ -18,6 +18,7 @@ export function createCharacter(initial?: CharacterData) {
 	let name = $state(initial?.name ?? '');
 	let situationId = $state(initial?.situation ?? '');
 	let socialClass = $state<SocialClass | ''>(initial?.socialClass ?? '');
+	let deathStatus = $state<DeathStatus | ''>(initial?.deathStatus ?? '');
 	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
 	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
 	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
@@ -61,6 +62,10 @@ export function createCharacter(initial?: CharacterData) {
 		const classes = getAvailableClasses(id);
 		socialClass = classes.length === 1 ? classes[0] : '';
 
+		// Set starting death status from the situation
+		const situation = SITUATION_MAP.get(id);
+		deathStatus = situation?.startingDeathStatus ?? '';
+
 		if (id) {
 			const effects = getEffects('situation', id);
 			modifiers = [...modifiers, ...effects];
@@ -71,6 +76,11 @@ export function createCharacter(initial?: CharacterData) {
 	function setSocialClass(cls: SocialClass | '') {
 		if (cls && !availableClasses.includes(cls)) return;
 		socialClass = cls;
+	}
+
+	// --- Death status management ---
+	function setDeathStatus(status: DeathStatus) {
+		deathStatus = status;
 	}
 
 	// --- Slot management ---
@@ -176,6 +186,7 @@ export function createCharacter(initial?: CharacterData) {
 			name,
 			situation: situationId,
 			socialClass,
+			deathStatus,
 			slots: slots.map((s) => ({ ...s })),
 			traitValues: { ...traitValues },
 			accoutrements: { ...accoutrements },
@@ -195,6 +206,9 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		get socialClass() {
 			return socialClass;
+		},
+		get deathStatus() {
+			return deathStatus;
 		},
 		get availableClasses() {
 			return availableClasses;
@@ -267,6 +281,7 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		setSituation,
 		setSocialClass,
+		setDeathStatus,
 		addSlot,
 		removeSlot,
 		setTraitValue,

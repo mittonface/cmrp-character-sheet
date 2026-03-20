@@ -16,6 +16,8 @@ describe('createCharacter', () => {
 		const char = createCharacter({
 			name: 'Sir Lancelot',
 			situation: 'knight',
+			socialClass: 'upper',
+			deathStatus: 'mr_neutron',
 			slots: [{ type: 'trait', traitId: 'valour', required: true }],
 			traitValues: { valour: 12 },
 			accoutrements: {},
@@ -49,6 +51,36 @@ describe('setSituation', () => {
 
 		expect(char.traitValues).toEqual({});
 		expect(char.accoutrements).toEqual({});
+	});
+
+	it('sets starting death status from situation', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		expect(char.deathStatus).toBe('mr_neutron');
+	});
+
+	it('resets death status when situation changes', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		char.setSituation('');
+		flushSync();
+
+		expect(char.deathStatus).toBe('');
+	});
+
+	it('allows manually changing death status', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+
+		char.setDeathStatus('not_dead_yet');
+		flushSync();
+
+		expect(char.deathStatus).toBe('not_dead_yet');
 	});
 
 	it('clears old situation modifiers', () => {
@@ -375,6 +407,7 @@ describe('serialize', () => {
 		const data = char.serialize();
 		expect(data.name).toBe('Sir Lancelot');
 		expect(data.situation).toBe('knight');
+		expect(data.deathStatus).toBe('mr_neutron');
 		expect(data.slots).toHaveLength(4);
 		expect(data.traitValues['valour']).toBe(18);
 		expect(data.traitValues['chastity']).toBe(12);

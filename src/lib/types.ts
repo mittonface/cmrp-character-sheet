@@ -27,6 +27,7 @@ export type SituationDef = {
 	dicePool: DieSize[]; // dice available to distribute across traits (length = max trait slots)
 	availableClasses: SocialClass[]; // which social classes the player can pick
 	indifferentTrait: string; // trait ID the situation is indifferent to (display only)
+	startingDeathStatus: DeathStatus; // where on the Death Status track the character begins
 };
 
 /** A Trait definition */
@@ -66,6 +67,26 @@ export type AccoutrementDef = {
 /** Social class options */
 export const SOCIAL_CLASSES = ['upper', 'middle', 'lower'] as const;
 export type SocialClass = (typeof SOCIAL_CLASSES)[number];
+
+/** Death Status track — ordered from healthiest to deadest */
+export const DEATH_STATUSES = [
+	'mr_neutron',
+	'fine_fine',
+	'getting_better',
+	'not_dead_yet',
+	'virtually_dead',
+	'no_more'
+] as const;
+export type DeathStatus = (typeof DEATH_STATUSES)[number];
+
+export const DEATH_STATUS_LABELS: Record<DeathStatus, string> = {
+	mr_neutron: 'Mr. Neutron',
+	fine_fine: 'Fine, Fine',
+	getting_better: 'Getting Better',
+	not_dead_yet: 'Not Dead Yet',
+	virtually_dead: 'Virtually Dead',
+	no_more: 'No More'
+};
 
 export const SLOT_COUNT = 5;
 
@@ -107,6 +128,7 @@ export type CharacterData = {
 	name: string;
 	situation: string;
 	socialClass: SocialClass | '';
+	deathStatus: DeathStatus | '';
 	slots: CharacterSlot[];
 	traitValues: Record<string, DieSize>; // trait ID → die size (e.g. 20 for d20)
 	accoutrements: Record<string, string>; // trait ID → accoutrement ID

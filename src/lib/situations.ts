@@ -62,7 +62,8 @@ export const SITUATIONS: SituationDef[] = [
 		availableRetainers: ['squire', 'minstrel'],
 		dicePool: [18, 12, 12, 6],
 		availableClasses: ['upper'],
-		indifferentTrait: 'subtlety'
+		indifferentTrait: 'subtlety',
+		startingDeathStatus: 'mr_neutron'
 	}
 ];
 

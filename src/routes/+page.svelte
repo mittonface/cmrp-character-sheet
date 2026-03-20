@@ -2,7 +2,7 @@
 	import { createCharacter } from '$lib/character.svelte';
 	import { SITUATIONS, TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
 	import { getAvailableAccoutrements, ACCOUTREMENT_MAP } from '$lib/accoutrements';
-	import { DIE_SIZES, SOCIAL_CLASSES, type CharacterSlot, type DieSize, type SocialClass } from '$lib/types';
+	import { DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, type CharacterSlot, type DieSize, type SocialClass } from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
 
 	let character = createCharacter();
@@ -85,6 +85,25 @@
 						{/each}
 					</select>
 				{/if}
+			</div>
+		{/if}
+
+		<!-- Death Status -->
+		{#if character.deathStatus}
+			<div class="mb-6">
+				<h2 class="mb-2 text-sm font-medium">Death Status</h2>
+				<div class="flex gap-1">
+					{#each DEATH_STATUSES as status}
+						<button
+							class="flex-1 rounded px-2 py-1.5 text-center text-xs font-medium {status === character.deathStatus
+								? 'bg-indigo-600 text-white'
+								: 'bg-gray-100 text-gray-400 hover:bg-gray-200'}"
+							onclick={() => character.setDeathStatus(status)}
+						>
+							{DEATH_STATUS_LABELS[status]}
+						</button>
+					{/each}
+				</div>
 			</div>
 		{/if}
 
