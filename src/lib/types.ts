@@ -26,7 +26,7 @@ export type SituationDef = {
 	availableRetainers?: string[]; // if set, restricts which retainers can be chosen
 	dicePool: DieSize[]; // dice available to distribute across traits (length = max trait slots)
 	availableClasses: SocialClass[]; // which social classes the player can pick
-	indifferentTrait: string; // trait ID the situation is indifferent to (display only)
+	indifferentTraits: IndifferentTraitsDef; // how indifferent traits are determined
 	startingDeathStatus: DeathStatus; // where on the Death Status track the character begins
 	startingLoonyStatus: LoonyStatus; // where on the Loony Status track the character begins
 	startingCurrency: { currency: Currency; roll: DiceExpression }; // which currency and what to roll for the starting amount
@@ -65,6 +65,11 @@ export type AccoutrementDef = {
 	specialEffects?: string[]; // narrative/one-time effects
 	requires?: { retainer: boolean }; // prerequisites
 };
+
+/** Indifferent traits definition — fixed by the Situation or selected by the player */
+export type IndifferentTraitsDef =
+	| { type: 'fixed'; traitIds: string[] }
+	| { type: 'select'; count: number; exclude?: string[] };
 
 /** Social class options */
 export const SOCIAL_CLASSES = ['upper', 'middle', 'lower'] as const;
@@ -182,6 +187,7 @@ export type CharacterData = {
 	loonyStatus: LoonyStatus | '';
 	slots: CharacterSlot[];
 	traitValues: Record<string, DieSize>; // trait ID → die size (e.g. 20 for d20)
+	indifferentTraits?: string[]; // player-selected or fixed indifferent trait IDs
 	accoutrements: Record<string, string>; // trait ID → accoutrement ID
 	currencies: Partial<Record<Currency, number>>; // currency amounts
 	selections: Record<string, string>; // other selections

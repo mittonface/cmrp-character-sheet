@@ -62,10 +62,37 @@ export const SITUATIONS: SituationDef[] = [
 		availableRetainers: ['squire', 'minstrel'],
 		dicePool: [18, 12, 12, 6],
 		availableClasses: ['upper'],
-		indifferentTrait: 'subtlety',
+		indifferentTraits: { type: 'fixed', traitIds: ['subtlety'] },
 		startingDeathStatus: 'mr_neutron',
 		startingLoonyStatus: 'daft',
 		startingCurrency: { currency: 'gold', roll: { count: 1, sides: 30 } }
+	},
+	{
+		id: 'churl',
+		label: 'Churl',
+		requiredTraits: ['animal_husbandry'],
+		availableTraits: [
+			'argumentation',
+			'bardistry',
+			'chastity',
+			'druidry',
+			'glibness',
+			'heartiness',
+			'luck',
+			'nimbleness',
+			'purpose',
+			'strategy',
+			'subtlety',
+			'valour'
+		],
+		requiredRetainers: [],
+		allowRetainers: false,
+		dicePool: [12, 12, 10, 10, 8],
+		availableClasses: ['lower'],
+		indifferentTraits: { type: 'select', count: 2, exclude: ['luck'] },
+		startingDeathStatus: 'getting_better',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: { currency: 'plague_dead_bodies', roll: { count: 1, sides: 30 } }
 	}
 ];
 

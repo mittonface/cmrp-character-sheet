@@ -60,6 +60,7 @@ Every character has exactly **5 slots**. Each slot holds either a Trait or a Ret
 - The Situation **locks in** some slots (required Traits and/or required Retainers).
 - The player **fills remaining slots** by choosing from the Traits and Retainers allowed by their Situation.
 - A Situation defines: required traits, available traits to pick from, required retainers, whether retainers are allowed, and which retainer types are available.
+- **Indifferent Traits** — each Situation specifies traits the character is indifferent to, via `IndifferentTraitsDef`. Two variants: `{ type: 'fixed', traitIds: [...] }` for Situations with predetermined indifferent traits (e.g., Knight is always indifferent to Subtlety), and `{ type: 'select', count: N, exclude?: [...] }` for Situations where the player chooses N indifferent traits from their unchosen available traits (e.g., Churl picks 2, excluding Luck). Selections are only available once all 5 slots are filled.
 
 ### Design Patterns
 

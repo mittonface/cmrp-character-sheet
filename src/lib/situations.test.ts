@@ -98,9 +98,22 @@ describe('data integrity', () => {
 		}
 	});
 
-	it('situation indifferentTrait references a valid trait ID', () => {
+	it('situation indifferentTraits references valid trait IDs', () => {
 		for (const sit of SITUATIONS) {
-			expect(TRAIT_MAP.has(sit.indifferentTrait)).toBe(true);
+			const def = sit.indifferentTraits;
+			if (def.type === 'fixed') {
+				for (const traitId of def.traitIds) {
+					expect(TRAIT_MAP.has(traitId)).toBe(true);
+				}
+			}
+			if (def.type === 'select') {
+				expect(def.count).toBeGreaterThan(0);
+				if (def.exclude) {
+					for (const traitId of def.exclude) {
+						expect(TRAIT_MAP.has(traitId)).toBe(true);
+					}
+				}
+			}
 		}
 	});
 
@@ -183,7 +196,7 @@ describe('Knight situation', () => {
 	});
 
 	it('is indifferent to subtlety', () => {
-		expect(knight.indifferentTrait).toBe('subtlety');
+		expect(knight.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['subtlety'] });
 	});
 
 	it('starts on Mr. Neutron death status', () => {
@@ -196,6 +209,57 @@ describe('Knight situation', () => {
 
 	it('starts with gold (1d30)', () => {
 		expect(knight.startingCurrency).toEqual({ currency: 'gold', roll: { count: 1, sides: 30 } });
+	});
+});
+
+describe('Churl situation', () => {
+	const churl = SITUATION_MAP.get('churl')!;
+
+	it('exists in the situation map', () => {
+		expect(churl).toBeDefined();
+	});
+
+	it('requires animal husbandry', () => {
+		expect(churl.requiredTraits).toEqual(['animal_husbandry']);
+	});
+
+	it('has no required retainers', () => {
+		expect(churl.requiredRetainers).toEqual([]);
+	});
+
+	it('does not allow retainers', () => {
+		expect(churl.allowRetainers).toBe(false);
+	});
+
+	it('has a dice pool of [12, 12, 10, 10, 8]', () => {
+		expect(churl.dicePool).toEqual([12, 12, 10, 10, 8]);
+	});
+
+	it('only allows lower class', () => {
+		expect(churl.availableClasses).toEqual(['lower']);
+	});
+
+	it('allows selecting 2 indifferent traits excluding luck', () => {
+		expect(churl.indifferentTraits).toEqual({ type: 'select', count: 2, exclude: ['luck'] });
+	});
+
+	it('has 12 available traits to choose from', () => {
+		expect(churl.availableTraits).toHaveLength(12);
+	});
+
+	it('starts on Getting Better death status', () => {
+		expect(churl.startingDeathStatus).toBe('getting_better');
+	});
+
+	it('starts on Sensible loony status', () => {
+		expect(churl.startingLoonyStatus).toBe('sensible');
+	});
+
+	it('starts with plague-dead bodies (1d30)', () => {
+		expect(churl.startingCurrency).toEqual({
+			currency: 'plague_dead_bodies',
+			roll: { count: 1, sides: 30 }
+		});
 	});
 });
 

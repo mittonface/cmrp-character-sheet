@@ -1,8 +1,8 @@
-import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
+import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, IndifferentTraitsDef, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
-import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, SITUATION_MAP } from './situations';
+import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, SITUATION_MAP, TRAIT_MAP } from './situations';
 import { ACCOUTREMENT_MAP, getAvailableAccoutrements } from './accoutrements';
 
 /**
@@ -22,6 +22,7 @@ export function createCharacter(initial?: CharacterData) {
 	let loonyStatus = $state<LoonyStatus | ''>(initial?.loonyStatus ?? '');
 	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
 	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
+	let indifferentTraitSelections = $state<string[]>(initial?.indifferentTraits ?? []);
 	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
 	let currencies = $state<Partial<Record<Currency, number>>>(initial?.currencies ?? {});
 	let selections = $state<Record<string, string>>(initial?.selections ?? {});
@@ -43,8 +44,48 @@ export function createCharacter(initial?: CharacterData) {
 	// --- Available social classes from the situation ---
 	let availableClasses = $derived(getAvailableClasses(situationId));
 
-	// --- Indifferent trait (display only) ---
-	let indifferentTrait = $derived(SITUATION_MAP.get(situationId)?.indifferentTrait ?? '');
+	// --- Indifferent traits ---
+	let indifferentTraitsDef = $derived<IndifferentTraitsDef | null>(
+		SITUATION_MAP.get(situationId)?.indifferentTraits ?? null
+	);
+
+	// The resolved list of indifferent trait IDs (fixed or player-selected)
+	let indifferentTraits = $derived.by(() => {
+		const def = indifferentTraitsDef;
+		if (!def) return [];
+		if (def.type === 'fixed') return def.traitIds;
+		return indifferentTraitSelections;
+	});
+
+	// Traits available for the player to pick as indifferent (for 'select' type)
+	let pickableIndifferentTraits = $derived.by(() => {
+		const def = indifferentTraitsDef;
+		if (!def || def.type !== 'select') return [];
+		const situation = SITUATION_MAP.get(situationId);
+		if (!situation) return [];
+
+		const chosenTraitIds = new Set(traitIds);
+		const excluded = new Set(def.exclude ?? []);
+		const alreadySelected = new Set(indifferentTraitSelections);
+
+		return situation.availableTraits
+			.filter((id) => !chosenTraitIds.has(id) && !excluded.has(id) && !alreadySelected.has(id))
+			.map((id) => TRAIT_MAP.get(id)!)
+			.filter(Boolean);
+	});
+
+	let indifferentTraitsComplete = $derived.by(() => {
+		const def = indifferentTraitsDef;
+		if (!def) return true;
+		if (def.type === 'fixed') return true;
+		return indifferentTraitSelections.length >= def.count;
+	});
+
+	let indifferentTraitsNeeded = $derived.by(() => {
+		const def = indifferentTraitsDef;
+		if (!def || def.type !== 'select') return 0;
+		return def.count - indifferentTraitSelections.length;
+	});
 
 	// --- Starting currency from the situation (for highlighting) ---
 	let startingCurrency = $derived(SITUATION_MAP.get(situationId)?.startingCurrency ?? null);
@@ -62,6 +103,7 @@ export function createCharacter(initial?: CharacterData) {
 		slots = getRequiredSlots(id);
 		traitValues = {};
 		accoutrements = {};
+		indifferentTraitSelections = [];
 
 		// Auto-set class if only one option
 		const classes = getAvailableClasses(id);
@@ -97,10 +139,27 @@ export function createCharacter(initial?: CharacterData) {
 		loonyStatus = status;
 	}
 
+	// --- Indifferent trait selection management ---
+	function addIndifferentTrait(traitId: string) {
+		const def = indifferentTraitsDef;
+		if (!def || def.type !== 'select') return;
+		if (indifferentTraitSelections.length >= def.count) return;
+		if (indifferentTraitSelections.includes(traitId)) return;
+		indifferentTraitSelections = [...indifferentTraitSelections, traitId];
+	}
+
+	function removeIndifferentTrait(traitId: string) {
+		indifferentTraitSelections = indifferentTraitSelections.filter((id) => id !== traitId);
+	}
+
 	// --- Slot management ---
 	function addSlot(slot: CharacterSlot) {
 		if (slots.length >= SLOT_COUNT) return;
 		slots = [...slots, slot];
+		// If a trait was added that was selected as indifferent, remove it from indifferent selections
+		if (slot.type === 'trait' && indifferentTraitSelections.includes(slot.traitId)) {
+			indifferentTraitSelections = indifferentTraitSelections.filter((id) => id !== slot.traitId);
+		}
 	}
 
 	function removeSlot(index: number) {
@@ -212,6 +271,7 @@ export function createCharacter(initial?: CharacterData) {
 			deathStatus,
 			loonyStatus,
 			slots: slots.map((s) => ({ ...s })),
+			indifferentTraits: [...indifferentTraitSelections],
 			traitValues: { ...traitValues },
 			accoutrements: { ...accoutrements },
 			currencies: { ...currencies },
@@ -241,8 +301,20 @@ export function createCharacter(initial?: CharacterData) {
 		get availableClasses() {
 			return availableClasses;
 		},
-		get indifferentTrait() {
-			return indifferentTrait;
+		get indifferentTraits() {
+			return indifferentTraits;
+		},
+		get indifferentTraitsDef() {
+			return indifferentTraitsDef;
+		},
+		get pickableIndifferentTraits() {
+			return pickableIndifferentTraits;
+		},
+		get indifferentTraitsComplete() {
+			return indifferentTraitsComplete;
+		},
+		get indifferentTraitsNeeded() {
+			return indifferentTraitsNeeded;
 		},
 		get startingCurrency() {
 			return startingCurrency;
@@ -315,6 +387,8 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		setSituation,
 		setSocialClass,
+		addIndifferentTrait,
+		removeIndifferentTrait,
 		setDeathStatus,
 		setLoonyStatus,
 		addSlot,

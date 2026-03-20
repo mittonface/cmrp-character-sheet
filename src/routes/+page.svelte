@@ -127,14 +127,49 @@
 			</div>
 		{/if}
 
-		<!-- Indifferent Trait -->
-		{#if character.indifferentTrait}
-			{@const traitLabel = TRAIT_MAP.get(character.indifferentTrait)?.label ?? character.indifferentTrait}
+		<!-- Indifferent Traits -->
+		{#if character.indifferentTraitsDef}
 			<div class="mb-6">
-				<p class="text-sm">
-					<span class="font-medium">Indifferent to:</span>
-					{traitLabel}
-				</p>
+				{#if character.indifferentTraitsDef.type === 'fixed'}
+					<p class="text-sm">
+						<span class="font-medium">Indifferent to:</span>
+						{character.indifferentTraits.map((id) => TRAIT_MAP.get(id)?.label ?? id).join(', ')}
+					</p>
+				{:else}
+					<h2 class="mb-2 text-sm font-medium">Indifferent Traits</h2>
+					{#if character.indifferentTraits.length > 0}
+						<div class="mb-2 flex flex-wrap gap-2">
+							{#each character.indifferentTraits as traitId}
+								<span class="inline-flex items-center gap-1 rounded bg-gray-200 px-2 py-1 text-sm">
+									{TRAIT_MAP.get(traitId)?.label ?? traitId}
+									<button
+										class="text-red-500 hover:text-red-700"
+										onclick={() => character.removeIndifferentTrait(traitId)}
+									>&times;</button>
+								</span>
+							{/each}
+						</div>
+					{/if}
+					{#if character.indifferentTraitsNeeded > 0 && character.slotsComplete}
+						<div class="rounded border border-dashed border-gray-300 p-3">
+							<p class="mb-2 text-sm text-gray-600">
+								Choose {character.indifferentTraitsNeeded} trait{character.indifferentTraitsNeeded > 1 ? 's' : ''} to be indifferent to:
+							</p>
+							<div class="flex flex-wrap gap-2">
+								{#each character.pickableIndifferentTraits as trait}
+									<button
+										class="rounded bg-gray-50 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+										onclick={() => character.addIndifferentTrait(trait.id)}
+									>
+										{trait.label}
+									</button>
+								{/each}
+							</div>
+						</div>
+					{:else if !character.slotsComplete && character.indifferentTraitsNeeded > 0}
+						<p class="text-xs text-gray-400">Fill all slots first to choose indifferent traits.</p>
+					{/if}
+				{/if}
 			</div>
 		{/if}
 
