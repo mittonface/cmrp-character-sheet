@@ -1680,8 +1680,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'subtlety', value: 1 },
 			{ target: 'lorefulness', value: 1 }
-		],
-		specialEffects: ['Special effect TBD']
+		]
 	},
 	{
 		id: 'heart_attack_o_margarine',
@@ -1700,8 +1699,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'subtlety', value: 1 },
 			{ target: 'valour', value: 1 }
-		],
-		specialEffects: ['Special effect TBD']
+		]
 	},
 	{
 		id: 'brazilian_dagger',
@@ -1722,6 +1720,111 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'decorum', value: 1 }
 		],
 		specialEffects: ['One-time use: if you convince or trick someone into eating all six, they are No More.']
+	},
+
+	// --- Wisdom in the Ways of Science accoutrements ---
+	// All wisdom in the ways of science accoutrements share a baseline +1 to wisdom_in_the_ways_of_science
+	{
+		id: 'sundial',
+		label: 'Sundial',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'druidry', value: 1 }
+		],
+		specialEffects: ['Large. Stone. Requires a cart to transport.', 'Useless at night, but surely you knew that.']
+	},
+	{
+		id: 'sulphur_powder_iron_filings_magnet',
+		label: 'Sulphur Powder, Iron Filings, and a Magnet',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'chastity', value: 1 }
+		]
+	},
+	{
+		id: 'scales_large',
+		label: 'Scales (large)',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'authority', value: 1 }
+		],
+		specialEffects: ['Requires a cart to transport.']
+	},
+	{
+		id: 'abacus_protractor_ruler_compass',
+		label: 'Abacus, Protractor, Ruler, and Compass',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'glibness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Shoppekeepers, Burghers, merchants, and the like' }],
+		specialEffects: ['If carried openly, these objects cause children to flee in terror.']
+	},
+	{
+		id: 'scales_reasonable',
+		label: 'Scales (reasonable)',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		]
+	},
+	{
+		id: 'powders_burn_different_colours',
+		label: 'Powders that Burn in Different Colours',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'subtlety', value: 1 }
+		]
+	},
+	{
+		id: 'silver_trophy_achievement_science',
+		label: 'Silver Trophy for Achievement in Science',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'argumentation', value: 1 }
+		],
+		specialEffects: [
+			"Often confused for the Holy Grail. One-time use: melt it down for 23 Gold (currency). Don't ask, 'But isn't it made of silver?' You'll only embarrass yourself."
+		]
+	},
+	{
+		id: 'alchemical_equipment',
+		label: 'Alchemical Equipment',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'druidry', value: 1 }
+		]
+	},
+	{
+		id: 'astrolabe',
+		label: 'Astrolabe',
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'purpose', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. astrologers, scientists, and other forward-thinkers' }],
+		specialEffects: ['Useless in daytime, birdbrain.']
+	},
+	{
+		id: 'philosophers_stone',
+		label: "The Philosopher's Stone",
+		slotId: 'wisdom_in_the_ways_of_science',
+		modifiers: [
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'purpose', value: 1 },
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'heartiness', value: -1 }
+		],
+		specialEffects: ['One-time use: resurrect someone (including yourself) who is No More OR transform any base metal into Gold (Currency). Roll a d20 ten times to see how much you get.']
 	}
 ];
 

@@ -597,6 +597,35 @@ describe('specific accoutrements', () => {
 		expect(bd.modifiers[0]).toEqual({ target: 'subtlety', value: 1 });
 		expect(bd.specialEffects).toBeDefined();
 	});
+
+	it('all wisdom_in_the_ways_of_science accoutrements have +1 wisdom_in_the_ways_of_science as first modifier', () => {
+		const wisAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'wisdom_in_the_ways_of_science');
+		expect(wisAccs.length).toBe(10);
+		for (const acc of wisAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'wisdom_in_the_ways_of_science', value: 1 });
+		}
+	});
+
+	it('Abacus set has conditional modifier vs Shoppekeepers and -1 glibness', () => {
+		const abacus = ACCOUTREMENT_MAP.get('abacus_protractor_ruler_compass')!;
+		expect(abacus.conditionalModifiers).toHaveLength(1);
+		expect(abacus.conditionalModifiers![0].description).toContain('Shoppekeepers');
+		expect(abacus.modifiers.find((m) => m.target === 'glibness')!.value).toBe(-1);
+	});
+
+	it('Astrolabe has conditional modifier vs forward-thinkers and -1 purpose', () => {
+		const astrolabe = ACCOUTREMENT_MAP.get('astrolabe')!;
+		expect(astrolabe.conditionalModifiers).toHaveLength(1);
+		expect(astrolabe.conditionalModifiers![0].description).toContain('forward-thinkers');
+		expect(astrolabe.modifiers.find((m) => m.target === 'purpose')!.value).toBe(-1);
+	});
+
+	it("Philosopher's Stone has +1 purpose, +1 lorefulness, and -1 heartiness", () => {
+		const ps = ACCOUTREMENT_MAP.get('philosophers_stone')!;
+		expect(ps.modifiers.find((m) => m.target === 'purpose')!.value).toBe(1);
+		expect(ps.modifiers.find((m) => m.target === 'lorefulness')!.value).toBe(1);
+		expect(ps.modifiers.find((m) => m.target === 'heartiness')!.value).toBe(-1);
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
