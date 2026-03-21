@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
 	ALL_ACCOUTREMENTS,
-	ACCOUTREMENTS_BY_TRAIT,
+	ACCOUTREMENTS_BY_SLOT,
 	ACCOUTREMENT_MAP,
 	getAvailableAccoutrements
 } from './accoutrements';
@@ -19,9 +19,9 @@ describe('data integrity', () => {
 		}
 	});
 
-	it('ACCOUTREMENTS_BY_TRAIT indexes all accoutrements correctly', () => {
+	it('ACCOUTREMENTS_BY_SLOT indexes all accoutrements correctly', () => {
 		let total = 0;
-		for (const [, list] of ACCOUTREMENTS_BY_TRAIT) {
+		for (const [, list] of ACCOUTREMENTS_BY_SLOT) {
 			total += list.length;
 		}
 		expect(total).toBe(ALL_ACCOUTREMENTS.length);
@@ -34,7 +34,7 @@ describe('data integrity', () => {
 	});
 
 	it('all valour accoutrements have +1 valour as first modifier', () => {
-		const valourAccs = ALL_ACCOUTREMENTS.filter((a) => a.traitId === 'valour');
+		const valourAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'valour');
 		for (const acc of valourAccs) {
 			expect(acc.modifiers[0]).toEqual({ target: 'valour', value: 1 });
 		}
@@ -77,14 +77,14 @@ describe('specific accoutrements', () => {
 describe('getAvailableAccoutrements', () => {
 	it('returns all valour accoutrements when player has a retainer', () => {
 		const available = getAvailableAccoutrements('valour', true);
-		const allValour = ALL_ACCOUTREMENTS.filter((a) => a.traitId === 'valour');
+		const allValour = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'valour');
 		expect(available).toHaveLength(allValour.length);
 	});
 
 	it('excludes retainer-required accoutrements when player has no retainer', () => {
 		const available = getAvailableAccoutrements('valour', false);
 		const withoutRetainerReq = ALL_ACCOUTREMENTS.filter(
-			(a) => a.traitId === 'valour' && !a.requires?.retainer
+			(a) => a.slotId === 'valour' && !a.requires?.retainer
 		);
 		expect(available).toHaveLength(withoutRetainerReq.length);
 		expect(available.find((a) => a.id === 'burlington_wallbanger')).toBeUndefined();

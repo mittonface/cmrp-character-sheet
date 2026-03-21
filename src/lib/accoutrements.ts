@@ -7,7 +7,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'knightly_armour',
 		label: 'Knightly Armour',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'authority', value: 1 }
@@ -16,7 +16,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'shield',
 		label: 'Shield',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'strategy', value: 1 }
@@ -25,7 +25,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'knightly_helmet',
 		label: 'Knightly Helmet',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'luck', value: 1 }
@@ -34,7 +34,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'knightly_weapon',
 		label: 'Knightly Weapon',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'argumentation', value: 1 }
@@ -43,7 +43,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'polearm',
 		label: 'Polearm',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'nimbleness', value: -1 }
@@ -53,7 +53,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'jousting_lance',
 		label: 'Jousting Lance',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'animal_husbandry', value: -1 }
@@ -63,7 +63,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'longersword',
 		label: 'Longersword',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'purpose', value: 1 }
@@ -72,7 +72,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'fresh_fruit',
 		label: 'Fresh Fruit',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'heartiness', value: 1 }
@@ -81,7 +81,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'vicious_axe',
 		label: 'Vicious Axe',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'decorum', value: -1 }
@@ -91,7 +91,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	{
 		id: 'burlington_wallbanger',
 		label: 'The Burlington Wallbanger',
-		traitId: 'valour',
+		slotId: 'valour',
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'valour', value: 1 }, // extra +1 valour (total +2)
@@ -102,12 +102,12 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 	}
 ];
 
-/** Accoutrements indexed by trait ID */
-export const ACCOUTREMENTS_BY_TRAIT = new Map<string, AccoutrementDef[]>();
+/** Accoutrements indexed by slot ID (trait or retainer) */
+export const ACCOUTREMENTS_BY_SLOT = new Map<string, AccoutrementDef[]>();
 for (const acc of ALL_ACCOUTREMENTS) {
-	const list = ACCOUTREMENTS_BY_TRAIT.get(acc.traitId) ?? [];
+	const list = ACCOUTREMENTS_BY_SLOT.get(acc.slotId) ?? [];
 	list.push(acc);
-	ACCOUTREMENTS_BY_TRAIT.set(acc.traitId, list);
+	ACCOUTREMENTS_BY_SLOT.set(acc.slotId, list);
 }
 
 /** Accoutrements indexed by ID */
@@ -115,12 +115,12 @@ export const ACCOUTREMENT_MAP = new Map<string, AccoutrementDef>(
 	ALL_ACCOUTREMENTS.map((a) => [a.id, a])
 );
 
-/** Get available accoutrements for a trait, filtered by prerequisites */
+/** Get available accoutrements for a slot (trait or retainer), filtered by prerequisites */
 export function getAvailableAccoutrements(
-	traitId: string,
+	slotId: string,
 	hasRetainer: boolean
 ): AccoutrementDef[] {
-	const all = ACCOUTREMENTS_BY_TRAIT.get(traitId) ?? [];
+	const all = ACCOUTREMENTS_BY_SLOT.get(slotId) ?? [];
 	return all.filter((a) => {
 		if (a.requires?.retainer && !hasRetainer) return false;
 		return true;

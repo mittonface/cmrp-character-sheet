@@ -650,12 +650,13 @@ describe('derived values', () => {
 		expect(char.hasRetainer).toBe(true); // manservant is required
 	});
 
-	it('computes requiredTraitIds correctly', () => {
+	it('computes requiredSlotIds correctly', () => {
 		const char = createCharacter();
 		char.setSituation('knight');
 		flushSync();
 
-		expect(char.requiredTraitIds).toEqual(new Set(['valour', 'chastity']));
+		// Knight has required traits (valour, chastity) and required retainer (manservant)
+		expect(char.requiredSlotIds).toEqual(new Set(['valour', 'chastity', 'manservant']));
 	});
 });
 

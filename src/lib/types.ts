@@ -58,11 +58,11 @@ export type ConditionalModifier = {
 	description: string; // e.g. "+1 to all trait rolls vs Monstrosities"
 };
 
-/** An accoutrement that can be equipped on a trait */
+/** An accoutrement that can be equipped on a trait or retainer slot */
 export type AccoutrementDef = {
 	id: string;
 	label: string;
-	traitId: string; // which trait this accoutrement belongs to
+	slotId: string; // which trait or retainer this accoutrement belongs to
 	modifiers: AccoutrementModifier[]; // simple +/- to traits (auto-applied)
 	conditionalModifiers?: ConditionalModifier[]; // display-only conditional effects
 	specialEffects?: string[]; // narrative/one-time effects

@@ -343,27 +343,29 @@
 			</div>
 		{/if}
 
-		<!-- Accoutrements (for required traits) -->
-		{#if character.traitSlots.some((s) => character.requiredTraitIds.has(s.traitId))}
+		<!-- Accoutrements (for required slots — traits and retainers) -->
+		{@const requiredSlots = character.slots.filter((s) => character.requiredSlotIds.has(s.type === 'trait' ? s.traitId : s.retainerId))}
+		{#if requiredSlots.length > 0}
 			<div class="mb-6">
 				<h2 class="mb-3 text-xl font-semibold">Accoutrements</h2>
 				<div class="space-y-4">
-					{#each character.traitSlots.filter((s) => character.requiredTraitIds.has(s.traitId)) as slot}
-						{@const traitLabel = TRAIT_MAP.get(slot.traitId)?.label ?? slot.traitId}
-						{@const available = getAvailableAccoutrements(slot.traitId, character.hasRetainer)}
-						{@const selectedId = character.accoutrements[slot.traitId]}
+					{#each requiredSlots as slot}
+						{@const slotId = slot.type === 'trait' ? slot.traitId : slot.retainerId}
+						{@const label = slotLabel(slot)}
+						{@const available = getAvailableAccoutrements(slotId, character.hasRetainer)}
+						{@const selectedId = character.accoutrements[slotId]}
 						{@const selected = selectedId ? ACCOUTREMENT_MAP.get(selectedId) : undefined}
 						<div class="rounded border border-gray-200 p-3">
-							<label class="mb-2 block text-sm font-medium" for="acc-{slot.traitId}">
-								{traitLabel} Accoutrement
+							<label class="mb-2 block text-sm font-medium" for="acc-{slotId}">
+								{label} Accoutrement
 							</label>
 							{#if available.length > 0}
 								<select
-									id="acc-{slot.traitId}"
+									id="acc-{slotId}"
 									value={selectedId ?? ''}
 									onchange={(e) => {
 										const select = e.target as HTMLSelectElement;
-										character.setAccoutrement(slot.traitId, select.value);
+										character.setAccoutrement(slotId, select.value);
 									}}
 									class="w-full rounded border border-gray-300 px-3 py-2"
 								>
@@ -401,7 +403,7 @@
 									</div>
 								{/if}
 							{:else}
-								<p class="text-sm text-gray-400">No accoutrements available for this trait.</p>
+								<p class="text-sm text-gray-400">No accoutrements available for this slot.</p>
 							{/if}
 						</div>
 					{/each}

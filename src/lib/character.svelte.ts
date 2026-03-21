@@ -203,10 +203,12 @@ export function createCharacter(initial?: CharacterData) {
 		const slot = slots[index];
 		if (!slot || slot.required) return; // can't remove required slots
 
-		// Clean up trait value and accoutrement if removing a trait
+		// Clean up trait value and accoutrement
 		if (slot.type === 'trait') {
 			delete traitValues[slot.traitId];
 			clearAccoutrement(slot.traitId);
+		} else {
+			clearAccoutrement(slot.retainerId);
 		}
 
 		slots = slots.filter((_, i) => i !== index);
@@ -218,11 +220,11 @@ export function createCharacter(initial?: CharacterData) {
 
 	// --- Accoutrement management ---
 	let hasRetainer = $derived(retainerSlots.length > 0);
-	let requiredTraitIds = $derived(
+	let requiredSlotIds = $derived(
 		new Set(
 			slots
-				.filter((s): s is CharacterSlot & { type: 'trait' } => s.type === 'trait' && s.required)
-				.map((s) => s.traitId)
+				.filter((s) => s.required)
+				.map((s) => (s.type === 'trait' ? s.traitId : s.retainerId))
 		)
 	);
 
@@ -414,8 +416,8 @@ export function createCharacter(initial?: CharacterData) {
 		get hasRetainer() {
 			return hasRetainer;
 		},
-		get requiredTraitIds() {
-			return requiredTraitIds;
+		get requiredSlotIds() {
+			return requiredSlotIds;
 		},
 		get selections() {
 			return selections;
