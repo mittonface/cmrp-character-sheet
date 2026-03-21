@@ -87,6 +87,108 @@
 			character.setAccoutrement(sid, accId, accIds.length);
 		}
 	}
+
+	/** Pick a random element from an array */
+	function pickRandom<T>(arr: T[]): T {
+		return arr[Math.floor(Math.random() * arr.length)];
+	}
+
+	/** Track which slots are currently "rolling" for animation */
+	let rollingSlots = $state<Set<string>>(new Set());
+
+	/** Randomly select accoutrements for a single slot */
+	function randomizeSlot(slot: CharacterSlot) {
+		const sid = slotId(slot);
+		const isRetainer = slot.type === 'retainer';
+
+		if (isRetainer) {
+			const def = RETAINER_MAP.get(slot.retainerId);
+			if (!def || def.accoutrementSlots === 0) return;
+			if (!def.accoutrementTypes) return;
+
+			const available = getRetainerAvailableAccoutrements(def.accoutrementTypes, character.hasRetainer);
+			if (available.length === 0) return;
+
+			// Clear existing picks first
+			const existing = character.accoutrements[sid] ?? [];
+			for (let i = existing.length - 1; i >= 0; i--) {
+				character.setAccoutrement(sid, '', i);
+			}
+
+			// Pick random accoutrements up to slot limit
+			const shuffled = [...available].sort(() => Math.random() - 0.5);
+			const count = Math.min(def.accoutrementSlots, shuffled.length);
+			for (let i = 0; i < count; i++) {
+				character.setAccoutrement(sid, shuffled[i].id, i);
+			}
+		} else {
+			const available = getAvailableAccoutrements(sid, character.hasRetainer);
+			if (available.length === 0) return;
+
+			// Pick a random primary accoutrement
+			const primary = pickRandom(available);
+			character.setAccoutrement(sid, primary.id);
+
+			// If it grants a bonus, pick a random bonus too
+			if (primary.grantsExtra) {
+				const extraOptions = getExtraAccoutrementOptions(primary.id, character.hasRetainer);
+				if (extraOptions.length > 0) {
+					const bonus = pickRandom(extraOptions);
+					character.setAccoutrement(sid, bonus.id, 1);
+				}
+			}
+		}
+	}
+
+	/** Animate a slot roll with a brief cycling effect, then land on the real pick */
+	function rollSlot(slot: CharacterSlot) {
+		const sid = slotId(slot);
+		rollingSlots = new Set([...rollingSlots, sid]);
+
+		// Brief animation: cycle through random picks visually
+		const steps = 4 + Math.floor(Math.random() * 3);
+		let step = 0;
+		const interval = setInterval(() => {
+			randomizeSlot(slot);
+			step++;
+			if (step >= steps) {
+				clearInterval(interval);
+				randomizeSlot(slot);
+				rollingSlots = new Set([...rollingSlots].filter((id) => id !== sid));
+			}
+		}, 80);
+	}
+
+	/** Roll for all unfilled pickable slots with staggered timing */
+	function rollAll() {
+		const pickableSlots = character.slots.filter((slot) => {
+			const sid = slotId(slot);
+			if (slot.type === 'retainer') {
+				const def = RETAINER_MAP.get(slot.retainerId);
+				if (!def || def.accoutrementSlots === 0) return false;
+			}
+			const accIds = character.accoutrements[sid] ?? [];
+			return accIds.length === 0;
+		});
+
+		if (pickableSlots.length === 0) {
+			// If all filled, re-roll everything pickable
+			const allPickable = character.slots.filter((slot) => {
+				if (slot.type === 'retainer') {
+					const def = RETAINER_MAP.get(slot.retainerId);
+					return def && def.accoutrementSlots > 0;
+				}
+				return true;
+			});
+			allPickable.forEach((slot, i) => {
+				setTimeout(() => rollSlot(slot), i * 150);
+			});
+		} else {
+			pickableSlots.forEach((slot, i) => {
+				setTimeout(() => rollSlot(slot), i * 150);
+			});
+		}
+	}
 </script>
 
 <div class="mx-auto max-w-4xl px-4">
@@ -111,7 +213,32 @@
 	<p class="mx-auto mb-10 max-w-lg text-center leading-relaxed text-parchment-300">
 		Each slot in your ledger comes with one <span class="font-heading font-semibold text-gold">accoutrement</span>
 		— a piece of equipment, companion, or curiosity that modifies your rolls.
+		Roll the dice to determine what fate provides, or choose manually below.
 	</p>
+
+	<!-- Roll All button — prominent, this is the primary action -->
+	<div class="mx-auto mb-8 max-w-2xl text-center">
+		<button
+			class="group/roll font-heading inline-flex cursor-pointer items-center gap-3 rounded-sm border-2 border-gold bg-gold/10 px-7 py-3 text-base font-bold tracking-wider text-gold uppercase transition-all duration-300 hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(184,152,68,0.25)]"
+			onclick={rollAll}
+		>
+			<svg
+				class="h-5 w-5 transition-transform duration-300 group-hover/roll:rotate-[30deg]"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+			>
+				<rect x="3" y="3" width="18" height="18" rx="3" />
+				<circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+				<circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+				<circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+				<circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none" />
+				<circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" stroke="none" />
+			</svg>
+			{allFilled ? 'Re-roll All' : 'Roll All'}
+		</button>
+	</div>
 
 	<!-- Progress indicator -->
 	<div class="mx-auto mb-8 max-w-lg">
@@ -154,79 +281,114 @@
 						? 'parchment-bg border-parchment-300/50'
 						: 'border-parchment-300/20 bg-parchment-50/20'}"
 			>
-				<!-- Card Header — always visible, clickable to expand -->
-				<button
-					class="flex w-full cursor-pointer items-center gap-0 text-left transition-colors duration-200
-						{canCarry ? 'hover:bg-gold/5' : 'cursor-default'}"
-					onclick={() => canCarry && toggleSlot(sid)}
-					disabled={!canCarry}
-				>
-					<!-- Slot numeral -->
-					<div
-						class="flex w-12 shrink-0 items-center justify-center self-stretch border-r sm:w-14
-							{hasPick
-							? 'border-gold/20 bg-gold/8'
-							: canCarry
-								? 'border-parchment-300/30 bg-parchment-200/20'
-								: 'border-parchment-300/10 bg-parchment-200/5'}"
+				<!-- Card Header — expand button + roll button side by side -->
+				<div class="flex w-full items-stretch">
+					<!-- Clickable expand area -->
+					<button
+						class="flex flex-1 cursor-pointer items-center gap-0 text-left transition-colors duration-200
+							{canCarry ? 'hover:bg-gold/5' : 'cursor-default'}"
+						onclick={() => canCarry && toggleSlot(sid)}
+						disabled={!canCarry}
 					>
-						<span
-							class="font-display text-lg font-bold
-								{hasPick ? 'text-gold/60' : canCarry ? 'text-ink/20' : 'text-parchment-300/20'}"
+						<!-- Slot numeral -->
+						<div
+							class="flex w-12 shrink-0 items-center justify-center self-stretch border-r sm:w-14
+								{hasPick
+								? 'border-gold/20 bg-gold/8'
+								: canCarry
+									? 'border-parchment-300/30 bg-parchment-200/20'
+									: 'border-parchment-300/10 bg-parchment-200/5'}"
 						>
-							{SLOT_NUMERALS[i]}
-						</span>
-					</div>
+							<span
+								class="font-display text-lg font-bold
+									{hasPick ? 'text-gold/60' : canCarry ? 'text-ink/20' : 'text-parchment-300/20'}"
+							>
+								{SLOT_NUMERALS[i]}
+							</span>
+						</div>
 
-					<!-- Slot info -->
-					<div class="flex min-h-[3.5rem] flex-1 items-center gap-3 px-4 py-2.5">
-						<!-- Type badge -->
-						<span
-							class="font-heading shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium
-								{isRetainer
-								? 'bg-gold/15 text-gold-dark'
-								: 'bg-crimson/10 text-crimson'}"
+						<!-- Slot info -->
+						<div class="flex min-h-[3.5rem] flex-1 items-center gap-3 px-4 py-2.5">
+							<!-- Type badge -->
+							<span
+								class="font-heading shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium
+									{isRetainer
+									? 'bg-gold/15 text-gold-dark'
+									: 'bg-crimson/10 text-crimson'}"
+							>
+								{isRetainer ? 'Retainer' : 'Trait'}
+							</span>
+
+							<!-- Slot name -->
+							<span class="font-heading text-sm font-semibold tracking-wide text-ink">
+								{label}
+							</span>
+
+							<span class="flex-1"></span>
+
+							<!-- Status -->
+							{#if !canCarry}
+								<span class="font-heading text-xs tracking-wide text-ink-faint/40">
+									No accoutrement slots
+								</span>
+							{:else if hasPick}
+								<span class="flex flex-wrap items-center gap-1.5">
+									{#each accIds as accId, ai}
+										{#if ai > 0}
+											<span class="text-gold-dark/30">&middot;</span>
+										{/if}
+										<span class="font-heading inline-block rounded-sm bg-gold/10 px-1.5 py-0.5 text-xs tracking-wide text-gold-dark/80">
+											{ACCOUTREMENT_MAP.get(accId)?.label ?? accId}
+										</span>
+									{/each}
+								</span>
+							{:else}
+								<span class="font-heading text-xs tracking-wide text-crimson/50">
+									Not yet outfitted
+								</span>
+							{/if}
+
+							<!-- Expand chevron -->
+							{#if canCarry}
+								<svg
+									class="h-4 w-4 text-ink-faint/40 transition-transform duration-200
+										{isExpanded ? 'rotate-180' : ''}"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<polyline points="6 9 12 15 18 9" />
+								</svg>
+							{/if}
+						</div>
+					</button>
+
+					<!-- Per-slot roll button — sibling of the expand button, not nested -->
+					{#if canCarry}
+						{@const isRolling = rollingSlots.has(sid)}
+						<button
+							class="flex w-11 shrink-0 cursor-pointer items-center justify-center border-l transition-all duration-200
+								{isRolling
+								? 'border-gold/40 bg-gold/15 text-gold'
+								: 'border-parchment-300/20 text-ink-faint/40 hover:bg-gold/8 hover:text-gold/70'}"
+							onclick={() => rollSlot(slot)}
+							title="Roll randomly"
 						>
-							{isRetainer ? 'Retainer' : 'Trait'}
-						</span>
-
-						<!-- Slot name -->
-						<span class="font-heading text-sm font-semibold tracking-wide text-ink">
-							{label}
-						</span>
-
-						<span class="flex-1"></span>
-
-						<!-- Status -->
-						{#if !canCarry}
-							<span class="font-heading text-xs tracking-wide text-ink-faint/40">
-								No accoutrement slots
-							</span>
-						{:else if hasPick}
-							<span class="font-heading text-xs tracking-wide text-gold-dark/70">
-								{accIds.map((id) => ACCOUTREMENT_MAP.get(id)?.label ?? id).join(', ')}
-							</span>
-						{:else}
-							<span class="font-heading text-xs tracking-wide text-crimson/50">
-								Not yet outfitted
-							</span>
-						{/if}
-
-						<!-- Expand chevron -->
-						{#if canCarry}
 							<svg
-								class="h-4 w-4 text-ink-faint/40 transition-transform duration-200
-									{isExpanded ? 'rotate-180' : ''}"
+								class="h-4 w-4 {isRolling ? 'roll-spinning' : ''}"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
 								stroke-width="2"
 							>
-								<polyline points="6 9 12 15 18 9" />
+								<rect x="3" y="3" width="18" height="18" rx="3" />
+								<circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+								<circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" stroke="none" />
 							</svg>
-						{/if}
-					</div>
-				</button>
+						</button>
+					{/if}
+				</div>
 
 				<!-- Expanded Selection Area -->
 				{#if isExpanded && canCarry}
@@ -531,5 +693,18 @@
 	.tooltip-wrap:hover .tooltip-text {
 		visibility: visible;
 		opacity: 1;
+	}
+
+	/* Dice roll animation */
+	@keyframes dice-tumble {
+		0% { transform: rotate(0deg); }
+		25% { transform: rotate(90deg); }
+		50% { transform: rotate(180deg); }
+		75% { transform: rotate(270deg); }
+		100% { transform: rotate(360deg); }
+	}
+
+	:global(.roll-spinning) {
+		animation: dice-tumble 0.32s linear infinite;
 	}
 </style>
