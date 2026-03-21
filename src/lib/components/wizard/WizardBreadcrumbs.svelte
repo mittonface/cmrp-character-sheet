@@ -40,7 +40,7 @@
 	}
 </script>
 
-<nav class="mx-auto flex max-w-xl items-center justify-center gap-0 px-4 pt-4 pb-1">
+<nav class="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-y-1 px-2 pt-4 pb-1 sm:px-4">
 	{#each STEPS as step, i (step.id)}
 		{@const isCurrent = step.id === current}
 		{@const isPast = i < currentIndex}
@@ -48,7 +48,7 @@
 
 		{#if i > 0}
 			<span
-				class="mx-1 h-px w-6 sm:w-10 transition-colors duration-200
+				class="mx-1 hidden h-px w-10 transition-colors duration-200 sm:block
 					{isPast ? 'bg-gold/60' : 'bg-parchment-300/40'}"
 			></span>
 		{/if}
