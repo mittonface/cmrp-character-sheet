@@ -199,6 +199,101 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			'One-time use: set the timer and lure a single person or creature near. When it detonates, the person or creature snuffs it, and everyone is covered in charred lettuce leaves.'
 		]
+	},
+	// --- Argumentation accoutrements ---
+	// All argumentation accoutrements share a baseline +1 to argumentation
+	{
+		id: 'club_with_notches',
+		label: "A Club with Notches in It, One For Each Argument You've Won",
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'gavel',
+		label: 'Gavel',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'authority', value: 1 }
+		]
+	},
+	{
+		id: 'socratic_toga',
+		label: 'Socratic Toga',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 }
+		]
+	},
+	{
+		id: 'black_barristers_gown',
+		label: "Black Barrister's Gown",
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'subtlety', value: 1 }
+		]
+	},
+	{
+		id: 'complicated_charts_and_diagrams',
+		label: 'A Bundle of Complicated Charts and Diagrams',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'strategy', value: 1 }
+		]
+	},
+	{
+		id: 'heap_of_historical_records',
+		label: 'A Heap of Historical Records',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'sheaf_of_contracts',
+		label: 'A Sheaf of Contracts, Forms, and Legal Documents',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'argumentation', value: 1 } // extra +1 (total +2)
+		]
+	},
+	{
+		id: 'portable_lectern',
+		label: 'Portable Lectern',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'decorum', value: 1 }
+		],
+		specialEffects: ['Must be set up before it can be used (and the plus can be applied)']
+	},
+	{
+		id: 'parliament_of_fowls',
+		label: 'Parliament of Fowls: A Book of Debate Poetry',
+		slotId: 'argumentation',
+		modifiers: [
+			{ target: 'argumentation', value: 1 },
+			{ target: 'authority', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs bards and other entertainers' }]
+	},
+	{
+		id: 'magna_carta',
+		label: 'Magna Carta (rough draft)',
+		slotId: 'argumentation',
+		modifiers: [{ target: 'argumentation', value: 1 }],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs upper-class persons' }],
+		specialEffects: [
+			'One-time use: defeat a sovereign. No roll required; the Sovereign is immediately overcome as if the required number of Deeds to defeat them had been met. They remain on the throne, but they\u2019ve lost a great deal of authority and respect\u2026 and they are no longer an obstacle to your aims.'
+		]
 	}
 ];
 

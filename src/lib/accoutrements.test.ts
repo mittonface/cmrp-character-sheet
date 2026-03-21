@@ -119,6 +119,43 @@ describe('specific accoutrements', () => {
 		expect(lettuce.specialEffects).toHaveLength(1);
 		expect(lettuce.specialEffects![0]).toContain('detonates');
 	});
+
+	it('all argumentation accoutrements have +1 argumentation as first modifier', () => {
+		const argAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'argumentation');
+		expect(argAccs.length).toBe(10);
+		for (const acc of argAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'argumentation', value: 1 });
+		}
+	});
+
+	it('Sheaf of Contracts has +2 argumentation total', () => {
+		const sheaf = ACCOUTREMENT_MAP.get('sheaf_of_contracts')!;
+		const argTotal = sheaf.modifiers
+			.filter((m) => m.target === 'argumentation')
+			.reduce((sum, m) => sum + m.value, 0);
+		expect(argTotal).toBe(2);
+	});
+
+	it('Portable Lectern has setup special effect', () => {
+		const lectern = ACCOUTREMENT_MAP.get('portable_lectern')!;
+		expect(lectern.specialEffects).toHaveLength(1);
+		expect(lectern.specialEffects![0]).toContain('set up');
+	});
+
+	it('Parliament of Fowls has conditional modifier and -1 authority', () => {
+		const pof = ACCOUTREMENT_MAP.get('parliament_of_fowls')!;
+		expect(pof.conditionalModifiers).toHaveLength(1);
+		expect(pof.conditionalModifiers![0].description).toContain('bards');
+		expect(pof.modifiers.find((m) => m.target === 'authority')!.value).toBe(-1);
+	});
+
+	it('Magna Carta has conditional modifier and sovereign special effect', () => {
+		const mc = ACCOUTREMENT_MAP.get('magna_carta')!;
+		expect(mc.conditionalModifiers).toHaveLength(1);
+		expect(mc.conditionalModifiers![0].description).toContain('upper-class');
+		expect(mc.specialEffects).toHaveLength(1);
+		expect(mc.specialEffects![0]).toContain('sovereign');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
