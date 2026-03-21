@@ -900,6 +900,106 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			'One-time use: break out the full kit at once. Make a Glibness roll (Strewthing/Spamming as normal). On a 2+, that number of people who hold neutral or negative opinions of you and your companions regard you as welcome guests. If you Spam it, everyone is covered in vomit, fungus, alcohol, snakes, skunk juice, and pooh pooh, and they\'re rather poor sports about the whole thing. This in addition to the normal Spam results.'
 		]
+	},
+
+	// --- Heartiness accoutrements ---
+	// All heartiness accoutrements share a baseline +1 to heartiness
+	{
+		id: 'animal_companion',
+		label: 'Animal Companion',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'animal_husbandry', value: 1 }
+		]
+	},
+	{
+		id: 'wooden_churn_of_bodily_substance',
+		label: 'A Wooden Churn of Bodily Substance',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Gumbys' }]
+	},
+	{
+		id: 'flint_and_steel',
+		label: 'Flint & Steel',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'luck', value: 1 }
+		],
+		specialEffects: ['Can be used to make fire.']
+	},
+	{
+		id: 'lamprey_loose_cover',
+		label: 'Lamprey Loose Cover',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		],
+		specialEffects: ['One-size-fits-all outerwear of homespun that stops dust getting in the cracks and crevices that nature left unprotected.']
+	},
+	{
+		id: 'sack_of_truffles',
+		label: 'Sack of Truffles',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'druidry', value: 1 }
+		],
+		specialEffects: ['Nearby pigs follow you around.']
+	},
+	{
+		id: 'cupping_cups',
+		label: 'Cupping Cups',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		],
+		specialEffects: ['Heated and placed on skin to create a suction effect and stimulate blood flow.']
+	},
+	{
+		id: 'surgical_stockings',
+		label: 'Surgical Stockings',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'chastity', value: 1 },
+			{ target: 'decorum', value: -1 }
+		]
+	},
+	{
+		id: 'sack_of_wilkinsons_laxative_cereal',
+		label: "Sack of Wilkinson's Number 8 Laxative Cereal",
+		slotId: 'heartiness',
+		modifiers: [{ target: 'heartiness', value: 1 }],
+		specialEffects: ['One-time use: ingest the whole sack at once to flush out any poison, illness, or curse. Not recommended for use within two miles of polite company.']
+	},
+	{
+		id: 'rancid_polecat_no_2',
+		label: 'Rancid Polecat No. 2 (eau de toilette)',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'chastity', value: 1 }
+		],
+		specialEffects: ['One-time use: douse yourself with an entire bottle to repel Beasts for one day.']
+	},
+	{
+		id: 'sack_of_ano_weet_pow',
+		label: 'Sack of Ano-Weet POW!',
+		slotId: 'heartiness',
+		modifiers: [
+			{ target: 'heartiness', value: 1 },
+			{ target: 'purpose', value: 1 },
+			{ target: 'decorum', value: -1 }
+		],
+		specialEffects: ["One-time use: remove the miniature Pope that comes in each sack and make a d30 roll on the Cleric's Spiffing Serious Ability table, no matter what your Situation is."]
 	}
 ];
 

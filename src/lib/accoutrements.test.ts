@@ -259,6 +259,33 @@ describe('specific accoutrements', () => {
 		expect(mask.conditionalModifiers).toHaveLength(1);
 		expect(mask.conditionalModifiers![0].description).toContain('Knights of the Round Table');
 	});
+
+	it('all heartiness accoutrements have +1 heartiness as first modifier', () => {
+		const heartAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'heartiness');
+		expect(heartAccs.length).toBe(10);
+		for (const acc of heartAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'heartiness', value: 1 });
+		}
+	});
+
+	it('Wooden Churn of Bodily Substance has conditional modifier vs Gumbys and -1 wisdom', () => {
+		const churn = ACCOUTREMENT_MAP.get('wooden_churn_of_bodily_substance')!;
+		expect(churn.conditionalModifiers).toHaveLength(1);
+		expect(churn.conditionalModifiers![0].description).toContain('Gumbys');
+		expect(churn.modifiers.find((m) => m.target === 'wisdom_in_the_ways_of_science')!.value).toBe(-1);
+	});
+
+	it('Surgical Stockings has +1 chastity and -1 decorum', () => {
+		const stockings = ACCOUTREMENT_MAP.get('surgical_stockings')!;
+		expect(stockings.modifiers.find((m) => m.target === 'chastity')!.value).toBe(1);
+		expect(stockings.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
+	});
+
+	it('Sack of Ano-Weet POW! has +1 purpose and -1 decorum', () => {
+		const pow = ACCOUTREMENT_MAP.get('sack_of_ano_weet_pow')!;
+		expect(pow.modifiers.find((m) => m.target === 'purpose')!.value).toBe(1);
+		expect(pow.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
