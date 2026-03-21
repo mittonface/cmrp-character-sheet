@@ -429,6 +429,65 @@ describe('Cleric situation', () => {
 	});
 });
 
+describe('Knave situation', () => {
+	const knave = SITUATION_MAP.get('knave')!;
+
+	it('exists in the situation map', () => {
+		expect(knave).toBeDefined();
+	});
+
+	it('requires subtlety, glibness, and nimbleness', () => {
+		expect(knave.requiredTraits).toEqual(['subtlety', 'glibness', 'nimbleness']);
+	});
+
+	it('has no required retainers', () => {
+		expect(knave.requiredRetainers).toEqual([]);
+	});
+
+	it('does not allow retainers', () => {
+		expect(knave.allowRetainers).toBe(false);
+	});
+
+	it('has a dice pool of [14, 12, 10, 8, 6]', () => {
+		expect(knave.dicePool).toEqual([14, 12, 10, 8, 6]);
+	});
+
+	it('only allows lower class', () => {
+		expect(knave.availableClasses).toEqual(['lower']);
+	});
+
+	it('is indifferent to valour', () => {
+		expect(knave.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['valour'] });
+	});
+
+	it('has 6 available traits to choose from', () => {
+		expect(knave.availableTraits).toHaveLength(6);
+		expect(knave.availableTraits).toEqual([
+			'animal_husbandry',
+			'argumentation',
+			'bardistry',
+			'heartiness',
+			'luck',
+			'strategy'
+		]);
+	});
+
+	it('starts on Fine, Fine death status', () => {
+		expect(knave.startingDeathStatus).toBe('fine_fine');
+	});
+
+	it('starts on Sensible loony status', () => {
+		expect(knave.startingLoonyStatus).toBe('sensible');
+	});
+
+	it('starts with whizzo butter (1d30)', () => {
+		expect(knave.startingCurrency).toEqual({
+			currency: 'whizzo_butter',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('Enchanter situation', () => {
 	const enchanter = SITUATION_MAP.get('enchanter')!;
 

@@ -137,6 +137,27 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'acorns', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'knave',
+		label: 'Knave',
+		requiredTraits: ['subtlety', 'glibness', 'nimbleness'],
+		availableTraits: [
+			'animal_husbandry',
+			'argumentation',
+			'bardistry',
+			'heartiness',
+			'luck',
+			'strategy'
+		],
+		requiredRetainers: [],
+		allowRetainers: false,
+		dicePool: [14, 12, 10, 8, 6],
+		availableClasses: ['lower'],
+		indifferentTraits: { type: 'fixed', traitIds: ['valour'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: { currency: 'whizzo_butter', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],
