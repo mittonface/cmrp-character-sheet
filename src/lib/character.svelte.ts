@@ -6,6 +6,27 @@ import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailable
 import { ACCOUTREMENT_MAP, getAvailableAccoutrements } from './accoutrements';
 
 /**
+ * Rebuild modifiers from serialized character data.
+ * When restoring from saved state, we need to re-derive modifiers
+ * from the situation and selections since modifiers aren't serialized.
+ */
+function rehydrateModifiers(data?: CharacterData): Modifier[] {
+	if (!data) return [];
+	const mods: Modifier[] = [];
+	if (data.situation) {
+		mods.push(...getEffects('situation', data.situation));
+	}
+	if (data.selections) {
+		for (const [category, choice] of Object.entries(data.selections)) {
+			if (choice) {
+				mods.push(...getEffects(category, choice));
+			}
+		}
+	}
+	return mods;
+}
+
+/**
  * Creates a reactive character sheet state using Svelte 5 runes.
  *
  * Usage:
@@ -27,7 +48,7 @@ export function createCharacter(initial?: CharacterData) {
 	let currencies = $state<Partial<Record<Currency, number>>>(initial?.currencies ?? {});
 	let choiceSelections = $state<Record<string, string>>(initial?.choiceSelections ?? {});
 	let selections = $state<Record<string, string>>(initial?.selections ?? {});
-	let modifiers = $state<Modifier[]>([]);
+	let modifiers = $state<Modifier[]>(rehydrateModifiers(initial));
 
 	// --- Derived from slots ---
 	let traitSlots = $derived(slots.filter((s) => s.type === 'trait'));

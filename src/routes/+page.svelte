@@ -5,8 +5,14 @@
 	import { CURRENCIES, CURRENCY_LABELS, DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, LOONY_STATUSES, LOONY_STATUS_LABELS, type CharacterSlot, type Currency, type DieSize, type SocialClass } from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
 	import { formatDiceExpression } from '$lib/dice';
+	import { loadCharacter, saveCharacter } from '$lib/persistence';
 
-	let character = createCharacter();
+	let character = createCharacter(loadCharacter());
+
+	// Auto-save to localStorage whenever character state changes
+	$effect(() => {
+		saveCharacter(character.serialize());
+	});
 
 	function handleSituationChange(e: Event) {
 		const select = e.target as HTMLSelectElement;

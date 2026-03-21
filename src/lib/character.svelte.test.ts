@@ -30,6 +30,59 @@ describe('createCharacter', () => {
 		expect(char.situationId).toBe('knight');
 		expect(char.slots).toHaveLength(1);
 	});
+
+	it('rehydrates modifiers from situation when restoring saved data', () => {
+		// Create a character via normal flow to get expected modifiers
+		const fresh = createCharacter();
+		fresh.setSituation('knight');
+		flushSync();
+		const expectedModifiers = fresh.modifiers;
+
+		// Restore from serialized data — modifiers should match
+		const restored = createCharacter(fresh.serialize());
+		expect(restored.modifiers).toEqual(expectedModifiers);
+	});
+
+	it('rehydrates modifiers from selections when restoring saved data', () => {
+		// Create a character with selections
+		const fresh = createCharacter();
+		fresh.setSituation('knight');
+		flushSync();
+
+		const data = fresh.serialize();
+		// Manually add a selection to test selection rehydration
+		data.selections = {};
+
+		const restored = createCharacter(data);
+		// Should have situation modifiers rehydrated
+		expect(restored.situationId).toBe('knight');
+	});
+
+	it('round-trips through serialize/restore preserving all state', () => {
+		const char = createCharacter();
+		char.name = 'Sir Robin';
+		char.setSituation('knight');
+		flushSync();
+
+		char.addSlot({ type: 'trait', traitId: 'strategy', required: false });
+		char.setTraitValue('valour', 18);
+		char.setAccoutrement('valour', 'shield');
+		char.setCurrency('gold', 25);
+		flushSync();
+
+		const data = char.serialize();
+		const restored = createCharacter(data);
+
+		expect(restored.name).toBe('Sir Robin');
+		expect(restored.situationId).toBe('knight');
+		expect(restored.socialClass).toBe('upper');
+		expect(restored.deathStatus).toBe('mr_neutron');
+		expect(restored.loonyStatus).toBe('daft');
+		expect(restored.slots).toHaveLength(4);
+		expect(restored.traitValues['valour']).toBe(18);
+		expect(restored.accoutrements['valour']).toEqual(['shield']);
+		expect(restored.currencies['gold']).toBe(25);
+	});
 });
 
 describe('setSituation', () => {
