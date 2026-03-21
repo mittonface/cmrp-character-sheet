@@ -54,7 +54,7 @@
 			onchange={handleSituationChange}
 		>
 			<option value="">— Choose a Situation —</option>
-			{#each SITUATIONS as situation}
+			{#each [...SITUATIONS].sort((a, b) => a.label.localeCompare(b.label)) as situation}
 				<option value={situation.id}>{situation.label}</option>
 			{/each}
 		</select>
