@@ -295,6 +295,105 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'One-time use: defeat a sovereign. No roll required; the Sovereign is immediately overcome as if the required number of Deeds to defeat them had been met. They remain on the throne, but they\u2019ve lost a great deal of authority and respect\u2026 and they are no longer an obstacle to your aims.'
 		]
 	},
+	// --- Bardistry accoutrements ---
+	// All bardistry accoutrements share a baseline +1 to bardistry
+	{
+		id: 'tambourine',
+		label: 'Tambourine',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'glibness', value: 1 }
+		]
+	},
+	{
+		id: 'trumpet',
+		label: 'Trumpet',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'valour', value: 1 }
+		],
+		specialEffects: ['Attracts geese when playing']
+	},
+	{
+		id: 'shadow_lantern',
+		label: 'Shadow Lantern',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		],
+		specialEffects: [
+			'Must be lit before use. Projects images of witches, dragons, and other exciting characters.'
+		]
+	},
+	{
+		id: 'bagpipes',
+		label: 'Bagpipes',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		]
+	},
+	{
+		id: 'lute',
+		label: 'Lute',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'harp',
+		label: 'Harp',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'chastity', value: 1 }
+		]
+	},
+	{
+		id: 'red_shoes_sprinkled_with_holy_oil',
+		label: 'Red Shoes Sprinkled with Holy Oil',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'purpose', value: 1 }
+		]
+	},
+	{
+		id: 'portable_music_stand',
+		label: 'Portable Music Stand',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'authority', value: 1 }
+		],
+		specialEffects: ['Must be set up before it can be used (and the plus can be applied)']
+	},
+	{
+		id: 'portative_organ',
+		label: 'Portative Organ',
+		slotId: 'bardistry',
+		modifiers: [
+			{ target: 'bardistry', value: 1 },
+			{ target: 'animal_husbandry', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs French persons' }]
+	},
+	{
+		id: 'positive_organ',
+		label: 'Positive Organ',
+		slotId: 'bardistry',
+		modifiers: [{ target: 'bardistry', value: 1 }],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs clergy' }],
+		specialEffects: [
+			'Requires a cart to transport, and a second person to operate the bellows. Once per day, you can attempt to play a rousing voluntary. Make a Bardistry roll (Strewthing/Spamming as normal). That many nearby are converted to a religion of your choice. If you Spam It, the organ explodes heretically, in addition to the normal Spam results.'
+		]
+	},
 	// --- Authority accoutrements ---
 	// All authority accoutrements share a baseline +1 to authority
 	{
