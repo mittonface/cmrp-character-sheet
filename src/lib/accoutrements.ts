@@ -38,7 +38,8 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'argumentation', value: 1 }
-		]
+		],
+		pointy: true
 	},
 	{
 		id: 'polearm',
@@ -48,6 +49,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'valour', value: 1 },
 			{ target: 'nimbleness', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all trait rolls vs Lower-class persons' }]
 	},
 	{
@@ -58,6 +60,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'valour', value: 1 },
 			{ target: 'animal_husbandry', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all trait rolls vs Knights' }]
 	},
 	{
@@ -67,7 +70,8 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'valour', value: 1 },
 			{ target: 'purpose', value: 1 }
-		]
+		],
+		pointy: true
 	},
 	{
 		id: 'fresh_fruit',
@@ -86,6 +90,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'valour', value: 1 },
 			{ target: 'decorum', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all trait rolls vs Monstrosities' }]
 	},
 	{
@@ -148,6 +153,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'animal_husbandry', value: 1 },
 			{ target: 'wisdom_in_the_ways_of_science', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all trait rolls vs witches, wizards, and the like' }]
 	},
 	{
@@ -157,7 +163,8 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'animal_husbandry', value: 1 },
 			{ target: 'authority', value: 1 }
-		]
+		],
+		pointy: true
 	},
 	{
 		id: 'bird_rattle',
@@ -672,6 +679,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'decorum', value: 1 },
 			{ target: 'nimbleness', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Upper-Class persons' }]
 	},
 	{
@@ -1189,6 +1197,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'luck', value: 1 },
 			{ target: 'subtlety', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [
 			{ description: "+1 to all Trait rolls vs. Knights Who Say 'Ni'" }
 		]
@@ -1573,6 +1582,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'strategy', value: 1 },
 			{ target: 'subtlety', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all rolls vs. French persons' }]
 	},
 	{
@@ -1602,6 +1612,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'strategy', value: 1 },
 			{ target: 'nimbleness', value: -1 }
 		],
+		pointy: true,
 		conditionalModifiers: [{ description: '+1 to all rolls vs. armoured persons' }]
 	},
 	{
@@ -1653,7 +1664,8 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		modifiers: [
 			{ target: 'subtlety', value: 1 },
 			{ target: 'strategy', value: 1 }
-		]
+		],
+		pointy: true
 	},
 	{
 		id: 'hooded_cloak_questionable_tassel',
@@ -1706,6 +1718,7 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		label: 'Brazilian Dagger',
 		slotId: 'subtlety',
 		modifiers: [{ target: 'subtlety', value: 1 }],
+		pointy: true,
 		specialEffects: [
 			'If you unsheath it, your Luck (if you have it as a Trait) resets to d4.',
 			"One-time use: if you can get another person to use it, horrible things begin happening to them. Ultimately this results in the person being made dead and the dagger being destroyed, and it's always messy."
