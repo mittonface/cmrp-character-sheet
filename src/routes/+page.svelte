@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createCharacter } from '$lib/character.svelte';
-	import { SITUATIONS, TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
+	import { TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
 	import {
 		getAvailableAccoutrements,
 		getRetainerAvailableAccoutrements,
@@ -11,42 +11,49 @@
 		CURRENCIES,
 		CURRENCY_LABELS,
 		DIE_SIZES,
-		SOCIAL_CLASSES,
 		DEATH_STATUSES,
 		DEATH_STATUS_LABELS,
 		LOONY_STATUSES,
 		LOONY_STATUS_LABELS,
 		type CharacterSlot,
 		type Currency,
-		type DieSize,
-		type SocialClass
+		type DieSize
 	} from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
 	import { formatDiceExpression } from '$lib/dice';
-	import { loadCharacter, saveCharacter } from '$lib/persistence';
+	import { loadCharacter, saveCharacter, clearSavedCharacter } from '$lib/persistence';
 	import SituationStep from '$lib/components/wizard/SituationStep.svelte';
+	import ClassStep from '$lib/components/wizard/ClassStep.svelte';
+	import WizardBreadcrumbs from '$lib/components/wizard/WizardBreadcrumbs.svelte';
 
-	let character = createCharacter(loadCharacter());
+	let character = $state(createCharacter(loadCharacter()));
 
 	// Auto-save to localStorage whenever character state changes
 	$effect(() => {
 		saveCharacter(character.serialize());
 	});
 
-	type WizardStep = 'situation' | 'rest';
-	let currentStep = $state<WizardStep>(character.situationId ? 'rest' : 'situation');
+	type WizardStep = 'situation' | 'class' | 'rest';
+	const initialData = loadCharacter();
+	let currentStep = $state<WizardStep>(initialData?.situation ? (initialData.socialClass ? 'rest' : 'class') : 'situation');
 
 	function advanceFromSituation() {
+		// If only one class, it's auto-set — skip to class step anyway so they see their station
+		currentStep = 'class';
+	}
+
+	function advanceFromClass() {
 		currentStep = 'rest';
 	}
 
-	function goToSituation() {
-		currentStep = 'situation';
+	function navigateTo(stepId: string) {
+		currentStep = stepId as WizardStep;
 	}
 
-	function handleSituationChange(e: Event) {
-		const select = e.target as HTMLSelectElement;
-		character.setSituation(select.value);
+	function startOver() {
+		clearSavedCharacter();
+		character = createCharacter();
+		currentStep = 'situation';
 	}
 
 	function addTrait(traitId: string) {
@@ -65,20 +72,19 @@
 	}
 </script>
 
+<WizardBreadcrumbs current={currentStep} onnavigate={navigateTo} onstartover={startOver} />
+
 {#if currentStep === 'situation'}
 	<div class="min-h-dvh py-12">
 		<SituationStep {character} onadvance={advanceFromSituation} />
 	</div>
+{:else if currentStep === 'class'}
+	<div class="min-h-dvh py-12">
+		<ClassStep {character} onadvance={advanceFromClass} />
+	</div>
 {:else}
 	<!-- Existing character sheet (rest of steps — will be wizardified incrementally) -->
 	<div class="parchment-bg mx-auto min-h-dvh max-w-2xl p-8">
-		<!-- Back to situation selection -->
-		<button
-			class="font-heading mb-6 cursor-pointer text-sm text-crimson hover:text-crimson-light transition-colors"
-			onclick={goToSituation}
-		>
-			&larr; Change Situation
-		</button>
 
 		<h1 class="font-display mb-6 text-3xl font-bold text-crimson">CMRP Character Sheet</h1>
 
@@ -95,34 +101,6 @@
 		</div>
 
 		{#if character.situationId}
-			<!-- Class -->
-			{#if character.availableClasses.length > 0}
-				<div class="mb-6">
-					<label class="font-heading mb-1 block text-sm font-medium text-ink" for="social-class">Class</label>
-					{#if character.availableClasses.length === 1}
-						<p class="rounded border border-parchment-300 bg-parchment-50 px-3 py-2 text-sm text-ink">
-							{character.availableClasses[0].charAt(0).toUpperCase() + character.availableClasses[0].slice(1)}
-							<span class="text-xs text-ink-faint">(required by situation)</span>
-						</p>
-					{:else}
-						<select
-							id="social-class"
-							value={character.socialClass}
-							onchange={(e) => {
-								const select = e.target as HTMLSelectElement;
-								character.setSocialClass(select.value as SocialClass | '');
-							}}
-							class="w-full rounded border border-parchment-300 bg-parchment-50 px-3 py-2 font-body text-ink focus:border-gold focus:outline-none"
-						>
-							<option value="">— Choose a Class —</option>
-							{#each character.availableClasses as cls}
-								<option value={cls}>{cls.charAt(0).toUpperCase() + cls.slice(1)}</option>
-							{/each}
-						</select>
-					{/if}
-				</div>
-			{/if}
-
 			<!-- Situation Choices (e.g. Muse) -->
 			{#each character.situationChoices as choice}
 				<div class="mb-6">

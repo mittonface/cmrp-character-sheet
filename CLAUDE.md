@@ -45,7 +45,7 @@ This project prioritizes clean code and well-designed data structures. When impl
 - Global CSS entry point: `src/app.css` (imports Tailwind + custom theme), loaded via `+layout.svelte`
 - Shared library code goes in `src/lib/` (aliased as `$lib`)
 - Tailwind is configured as a Vite plugin in `vite.config.ts`, not via PostCSS
-- **Wizard UI** — character creation is a multi-step wizard. Step components live in `src/lib/components/wizard/` and receive the `character` state object as a prop. The wizard orchestration (step routing, navigation) lives in `+page.svelte`.
+- **Wizard UI** — character creation is a multi-step wizard. Step components live in `src/lib/components/wizard/` and receive the `character` state object as a prop. The wizard orchestration (step routing, navigation) lives in `+page.svelte`. Steps: I. Situation → II. Class → III. Details (rest of sheet, will be broken up further). `WizardBreadcrumbs` provides top-of-page navigation with Roman numeral labels; past steps are clickable, future steps are disabled. A "Start Over" button clears all state with a confirmation dialog. Each step component receives `{ character, onadvance }` props — mutates character state directly and calls `onadvance()` to proceed.
 - **Visual theme** — medieval manuscript aesthetic. Fonts: Cinzel Decorative (display), Cinzel (headings), Cormorant Garamond (body) loaded via Google Fonts. Custom Tailwind theme colors defined in `app.css` via `@theme`: parchment, ink, crimson, gold, realm.
 
 ## Game System (CMRP)
@@ -87,7 +87,7 @@ Every character has exactly **5 slots**. Each slot holds either a Trait or a Ret
 - `src/lib/effects.ts` — effect registry mapping choices to modifiers
 - `src/lib/dice.ts` — dice rolling engine
 - `src/lib/character.svelte.ts` — reactive character state factory (createCharacter)
-- `src/lib/components/wizard/` — wizard step components (SituationStep, etc.)
+- `src/lib/components/wizard/` — wizard step components (SituationStep, ClassStep) and WizardBreadcrumbs
 
 ### Svelte Gotchas
 
