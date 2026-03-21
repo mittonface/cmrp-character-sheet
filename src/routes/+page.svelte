@@ -24,6 +24,7 @@
 	import { loadCharacter, saveCharacter, clearSavedCharacter } from '$lib/persistence';
 	import SituationStep from '$lib/components/wizard/SituationStep.svelte';
 	import ClassStep from '$lib/components/wizard/ClassStep.svelte';
+	import SlotsStep from '$lib/components/wizard/SlotsStep.svelte';
 	import WizardBreadcrumbs from '$lib/components/wizard/WizardBreadcrumbs.svelte';
 
 	let character = $state(createCharacter(loadCharacter()));
@@ -33,9 +34,17 @@
 		saveCharacter(character.serialize());
 	});
 
-	type WizardStep = 'situation' | 'class' | 'rest';
+	type WizardStep = 'situation' | 'class' | 'slots' | 'rest';
 	const initialData = loadCharacter();
-	let currentStep = $state<WizardStep>(initialData?.situation ? (initialData.socialClass ? 'rest' : 'class') : 'situation');
+	let currentStep = $state<WizardStep>(
+		initialData?.situation
+			? initialData.socialClass
+				? initialData.slots && initialData.slots.length === 5
+					? 'rest'
+					: 'slots'
+				: 'class'
+			: 'situation'
+	);
 
 	function advanceFromSituation() {
 		// If only one class, it's auto-set — skip to class step anyway so they see their station
@@ -43,6 +52,10 @@
 	}
 
 	function advanceFromClass() {
+		currentStep = 'slots';
+	}
+
+	function advanceFromSlots() {
 		currentStep = 'rest';
 	}
 
@@ -54,14 +67,6 @@
 		clearSavedCharacter();
 		character = createCharacter();
 		currentStep = 'situation';
-	}
-
-	function addTrait(traitId: string) {
-		character.addSlot({ type: 'trait', traitId, required: false });
-	}
-
-	function addRetainer(retainerId: string) {
-		character.addSlot({ type: 'retainer', retainerId, required: false, name: '' });
 	}
 
 	function slotLabel(slot: CharacterSlot): string {
@@ -82,6 +87,10 @@
 	<div class="min-h-dvh py-12">
 		<ClassStep {character} onadvance={advanceFromClass} />
 	</div>
+{:else if currentStep === 'slots'}
+	<div class="min-h-dvh py-12">
+		<SlotsStep {character} onadvance={advanceFromSlots} />
+	</div>
 {:else}
 	<!-- Existing character sheet (rest of steps — will be wizardified incrementally) -->
 	<div class="parchment-bg mx-auto min-h-dvh max-w-2xl p-8">
@@ -101,27 +110,6 @@
 		</div>
 
 		{#if character.situationId}
-			<!-- Situation Choices (e.g. Muse) -->
-			{#each character.situationChoices as choice}
-				<div class="mb-6">
-					<label class="font-heading mb-1 block text-sm font-medium text-ink" for="choice-{choice.id}">{choice.label}</label>
-					<select
-						id="choice-{choice.id}"
-						value={character.choiceSelections[choice.id] ?? ''}
-						onchange={(e) => {
-							const select = e.target as HTMLSelectElement;
-							character.setChoice(choice.id, select.value);
-						}}
-						class="w-full rounded border border-parchment-300 bg-parchment-50 px-3 py-2 font-body text-ink focus:border-gold focus:outline-none"
-					>
-						<option value="">— Choose a {choice.label} —</option>
-						{#each choice.options as option}
-							<option value={option.id}>{option.label}</option>
-						{/each}
-					</select>
-				</div>
-			{/each}
-
 			<!-- Death Status -->
 			{#if character.deathStatus}
 				<div class="mb-6">
@@ -205,92 +193,6 @@
 					{/if}
 				</div>
 			{/if}
-
-			<!-- Slots -->
-			<div class="mb-6">
-				<h2 class="font-heading mb-3 text-xl font-semibold text-ink">
-					Slots ({character.slots.length}/5)
-				</h2>
-
-				<!-- Current slots -->
-				<div class="mb-4 space-y-2">
-					{#each character.slots as slot, i}
-						<div class="flex items-center gap-3 rounded border border-parchment-300 bg-parchment-50 px-3 py-2">
-							<span
-								class="font-heading rounded px-2 py-0.5 text-xs font-medium {slot.type === 'trait'
-									? 'bg-crimson/10 text-crimson'
-									: 'bg-gold/15 text-gold-dark'}"
-							>
-								{slot.type === 'trait' ? 'Trait' : 'Retainer'}
-							</span>
-							<span class="font-medium text-ink">{slotLabel(slot)}</span>
-							{#if slot.type === 'retainer'}
-								<input
-									type="text"
-									bind:value={slot.name}
-									class="flex-1 rounded border border-parchment-200 bg-parchment-50 px-2 py-1 text-sm text-ink focus:border-gold focus:outline-none"
-									placeholder="Name your {slotLabel(slot).toLowerCase()}..."
-								/>
-							{:else}
-								<span class="flex-1"></span>
-							{/if}
-							{#if slot.required}
-								<span class="text-xs text-ink-faint">Required</span>
-							{:else}
-								<button
-									class="cursor-pointer text-sm text-crimson hover:text-crimson-light"
-									onclick={() => character.removeSlot(i)}
-								>
-									Remove
-								</button>
-							{/if}
-						</div>
-					{/each}
-				</div>
-
-				<!-- Add slots -->
-				{#if character.remainingChoices > 0}
-					<div class="rounded border border-dashed border-parchment-300 p-4">
-						<p class="mb-3 text-sm text-ink-faint">
-							Choose {character.remainingChoices} more {character.remainingChoices === 1
-								? 'slot'
-								: 'slots'}:
-						</p>
-
-						{#if character.pickableTraits.length > 0}
-							<div class="mb-3">
-								<p class="font-heading mb-1 text-xs font-medium text-ink-faint">Traits</p>
-								<div class="flex flex-wrap gap-2">
-									{#each character.pickableTraits as trait}
-										<button
-											class="cursor-pointer rounded bg-crimson/8 px-3 py-1 text-sm text-crimson hover:bg-crimson/15"
-											onclick={() => addTrait(trait.id)}
-										>
-											{trait.label}
-										</button>
-									{/each}
-								</div>
-							</div>
-						{/if}
-
-						{#if character.pickableRetainers.length > 0}
-							<div>
-								<p class="font-heading mb-1 text-xs font-medium text-ink-faint">Retainers</p>
-								<div class="flex flex-wrap gap-2">
-									{#each character.pickableRetainers as retainer}
-										<button
-											class="cursor-pointer rounded bg-gold/10 px-3 py-1 text-sm text-gold-dark hover:bg-gold/20"
-											onclick={() => addRetainer(retainer.id)}
-										>
-											{retainer.label}
-										</button>
-									{/each}
-								</div>
-							</div>
-						{/if}
-					</div>
-				{/if}
-			</div>
 
 			<!-- Trait Values -->
 			{#if character.traitSlots.length > 0}

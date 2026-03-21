@@ -8,7 +8,8 @@
 	const STEPS: Step[] = [
 		{ id: 'situation', label: 'Situation', numeral: 'I' },
 		{ id: 'class', label: 'Class', numeral: 'II' },
-		{ id: 'rest', label: 'Details', numeral: 'III' }
+		{ id: 'slots', label: 'Slots', numeral: 'III' },
+		{ id: 'rest', label: 'Details', numeral: 'IV' }
 	];
 
 	let {
