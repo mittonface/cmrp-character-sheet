@@ -622,6 +622,71 @@ describe('Monk/Nun situation', () => {
 	});
 });
 
+describe('Noble situation', () => {
+	const noble = SITUATION_MAP.get('noble')!;
+
+	it('exists in the situation map', () => {
+		expect(noble).toBeDefined();
+	});
+
+	it('requires decorum and glibness', () => {
+		expect(noble.requiredTraits).toEqual(['decorum', 'glibness']);
+	});
+
+	it('requires valet retainer', () => {
+		expect(noble.requiredRetainers).toEqual(['valet']);
+	});
+
+	it('allows retainers', () => {
+		expect(noble.allowRetainers).toBe(true);
+	});
+
+	it('has manservant and herald as available retainers', () => {
+		expect(noble.availableRetainers).toEqual(['manservant', 'herald']);
+	});
+
+	it('has a dice pool of [18, 14, 8, 8]', () => {
+		expect(noble.dicePool).toEqual([18, 14, 8, 8]);
+	});
+
+	it('only allows upper class', () => {
+		expect(noble.availableClasses).toEqual(['upper']);
+	});
+
+	it('is indifferent to druidry', () => {
+		expect(noble.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['druidry'] });
+	});
+
+	it('has 8 available traits to choose from', () => {
+		expect(noble.availableTraits).toHaveLength(8);
+		expect(noble.availableTraits).toEqual([
+			'argumentation',
+			'authority',
+			'bardistry',
+			'chastity',
+			'luck',
+			'nimbleness',
+			'strategy',
+			'subtlety'
+		]);
+	});
+
+	it('starts on Mr. Neutron death status', () => {
+		expect(noble.startingDeathStatus).toBe('mr_neutron');
+	});
+
+	it('starts on Reginald Maudling loony status', () => {
+		expect(noble.startingLoonyStatus).toBe('reginald_maudling');
+	});
+
+	it('starts with lupins (1d30)', () => {
+		expect(noble.startingCurrency).toEqual({
+			currency: 'lupins',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('Enchanter situation', () => {
 	const enchanter = SITUATION_MAP.get('enchanter')!;
 

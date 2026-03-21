@@ -207,6 +207,30 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'eggs', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'noble',
+		label: 'Noble',
+		requiredTraits: ['decorum', 'glibness'],
+		availableTraits: [
+			'argumentation',
+			'authority',
+			'bardistry',
+			'chastity',
+			'luck',
+			'nimbleness',
+			'strategy',
+			'subtlety'
+		],
+		requiredRetainers: ['valet'],
+		allowRetainers: true,
+		availableRetainers: ['manservant', 'herald'],
+		dicePool: [18, 14, 8, 8],
+		availableClasses: ['upper'],
+		indifferentTraits: { type: 'fixed', traitIds: ['druidry'] },
+		startingDeathStatus: 'mr_neutron',
+		startingLoonyStatus: 'reginald_maudling',
+		startingCurrency: { currency: 'lupins', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],
