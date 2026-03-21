@@ -801,6 +801,105 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			"Once per day (that's really all one can bear of Sir Charles of Butley Down's writing), you can look up a Beast or Monstrosity you can see and learn everything about them. Your HoLE will provide you with the details you require."
 		]
+	},
+
+	// --- Glibness accoutrements ---
+	// All glibness accoutrements share a baseline +1 to glibness
+	{
+		id: 'a_box',
+		label: 'A Box',
+		slotId: 'glibness',
+		modifiers: [{ target: 'glibness', value: 1 }],
+		grantsExtra: { fromAnySlot: true, excludePointy: false },
+		specialEffects: ['Must be stood upon before it can be used (and the plus can be applied)']
+	},
+	{
+		id: 'vom_it_brand_cold_sick',
+		label: 'VOM-IT Brand Cold Sick (lump of)',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		]
+	},
+	{
+		id: 'leather_jack_of_scum',
+		label: 'Leather Jack of Scum',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		],
+		specialEffects: [
+			'Must be slathered on one\'s hair before it can be used (and the plus can be applied). May also be used as foot ointment or salad dressing.'
+		]
+	},
+	{
+		id: 'removable_moustache',
+		label: 'Removable Moustache',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'chastity', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. French persons' }]
+	},
+	{
+		id: 'fools_hat',
+		label: "Fool's Hat",
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'authority', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Upper-Class persons' }]
+	},
+	{
+		id: 'sir_dagonet_mask',
+		label: 'Sir Dagonet Mask',
+		slotId: 'glibness',
+		modifiers: [{ target: 'glibness', value: 1 }],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Knights of the Round Table' }]
+	},
+	{
+		id: 'turkish_little_rude_plant',
+		label: 'Turkish Little Rude Plant',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'druidry', value: 1 }
+		]
+	},
+	{
+		id: 'punch_and_judy_puppets',
+		label: 'Punch and Judy Puppets',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'authority', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Lower-Class persons and children' }]
+	},
+	{
+		id: 'motley_full_body_tights',
+		label: 'Motley Full-Body Tights',
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'johnsons_novelties',
+		label: "Johnson's Novelties",
+		slotId: 'glibness',
+		modifiers: [
+			{ target: 'glibness', value: 1 },
+			{ target: 'glibness', value: 1 }
+		],
+		specialEffects: [
+			'One-time use: break out the full kit at once. Make a Glibness roll (Strewthing/Spamming as normal). On a 2+, that number of people who hold neutral or negative opinions of you and your companions regard you as welcome guests. If you Spam it, everyone is covered in vomit, fungus, alcohol, snakes, skunk juice, and pooh pooh, and they\'re rather poor sports about the whole thing. This in addition to the normal Spam results.'
+		]
 	}
 ];
 

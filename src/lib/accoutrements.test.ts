@@ -200,6 +200,65 @@ describe('specific accoutrements', () => {
 		expect(book.specialEffects).toHaveLength(1);
 		expect(book.specialEffects![0]).toContain('levy a tax');
 	});
+
+	it('all glibness accoutrements have +1 glibness as first modifier', () => {
+		const glibAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'glibness');
+		expect(glibAccs.length).toBe(10);
+		for (const acc of glibAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'glibness', value: 1 });
+		}
+	});
+
+	it("Johnson's Novelties has +2 glibness total and one-time use special effect", () => {
+		const novelties = ACCOUTREMENT_MAP.get('johnsons_novelties')!;
+		const glibTotal = novelties.modifiers
+			.filter((m) => m.target === 'glibness')
+			.reduce((sum, m) => sum + m.value, 0);
+		expect(glibTotal).toBe(2);
+		expect(novelties.specialEffects).toHaveLength(1);
+		expect(novelties.specialEffects![0]).toContain('One-time use');
+		expect(novelties.specialEffects![0]).toContain('Glibness roll');
+	});
+
+	it('A Box grants extra accoutrement and has setup special effect', () => {
+		const box = ACCOUTREMENT_MAP.get('a_box')!;
+		expect(box.grantsExtra).toEqual({ fromAnySlot: true, excludePointy: false });
+		expect(box.specialEffects).toHaveLength(1);
+		expect(box.specialEffects![0]).toContain('stood upon');
+	});
+
+	it('Leather Jack of Scum has setup special effect', () => {
+		const jack = ACCOUTREMENT_MAP.get('leather_jack_of_scum')!;
+		expect(jack.specialEffects).toHaveLength(1);
+		expect(jack.specialEffects![0]).toContain('slathered');
+	});
+
+	it("Fool's Hat has conditional modifier vs Upper-Class and -1 authority", () => {
+		const hat = ACCOUTREMENT_MAP.get('fools_hat')!;
+		expect(hat.conditionalModifiers).toHaveLength(1);
+		expect(hat.conditionalModifiers![0].description).toContain('Upper-Class');
+		expect(hat.modifiers.find((m) => m.target === 'authority')!.value).toBe(-1);
+	});
+
+	it('Removable Moustache has conditional modifier vs French persons and -1 chastity', () => {
+		const moustache = ACCOUTREMENT_MAP.get('removable_moustache')!;
+		expect(moustache.conditionalModifiers).toHaveLength(1);
+		expect(moustache.conditionalModifiers![0].description).toContain('French');
+		expect(moustache.modifiers.find((m) => m.target === 'chastity')!.value).toBe(-1);
+	});
+
+	it('Punch and Judy Puppets has conditional modifier vs Lower-Class and -1 authority', () => {
+		const puppets = ACCOUTREMENT_MAP.get('punch_and_judy_puppets')!;
+		expect(puppets.conditionalModifiers).toHaveLength(1);
+		expect(puppets.conditionalModifiers![0].description).toContain('Lower-Class');
+		expect(puppets.modifiers.find((m) => m.target === 'authority')!.value).toBe(-1);
+	});
+
+	it('Sir Dagonet Mask has conditional modifier vs Knights of the Round Table', () => {
+		const mask = ACCOUTREMENT_MAP.get('sir_dagonet_mask')!;
+		expect(mask.conditionalModifiers).toHaveLength(1);
+		expect(mask.conditionalModifiers![0].description).toContain('Knights of the Round Table');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
