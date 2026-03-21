@@ -49,7 +49,7 @@
 		</p>
 		<div class="mx-auto mt-4 flex items-center justify-center gap-3">
 			<span class="h-px flex-1 max-w-16 bg-gold-dark/40"></span>
-			<span class="font-heading text-sm tracking-widest text-gold/60">II. Declare Your Station</span>
+			<span class="font-heading text-sm tracking-widest text-gold/60">II. Declare Your Class</span>
 			<span class="h-px flex-1 max-w-16 bg-gold-dark/40"></span>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 		<p class="mb-8 text-center text-parchment-300">
 			{#if singleClass}
 				As a <span class="font-heading font-semibold text-crimson">{situation.label}</span>,
-				your station in life is already determined.
+				your class is already determined.
 			{:else}
 				As a <span class="font-heading font-semibold text-crimson">{situation.label}</span>,
 				you may claim standing among the following classes.
