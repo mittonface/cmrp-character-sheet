@@ -700,6 +700,107 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			'One-time use: burn, shred or otherwise thoroughly destroy the book. All Upper-Class persons who see you do it faint dramatically from the shock. When they come to, they\u2019ll think you\u2019re the most vile, abhorrent knave and tell all their friends about you\u2026 but you\u2019ll be long gone by then, surely.'
 		]
+	},
+	// --- Druidry accoutrements ---
+	// All druidry accoutrements share a baseline +1 to druidry
+	{
+		id: 'sprig_of_mistletoe',
+		label: 'A Sprig of Mistletoe',
+		slotId: 'druidry',
+		modifiers: [{ target: 'druidry', value: 1 }],
+		specialEffects: [
+			'If you become No More, you immediately reincarnate in the body of a common NPC nearby, retaining all your Traits, memories, etc.'
+		]
+	},
+	{
+		id: 'bone_club',
+		label: 'Bone Club',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'wildflower_press',
+		label: 'Wildflower Press',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'set_of_ogham_staves',
+		label: 'Set of Ogham Staves',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'apes_skull',
+		label: "Ape's Skull",
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		],
+		specialEffects: [
+			"You occasionally have the desire to look at it and say, 'Yorick, stop messing about!' You don't know why."
+		]
+	},
+	{
+		id: 'stuffed_furry_creature',
+		label: 'Stuffed Furry Creature',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'luck', value: 1 }
+		]
+	},
+	{
+		id: 'crown_of_oak_leaves',
+		label: 'Crown of Oak Leaves',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'druidry', value: 1 } // extra +1 druidry (total +2)
+		]
+	},
+	{
+		id: 'miniature_wicker_man',
+		label: 'Miniature Wicker Man',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'valour', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. monotheists' }]
+	},
+	{
+		id: 'dolmen',
+		label: 'A Dolmen',
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'subtlety', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Barbarians and other pagans' }],
+		specialEffects: ['Requires a cart to transport.']
+	},
+	{
+		id: 'sir_charles_guide_to_fauna',
+		label: "Sir Charles of Butley Down's Guide to Fauna and Extra-Scary Fauna",
+		slotId: 'druidry',
+		modifiers: [
+			{ target: 'druidry', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 }
+		],
+		specialEffects: [
+			"Once per day (that's really all one can bear of Sir Charles of Butley Down's writing), you can look up a Beast or Monstrosity you can see and learn everything about them. Your HoLE will provide you with the details you require."
+		]
 	}
 ];
 
