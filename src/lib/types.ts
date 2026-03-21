@@ -67,6 +67,8 @@ export type AccoutrementDef = {
 	conditionalModifiers?: ConditionalModifier[]; // display-only conditional effects
 	specialEffects?: string[]; // narrative/one-time effects
 	requires?: { retainer: boolean }; // prerequisites
+	pointy?: boolean; // whether this is a pointy accoutrement (affects Cloth Sack etc.)
+	grantsExtra?: { fromAnySlot?: boolean; excludePointy?: boolean }; // grants a bonus accoutrement slot
 };
 
 /** A named choice a Situation offers the player, where each option can add required traits */
@@ -204,7 +206,7 @@ export type CharacterData = {
 	slots: CharacterSlot[];
 	traitValues: Record<string, DieSize>; // trait ID → die size (e.g. 20 for d20)
 	indifferentTraits?: string[]; // player-selected or fixed indifferent trait IDs
-	accoutrements: Record<string, string>; // trait ID → accoutrement ID
+	accoutrements: Record<string, string[]>; // trait ID → accoutrement IDs (primary + any bonus)
 	currencies: Partial<Record<Currency, number>>; // currency amounts
 	choiceSelections: Record<string, string>; // situation choice ID → selected option ID (e.g. muse → calliope)
 	selections: Record<string, string>; // other selections

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createCharacter } from '$lib/character.svelte';
 	import { SITUATIONS, TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
-	import { getAvailableAccoutrements, ACCOUTREMENT_MAP } from '$lib/accoutrements';
+	import { getAvailableAccoutrements, getExtraAccoutrementOptions, ACCOUTREMENT_MAP } from '$lib/accoutrements';
 	import { CURRENCIES, CURRENCY_LABELS, DIE_SIZES, SOCIAL_CLASSES, DEATH_STATUSES, DEATH_STATUS_LABELS, LOONY_STATUSES, LOONY_STATUS_LABELS, type CharacterSlot, type Currency, type DieSize, type SocialClass } from '$lib/types';
 	import { formatModifier } from '$lib/modifiers';
 	import { formatDiceExpression } from '$lib/dice';
@@ -353,8 +353,9 @@
 						{@const slotId = slot.type === 'trait' ? slot.traitId : slot.retainerId}
 						{@const label = slotLabel(slot)}
 						{@const available = getAvailableAccoutrements(slotId, character.hasRetainer)}
-						{@const selectedId = character.accoutrements[slotId]}
-						{@const selected = selectedId ? ACCOUTREMENT_MAP.get(selectedId) : undefined}
+						{@const accIds = character.accoutrements[slotId] ?? []}
+						{@const primaryId = accIds[0]}
+						{@const primary = primaryId ? ACCOUTREMENT_MAP.get(primaryId) : undefined}
 						<div class="rounded border border-gray-200 p-3">
 							<label class="mb-2 block text-sm font-medium" for="acc-{slotId}">
 								{label} Accoutrement
@@ -362,7 +363,7 @@
 							{#if available.length > 0}
 								<select
 									id="acc-{slotId}"
-									value={selectedId ?? ''}
+									value={primaryId ?? ''}
 									onchange={(e) => {
 										const select = e.target as HTMLSelectElement;
 										character.setAccoutrement(slotId, select.value);
@@ -375,11 +376,12 @@
 									{/each}
 								</select>
 
-								{#if selected}
+								{#if primary}
+									{@const accDef = primary}
 									<div class="mt-2 space-y-1">
-										{#if selected.modifiers.length > 0}
+										{#if accDef.modifiers.length > 0}
 											<div class="flex flex-wrap gap-2">
-												{#each selected.modifiers as mod}
+												{#each accDef.modifiers as mod}
 													<span
 														class="rounded px-2 py-0.5 text-xs font-medium {mod.value > 0
 															? 'bg-green-100 text-green-800'
@@ -390,17 +392,71 @@
 												{/each}
 											</div>
 										{/if}
-										{#if selected.conditionalModifiers}
-											{#each selected.conditionalModifiers as cond}
+										{#if accDef.conditionalModifiers}
+											{#each accDef.conditionalModifiers as cond}
 												<p class="text-xs italic text-gray-600">{cond.description}</p>
 											{/each}
 										{/if}
-										{#if selected.specialEffects}
-											{#each selected.specialEffects as effect}
+										{#if accDef.specialEffects}
+											{#each accDef.specialEffects as effect}
 												<p class="text-xs font-medium text-purple-700">{effect}</p>
 											{/each}
 										{/if}
 									</div>
+
+									<!-- Bonus accoutrement slot (e.g. from Cloth Sack) -->
+									{#if accDef.grantsExtra}
+										{@const extraOptions = getExtraAccoutrementOptions(accDef.id, character.hasRetainer)}
+										{@const bonusId = accIds[1]}
+										{@const bonus = bonusId ? ACCOUTREMENT_MAP.get(bonusId) : undefined}
+										<div class="mt-3 rounded border border-dashed border-purple-300 bg-purple-50 p-2">
+											<label class="mb-1 block text-xs font-medium text-purple-700" for="acc-{slotId}-bonus">
+												Bonus Accoutrement (from {accDef.label})
+											</label>
+											<select
+												id="acc-{slotId}-bonus"
+												value={bonusId ?? ''}
+												onchange={(e) => {
+													const select = e.target as HTMLSelectElement;
+													character.setAccoutrement(slotId, select.value, 1);
+												}}
+												class="w-full rounded border border-purple-300 px-3 py-2 text-sm"
+											>
+												<option value="">— None —</option>
+												{#each extraOptions as acc}
+													<option value={acc.id}>{acc.label} ({acc.slotId})</option>
+												{/each}
+											</select>
+
+											{#if bonus}
+												<div class="mt-1 space-y-1">
+													{#if bonus.modifiers.length > 0}
+														<div class="flex flex-wrap gap-2">
+															{#each bonus.modifiers as mod}
+																<span
+																	class="rounded px-2 py-0.5 text-xs font-medium {mod.value > 0
+																		? 'bg-green-100 text-green-800'
+																		: 'bg-red-100 text-red-800'}"
+																>
+																	{formatModifier(mod.value)} {TRAIT_MAP.get(mod.target)?.label ?? mod.target}
+																</span>
+															{/each}
+														</div>
+													{/if}
+													{#if bonus.conditionalModifiers}
+														{#each bonus.conditionalModifiers as cond}
+															<p class="text-xs italic text-gray-600">{cond.description}</p>
+														{/each}
+													{/if}
+													{#if bonus.specialEffects}
+														{#each bonus.specialEffects as effect}
+															<p class="text-xs font-medium text-purple-700">{effect}</p>
+														{/each}
+													{/if}
+												</div>
+											{/if}
+										</div>
+									{/if}
 								{/if}
 							{:else}
 								<p class="text-sm text-gray-400">No accoutrements available for this slot.</p>

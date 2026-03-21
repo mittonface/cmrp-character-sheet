@@ -99,6 +99,106 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		],
 		specialEffects: ['One-time use: bring down a wall of any size'],
 		requires: { retainer: true }
+	},
+	// --- Animal Husbandry accoutrements ---
+	// All animal husbandry accoutrements share a baseline +1 to animal husbandry
+	{
+		id: 'some_filth',
+		label: 'Some Filth (not lovely)',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'decorum', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs Lower-Class persons' }]
+	},
+	{
+		id: 'farm_animal_with_license',
+		label: 'Farm Animal with License',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'animal_husbandry', value: 1 } // extra +1 (total +2)
+		]
+	},
+	{
+		id: 'cloth_sack',
+		label: 'Cloth Sack',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'strategy', value: 1 }
+		],
+		grantsExtra: { fromAnySlot: true, excludePointy: true }
+	},
+	{
+		id: 'hoe',
+		label: 'Hoe',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'chastity', value: 1 }
+		]
+	},
+	{
+		id: 'pitchfork',
+		label: 'Pitchfork',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs witches, wizards, and the like' }]
+	},
+	{
+		id: 'scythe',
+		label: 'Scythe',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'authority', value: 1 }
+		]
+	},
+	{
+		id: 'bird_rattle',
+		label: 'Bird Rattle',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'glibness', value: 1 }
+		],
+		specialEffects: ['Chases away all non-migratory birds']
+	},
+	{
+		id: 'harrow',
+		label: 'Harrow',
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		]
+	},
+	{
+		id: 'sheeps_bladder',
+		label: "Sheep's Bladder",
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'druidry', value: 1 }
+		],
+		specialEffects: ['One-time use: prevent an earthquake']
+	},
+	{
+		id: 'webbs_wonder_lettuce',
+		label: "Webb's Wonder Lettuce",
+		slotId: 'animal_husbandry',
+		modifiers: [
+			{ target: 'animal_husbandry', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		],
+		specialEffects: [
+			'One-time use: set the timer and lure a single person or creature near. When it detonates, the person or creature snuffs it, and everyone is covered in charred lettuce leaves.'
+		]
 	}
 ];
 
@@ -123,6 +223,25 @@ export function getAvailableAccoutrements(
 	const all = ACCOUTREMENTS_BY_SLOT.get(slotId) ?? [];
 	return all.filter((a) => {
 		if (a.requires?.retainer && !hasRetainer) return false;
+		return true;
+	});
+}
+
+/** Get available extra accoutrements granted by a primary accoutrement (e.g. Cloth Sack) */
+export function getExtraAccoutrementOptions(
+	primaryAccId: string,
+	hasRetainer: boolean
+): AccoutrementDef[] {
+	const primary = ACCOUTREMENT_MAP.get(primaryAccId);
+	if (!primary?.grantsExtra) return [];
+
+	const { fromAnySlot, excludePointy } = primary.grantsExtra;
+	const pool = fromAnySlot ? ALL_ACCOUTREMENTS : (ACCOUTREMENTS_BY_SLOT.get(primary.slotId) ?? []);
+
+	return pool.filter((a) => {
+		if (a.id === primaryAccId) return false; // can't pick the same accoutrement twice
+		if (a.requires?.retainer && !hasRetainer) return false;
+		if (excludePointy && a.pointy) return false;
 		return true;
 	});
 }

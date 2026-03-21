@@ -23,7 +23,7 @@ export function createCharacter(initial?: CharacterData) {
 	let slots = $state<CharacterSlot[]>(initial?.slots ?? []);
 	let traitValues = $state<Record<string, DieSize>>(initial?.traitValues ?? {});
 	let indifferentTraitSelections = $state<string[]>(initial?.indifferentTraits ?? []);
-	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
+	let accoutrements = $state<Record<string, string[]>>(initial?.accoutrements ?? {});
 	let currencies = $state<Partial<Record<Currency, number>>>(initial?.currencies ?? {});
 	let choiceSelections = $state<Record<string, string>>(initial?.choiceSelections ?? {});
 	let selections = $state<Record<string, string>>(initial?.selections ?? {});
@@ -228,16 +228,37 @@ export function createCharacter(initial?: CharacterData) {
 		)
 	);
 
-	function setAccoutrement(traitId: string, accoutrementId: string) {
-		if (accoutrementId) {
-			accoutrements[traitId] = accoutrementId;
+	function setAccoutrement(slotId: string, accoutrementId: string, index: number = 0) {
+		if (index === 0) {
+			if (accoutrementId) {
+				const existing = accoutrements[slotId];
+				// When changing primary, clear any bonus accoutrements that depended on it
+				if (existing && existing.length > 1) {
+					accoutrements[slotId] = [accoutrementId];
+				} else {
+					accoutrements[slotId] = [accoutrementId];
+				}
+			} else {
+				delete accoutrements[slotId];
+			}
 		} else {
-			delete accoutrements[traitId];
+			// Setting a bonus accoutrement at a given index
+			const existing = accoutrements[slotId];
+			if (!existing) return; // no primary — can't set bonus
+			if (accoutrementId) {
+				const copy = [...existing];
+				copy[index] = accoutrementId;
+				accoutrements[slotId] = copy;
+			} else {
+				// Remove the bonus slot
+				const copy = existing.slice(0, index);
+				accoutrements[slotId] = copy;
+			}
 		}
 	}
 
-	function clearAccoutrement(traitId: string) {
-		delete accoutrements[traitId];
+	function clearAccoutrement(slotId: string) {
+		delete accoutrements[slotId];
 	}
 
 	// --- Roll modifiers derived from accoutrements ---
@@ -245,11 +266,13 @@ export function createCharacter(initial?: CharacterData) {
 	// e.g. Knightly Armour gives +1 valour and +1 authority as roll modifiers.
 	let rollModifiers = $derived.by(() => {
 		const mods: Record<string, number> = {};
-		for (const [, accId] of Object.entries(accoutrements)) {
-			const acc = ACCOUTREMENT_MAP.get(accId);
-			if (!acc) continue;
-			for (const m of acc.modifiers) {
-				mods[m.target] = (mods[m.target] ?? 0) + m.value;
+		for (const accIds of Object.values(accoutrements)) {
+			for (const accId of accIds) {
+				const acc = ACCOUTREMENT_MAP.get(accId);
+				if (!acc) continue;
+				for (const m of acc.modifiers) {
+					mods[m.target] = (mods[m.target] ?? 0) + m.value;
+				}
 			}
 		}
 		return mods;
@@ -312,7 +335,9 @@ export function createCharacter(initial?: CharacterData) {
 			slots: slots.map((s) => ({ ...s })),
 			indifferentTraits: [...indifferentTraitSelections],
 			traitValues: { ...traitValues },
-			accoutrements: { ...accoutrements },
+			accoutrements: Object.fromEntries(
+				Object.entries(accoutrements).map(([k, v]) => [k, [...v]])
+			),
 			currencies: { ...currencies },
 			choiceSelections: { ...choiceSelections },
 			selections: { ...selections }

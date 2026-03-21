@@ -682,7 +682,7 @@ describe('accoutrement management', () => {
 		char.setAccoutrement('valour', 'knightly_armour');
 		flushSync();
 
-		expect(char.accoutrements['valour']).toBe('knightly_armour');
+		expect(char.accoutrements['valour']).toEqual(['knightly_armour']);
 	});
 
 	it('computes roll modifiers from accoutrements', () => {
@@ -708,7 +708,7 @@ describe('accoutrement management', () => {
 		char.setAccoutrement('valour', 'shield'); // +1 valour, +1 strategy
 		flushSync();
 
-		expect(char.accoutrements['valour']).toBe('shield');
+		expect(char.accoutrements['valour']).toEqual(['shield']);
 		expect(char.rollModifiers['valour']).toBe(1);
 		expect(char.rollModifiers['strategy']).toBe(1);
 		expect(char.rollModifiers['authority']).toBeUndefined();
@@ -870,7 +870,7 @@ describe('serialize', () => {
 		expect(data.slots).toHaveLength(4);
 		expect(data.traitValues['valour']).toBe(18);
 		expect(data.traitValues['chastity']).toBe(12);
-		expect(data.accoutrements['valour']).toBe('shield');
+		expect(data.accoutrements['valour']).toEqual(['shield']);
 	});
 
 	it('returns a deep copy (mutations do not affect original)', () => {
