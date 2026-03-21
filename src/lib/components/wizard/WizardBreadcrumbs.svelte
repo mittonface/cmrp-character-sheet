@@ -9,7 +9,8 @@
 		{ id: 'situation', label: 'Situation', numeral: 'I' },
 		{ id: 'class', label: 'Class', numeral: 'II' },
 		{ id: 'slots', label: 'Slots', numeral: 'III' },
-		{ id: 'rest', label: 'Details', numeral: 'IV' }
+		{ id: 'accoutrements', label: 'Accoutrements', numeral: 'IV' },
+		{ id: 'rest', label: 'Details', numeral: 'V' }
 	];
 
 	let {
