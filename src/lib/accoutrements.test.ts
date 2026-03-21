@@ -570,6 +570,33 @@ describe('specific accoutrements', () => {
 		expect(pw.specialEffects![0]).toContain('One-time use');
 		expect(pw.specialEffects![0]).toContain('d6');
 	});
+
+	it('all subtlety accoutrements have +1 subtlety as first modifier', () => {
+		const subAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'subtlety');
+		expect(subAccs.length).toBe(10);
+		for (const acc of subAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'subtlety', value: 1 });
+		}
+	});
+
+	it('Snare Trap has conditional modifier vs Beasts and -1 animal husbandry', () => {
+		const trap = ACCOUTREMENT_MAP.get('snare_trap')!;
+		expect(trap.conditionalModifiers).toHaveLength(1);
+		expect(trap.conditionalModifiers![0].description).toContain('Beasts');
+		expect(trap.modifiers.find((m) => m.target === 'animal_husbandry')!.value).toBe(-1);
+	});
+
+	it('Padded Footwear grants +1 druidry', () => {
+		const pf = ACCOUTREMENT_MAP.get('padded_footwear')!;
+		expect(pf.modifiers.find((m) => m.target === 'druidry')!.value).toBe(1);
+	});
+
+	it('Brazilian Dagger has only +1 subtlety modifier', () => {
+		const bd = ACCOUTREMENT_MAP.get('brazilian_dagger')!;
+		expect(bd.modifiers).toHaveLength(1);
+		expect(bd.modifiers[0]).toEqual({ target: 'subtlety', value: 1 });
+		expect(bd.specialEffects).toBeDefined();
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
@@ -586,10 +613,6 @@ describe('getAvailableAccoutrements', () => {
 		);
 		expect(available).toHaveLength(withoutRetainerReq.length);
 		expect(available.find((a) => a.id === 'burlington_wallbanger')).toBeUndefined();
-	});
-
-	it('returns empty for a trait with no accoutrements', () => {
-		expect(getAvailableAccoutrements('subtlety', true)).toEqual([]);
 	});
 
 	it('returns empty for unknown trait', () => {

@@ -1623,6 +1623,105 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'Requires four people to haul and operate. Roll a d6 to determine type. 1 = Battering ram. 2 = Ballista. 3 = Catapult. 4 = Trebuchet. 5 = Portable drawbridge. 6 = Siege tower.',
 			"All types have a one-time use: bring down or bypass a castle's fortifications. The Siege Engine is destroyed in the process, but you're in!"
 		]
+	},
+
+	// --- Subtlety accoutrements ---
+	// All subtlety accoutrements share a baseline +1 to subtlety
+	{
+		id: 'padded_footwear',
+		label: 'Padded Footwear',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'druidry', value: 1 }
+		]
+	},
+	{
+		id: 'snare_trap',
+		label: 'Snare Trap',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'animal_husbandry', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Beasts' }]
+	},
+	{
+		id: 'grappling_hook_and_rope',
+		label: 'Grappling Hook and a Coil of Rope',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'strategy', value: 1 }
+		]
+	},
+	{
+		id: 'hooded_cloak_questionable_tassel',
+		label: 'Hooded Cloak with Questionable Tassel',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'glibness', value: 1 }
+		]
+	},
+	{
+		id: 'lock_picks',
+		label: 'Lock Picks',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'history_of_naughty_people',
+		label: 'A History of Naughty People by R.T. Sampson',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		],
+		specialEffects: ['Special effect TBD']
+	},
+	{
+		id: 'heart_attack_o_margarine',
+		label: 'Heart Attack-o Margarine (tub of)',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		],
+		specialEffects: ['One-time use: if a person or creature consumes the entire tub, their arteries become instantly clogged and they are No More.']
+	},
+	{
+		id: 'llap_goch_picture_book',
+		label: 'LLAP-GOCH Picture Book',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'valour', value: 1 }
+		],
+		specialEffects: ['Special effect TBD']
+	},
+	{
+		id: 'brazilian_dagger',
+		label: 'Brazilian Dagger',
+		slotId: 'subtlety',
+		modifiers: [{ target: 'subtlety', value: 1 }],
+		specialEffects: [
+			'If you unsheath it, your Luck (if you have it as a Trait) resets to d4.',
+			"One-time use: if you can get another person to use it, horrible things begin happening to them. Ultimately this results in the person being made dead and the dagger being destroyed, and it's always messy."
+		]
+	},
+	{
+		id: 'whizzo_assorted_chocolates',
+		label: 'Whizzo Assorted Chocolates (box of)',
+		slotId: 'subtlety',
+		modifiers: [
+			{ target: 'subtlety', value: 1 },
+			{ target: 'decorum', value: 1 }
+		],
+		specialEffects: ['One-time use: if you convince or trick someone into eating all six, they are No More.']
 	}
 ];
 
