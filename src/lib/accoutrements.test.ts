@@ -286,6 +286,54 @@ describe('specific accoutrements', () => {
 		expect(pow.modifiers.find((m) => m.target === 'purpose')!.value).toBe(1);
 		expect(pow.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
 	});
+
+	it('all lorefulness accoutrements have +1 lorefulness as first modifier', () => {
+		const loreAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'lorefulness');
+		expect(loreAccs.length).toBe(10);
+		for (const acc of loreAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'lorefulness', value: 1 });
+		}
+	});
+
+	it('A Short History of History Books has conditional modifier vs scholars and -1 argumentation', () => {
+		const book = ACCOUTREMENT_MAP.get('short_history_of_history_books')!;
+		expect(book.conditionalModifiers).toHaveLength(1);
+		expect(book.conditionalModifiers![0].description).toContain('scholars');
+		expect(book.modifiers.find((m) => m.target === 'argumentation')!.value).toBe(-1);
+	});
+
+	it('Short History of Chairs has conditional modifier vs Burghers and -1 glibness', () => {
+		const chairs = ACCOUTREMENT_MAP.get('short_history_of_chairs')!;
+		expect(chairs.conditionalModifiers).toHaveLength(1);
+		expect(chairs.conditionalModifiers![0].description).toContain('Burghers');
+		expect(chairs.modifiers.find((m) => m.target === 'glibness')!.value).toBe(-1);
+	});
+
+	it('World Encyclopaedia of Carnal Knowledge has +1 wisdom, -1 chastity, and special effects', () => {
+		const enc = ACCOUTREMENT_MAP.get('world_encyclopaedia_of_carnal_knowledge')!;
+		expect(enc.modifiers.find((m) => m.target === 'wisdom_in_the_ways_of_science')!.value).toBe(1);
+		expect(enc.modifiers.find((m) => m.target === 'chastity')!.value).toBe(-1);
+		expect(enc.specialEffects).toHaveLength(2);
+		expect(enc.specialEffects![0]).toContain('celibates');
+		expect(enc.specialEffects![1]).toContain('Naughty Pictures');
+	});
+
+	it('Clay Cup Sumerian has Holy Grail special effect', () => {
+		const cup = ACCOUTREMENT_MAP.get('clay_cup_sumerian')!;
+		expect(cup.specialEffects).toHaveLength(1);
+		expect(cup.specialEffects![0]).toContain('Holy Grail');
+	});
+
+	it('Immovable-Type Printing Press requires a cart', () => {
+		const press = ACCOUTREMENT_MAP.get('immovable_type_printing_press')!;
+		expect(press.specialEffects).toHaveLength(1);
+		expect(press.specialEffects![0]).toContain('cart');
+	});
+
+	it('Book of Armaments has +1 strategy', () => {
+		const book = ACCOUTREMENT_MAP.get('book_of_armaments')!;
+		expect(book.modifiers.find((m) => m.target === 'strategy')!.value).toBe(1);
+	});
 });
 
 describe('getAvailableAccoutrements', () => {

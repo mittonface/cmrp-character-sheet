@@ -1000,6 +1000,112 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			{ target: 'decorum', value: -1 }
 		],
 		specialEffects: ["One-time use: remove the miniature Pope that comes in each sack and make a d30 roll on the Cleric's Spiffing Serious Ability table, no matter what your Situation is."]
+	},
+
+	// --- Lorefulness accoutrements ---
+	// All lorefulness accoutrements share a baseline +1 to lorefulness
+	{
+		id: 'short_history_of_history_books',
+		label: 'A Short History of History Books by R.T. Boredom',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'argumentation', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: '+1 to all Trait rolls vs. scholars, tutors, researchers, and the like' }
+		]
+	},
+	{
+		id: 'pileus',
+		label: 'Pileus',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'short_history_of_chairs',
+		label: "Martin of Bedford's A Short History of Chairs, Tables, and Pieces of Wood",
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'glibness', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: '+1 to all Trait rolls vs. Burghers and other Middle-Class persons' }
+		]
+	},
+	{
+		id: 'forbidden_hungarian_phrase_book',
+		label: "Yalt's Forbidden Hungarian Phrase Book",
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'glibness', value: 1 }
+		]
+	},
+	{
+		id: 'autobiography_of_st_stephen',
+		label: 'Stone Me: The Autobiography of St. Stephen',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'purpose', value: 1 }
+		]
+	},
+	{
+		id: 'dynamo_tension_course',
+		label: '78-page Dynamo Tension Muscle-Building Course',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'clay_cup_sumerian',
+		label: 'Clay Cup, Sumerian, 4th Dynasty',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		],
+		specialEffects: ['Often mistaken for the Holy Grail.']
+	},
+	{
+		id: 'book_of_armaments',
+		label: 'The Book of Armaments',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'strategy', value: 1 }
+		]
+	},
+	{
+		id: 'immovable_type_printing_press',
+		label: 'Immovable-Type Printing Press',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'animal_husbandry', value: 1 }
+		],
+		specialEffects: ['Requires a cart to transport.']
+	},
+	{
+		id: 'world_encyclopaedia_of_carnal_knowledge',
+		label: 'The World Encyclopaedia of Carnal Knowledge',
+		slotId: 'lorefulness',
+		modifiers: [
+			{ target: 'lorefulness', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 },
+			{ target: 'chastity', value: -1 }
+		],
+		specialEffects: [
+			'Once per day, consult the book to produce a fact that causes all celibates, ascetics, and abstainers within hearing distance to be deeply depressed about what they\'re missing. They are unable to do anything but sit and pout for the rest of the day.',
+			'One-time use: rip out all the illustrations (destroying the book) to produce 100 Naughty Pictures (a Currency).'
+		]
 	}
 ];
 
