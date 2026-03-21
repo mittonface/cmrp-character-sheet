@@ -385,6 +385,55 @@ describe('specific accoutrements', () => {
 		expect(gargoyle.specialEffects![0]).toContain('cart');
 		expect(gargoyle.specialEffects![1]).toContain('Monstrosity');
 	});
+
+	it('all nimbleness accoutrements have +1 nimbleness as first modifier', () => {
+		const nimbAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'nimbleness');
+		expect(nimbAccs.length).toBe(10);
+		for (const acc of nimbAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'nimbleness', value: 1 });
+		}
+	});
+
+	it('Halitosis-Brand Body Rub has conditional modifier vs Gumbys and -1 decorum', () => {
+		const rub = ACCOUTREMENT_MAP.get('halitosis_brand_body_rub')!;
+		expect(rub.conditionalModifiers).toHaveLength(1);
+		expect(rub.conditionalModifiers![0].description).toContain('Gumbys');
+		expect(rub.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
+	});
+
+	it('Split-Crotch Breeches has +2 nimbleness total', () => {
+		const breeches = ACCOUTREMENT_MAP.get('split_crotch_breeches')!;
+		const nimbTotal = breeches.modifiers
+			.filter((m) => m.target === 'nimbleness')
+			.reduce((sum, m) => sum + m.value, 0);
+		expect(nimbTotal).toBe(2);
+	});
+
+	it('Pixie Hat with Pointy Ears is pointy, has -1 sorcery, and pixies attack', () => {
+		const hat = ACCOUTREMENT_MAP.get('pixie_hat_with_pointy_ears')!;
+		expect(hat.pointy).toBe(true);
+		expect(hat.modifiers.find((m) => m.target === 'sorcery')!.value).toBe(-1);
+		expect(hat.modifiers.find((m) => m.target === 'druidry')!.value).toBe(1);
+		expect(hat.specialEffects).toHaveLength(1);
+		expect(hat.specialEffects![0]).toContain('Pixies');
+	});
+
+	it('Llama-Skin Gloves has +1 glibness and llamas attack', () => {
+		const gloves = ACCOUTREMENT_MAP.get('llama_skin_gloves')!;
+		expect(gloves.modifiers.find((m) => m.target === 'glibness')!.value).toBe(1);
+		expect(gloves.specialEffects).toHaveLength(1);
+		expect(gloves.specialEffects![0]).toContain('Llamas');
+	});
+
+	it('Pouch of Rid-a-Weasel has conditional modifier vs woodland creatures, -1 heartiness, and one-time use', () => {
+		const pouch = ACCOUTREMENT_MAP.get('pouch_of_rid_a_weasel')!;
+		expect(pouch.conditionalModifiers).toHaveLength(1);
+		expect(pouch.conditionalModifiers![0].description).toContain('small woodland creatures');
+		expect(pouch.modifiers.find((m) => m.target === 'heartiness')!.value).toBe(-1);
+		expect(pouch.specialEffects).toHaveLength(2);
+		expect(pouch.specialEffects![0]).toContain('talcum powder');
+		expect(pouch.specialEffects![1]).toContain('One-time use');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {

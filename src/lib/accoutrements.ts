@@ -1214,6 +1214,109 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'Requires a cart to transport.',
 			'One-time use: the gargoyle wakes up and makes an extra-ugly face. One Monstrosity that sees it scarpers with the gargoyle in pursuit. Neither are ever seen again, and the Monstrosity is defeated, as if through Deeds.'
 		]
+	},
+
+	// --- Nimbleness accoutrements ---
+	// All nimbleness accoutrements share a baseline +1 to nimbleness
+	{
+		id: 'balancing_staff',
+		label: 'Balancing Staff',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'strategy', value: 1 }
+		]
+	},
+	{
+		id: 'embroidered_silk_handkerchiefs',
+		label: 'Set of Embroidered Silk Handkerchiefs',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'dashing_cape',
+		label: 'Dashing Cape with Extra Flowiness',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'halitosis_brand_body_rub',
+		label: 'Halitosis-Brand Body Rub',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'decorum', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Gumbys' }]
+	},
+	{
+		id: 'split_crotch_breeches',
+		label: 'Split-Crotch Breeches',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'fingerless_gloves',
+		label: 'Fingerless Gloves',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		]
+	},
+	{
+		id: 'eel_skin_boots',
+		label: 'Eel-Skin Boots',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'subtlety', value: 1 }
+		]
+	},
+	{
+		id: 'pixie_hat_with_pointy_ears',
+		label: 'Pixie Hat with Pointy Ears',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'druidry', value: 1 },
+			{ target: 'sorcery', value: -1 }
+		],
+		pointy: true,
+		specialEffects: ['Pixies attack on sight.']
+	},
+	{
+		id: 'llama_skin_gloves',
+		label: 'Llama-Skin Gloves',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'glibness', value: 1 }
+		],
+		specialEffects: ['Llamas attack on sight.']
+	},
+	{
+		id: 'pouch_of_rid_a_weasel',
+		label: 'Pouch of Rid-a-Weasel-Stoat-Rat-Mouse-Rabbitex',
+		slotId: 'nimbleness',
+		modifiers: [
+			{ target: 'nimbleness', value: 1 },
+			{ target: 'heartiness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. small woodland creatures' }],
+		specialEffects: [
+			'A talcum powder for grip enhancement.',
+			'One-time use: cover body with the entire contents of the pouch to repel all small woodland creatures, rodents, and rodential persons within a mile, for one day.'
+		]
 	}
 ];
 
