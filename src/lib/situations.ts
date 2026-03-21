@@ -182,6 +182,31 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'cheese', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'monk_nun',
+		label: 'Monk/Nun',
+		requiredTraits: ['purpose', 'chastity'],
+		availableTraits: [
+			'animal_husbandry',
+			'argumentation',
+			'bardistry',
+			'luck',
+			'nimbleness'
+		],
+		requiredRetainers: [],
+		allowRetainers: true,
+		availableRetainers: ['scribe', 'torchbearer'],
+		classRequiredTraits: {
+			middle: ['lorefulness'],
+			lower: ['heartiness']
+		},
+		dicePool: [14, 14, 12, 10, 8],
+		availableClasses: ['middle', 'lower'],
+		indifferentTraits: { type: 'fixed', traitIds: ['glibness'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: { currency: 'eggs', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],

@@ -553,6 +553,75 @@ describe('Monarch situation', () => {
 	});
 });
 
+describe('Monk/Nun situation', () => {
+	const monkNun = SITUATION_MAP.get('monk_nun')!;
+
+	it('exists in the situation map', () => {
+		expect(monkNun).toBeDefined();
+	});
+
+	it('requires purpose and chastity', () => {
+		expect(monkNun.requiredTraits).toEqual(['purpose', 'chastity']);
+	});
+
+	it('has no required retainers', () => {
+		expect(monkNun.requiredRetainers).toEqual([]);
+	});
+
+	it('allows retainers', () => {
+		expect(monkNun.allowRetainers).toBe(true);
+	});
+
+	it('has scribe and torchbearer as available retainers', () => {
+		expect(monkNun.availableRetainers).toEqual(['scribe', 'torchbearer']);
+	});
+
+	it('has a dice pool of [14, 14, 12, 10, 8]', () => {
+		expect(monkNun.dicePool).toEqual([14, 14, 12, 10, 8]);
+	});
+
+	it('allows middle and lower class', () => {
+		expect(monkNun.availableClasses).toEqual(['middle', 'lower']);
+	});
+
+	it('requires lorefulness for middle class and heartiness for lower class', () => {
+		expect(monkNun.classRequiredTraits).toEqual({
+			middle: ['lorefulness'],
+			lower: ['heartiness']
+		});
+	});
+
+	it('has 5 available traits to choose from', () => {
+		expect(monkNun.availableTraits).toHaveLength(5);
+		expect(monkNun.availableTraits).toEqual([
+			'animal_husbandry',
+			'argumentation',
+			'bardistry',
+			'luck',
+			'nimbleness'
+		]);
+	});
+
+	it('is indifferent to glibness', () => {
+		expect(monkNun.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['glibness'] });
+	});
+
+	it('starts on Fine, Fine death status', () => {
+		expect(monkNun.startingDeathStatus).toBe('fine_fine');
+	});
+
+	it('starts on Sensible loony status', () => {
+		expect(monkNun.startingLoonyStatus).toBe('sensible');
+	});
+
+	it('starts with eggs (1d30)', () => {
+		expect(monkNun.startingCurrency).toEqual({
+			currency: 'eggs',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('Enchanter situation', () => {
 	const enchanter = SITUATION_MAP.get('enchanter')!;
 
