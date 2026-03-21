@@ -394,6 +394,118 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'Requires a cart to transport, and a second person to operate the bellows. Once per day, you can attempt to play a rousing voluntary. Make a Bardistry roll (Strewthing/Spamming as normal). That many nearby are converted to a religion of your choice. If you Spam It, the organ explodes heretically, in addition to the normal Spam results.'
 		]
 	},
+	// --- Chastity accoutrements ---
+	// All chastity accoutrements share a baseline +1 to chastity
+	{
+		id: 'fashionable_tights',
+		label: 'Fashionable Tights',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'riding_crop',
+		label: 'Riding Crop',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'animal_husbandry', value: 1 }
+		]
+	},
+	{
+		id: 'elaborate_codpiece',
+		label: 'Elaborate Codpiece',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'decorum', value: 1 }
+		],
+		specialEffects: ['Nearby ducks attempt to mate with it']
+	},
+	{
+		id: 'chastity_belt',
+		label: 'Chastity Belt',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'chastity', value: 1 }, // extra +1 chastity (total +2)
+			{ target: 'glibness', value: -1 }
+		]
+	},
+	{
+		id: 'mantle_and_veil_of_the_vestal_virgin',
+		label: 'Mantle and Veil of the Vestal Virgin',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'druidry', value: -1 }
+		],
+		conditionalModifiers: [
+			{
+				description:
+					'+1 to all trait rolls vs cads, lechers, philanderers and other naughty persons'
+			}
+		]
+	},
+	{
+		id: 'quick_pitch_pavillion',
+		label: 'Quick Pitch Pavillion',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'purpose', value: 1 }
+		],
+		specialEffects: [
+			"This item is marketed as the 'Quickie,' but we're not sure why, as it's designed for on-the-go meditation and prayer only. Must be erected before use."
+		]
+	},
+	{
+		id: 'victor_mature_abdominal_corset',
+		label: 'Victor Mature Abdominal Corset',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		]
+	},
+	{
+		id: 'bleed_it_kosher_truss',
+		label: 'The Bleed-It Kosher Truss',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'heartiness', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: '+1 to all trait rolls vs monks, nuns, hermits and other ascetics' }
+		]
+	},
+	{
+		id: 'skeleton_key',
+		label: 'Skeleton Key',
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'subtlety', value: 1 }
+		],
+		specialEffects: [
+			'To be used exclusively for _locking_ chastity belts and doors between you and your lover. Why? How were you planning to use it? Well I never!'
+		]
+	},
+	{
+		id: 'hercules_hold_em_in',
+		label: "The Hercules Hold-'em In",
+		slotId: 'chastity',
+		modifiers: [
+			{ target: 'chastity', value: 1 },
+			{ target: 'valour', value: 1 }
+		],
+		specialEffects: [
+			'One-time use: remove the device, which destroys it. The rush of blood to the previously held-in parts gives you a sudden burst of vivacity. Reset Death status to your maximum, and for the remainder of the scene you may perform three Deeds on each of your turns.'
+		]
+	},
 	// --- Authority accoutrements ---
 	// All authority accoutrements share a baseline +1 to authority
 	{
