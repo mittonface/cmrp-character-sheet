@@ -93,8 +93,45 @@ describe('data integrity', () => {
 
 	it('situation required + available slots do not exceed SLOT_COUNT', () => {
 		for (const sit of SITUATIONS) {
-			const requiredCount = sit.requiredTraits.length + sit.requiredRetainers.length;
-			expect(requiredCount).toBeLessThanOrEqual(SLOT_COUNT);
+			const baseRequired = sit.requiredTraits.length + sit.requiredRetainers.length;
+			expect(baseRequired).toBeLessThanOrEqual(SLOT_COUNT);
+
+			// Also check with class-required traits
+			if (sit.classRequiredTraits) {
+				for (const traits of Object.values(sit.classRequiredTraits)) {
+					const totalRequired = baseRequired + (traits?.length ?? 0);
+					expect(totalRequired).toBeLessThanOrEqual(SLOT_COUNT);
+				}
+			}
+		}
+	});
+
+	it('situation classRequiredTraits reference valid trait IDs and classes', () => {
+		const validClasses = new Set<string>(SOCIAL_CLASSES);
+		for (const sit of SITUATIONS) {
+			if (sit.classRequiredTraits) {
+				for (const [cls, traits] of Object.entries(sit.classRequiredTraits)) {
+					expect(validClasses.has(cls)).toBe(true);
+					for (const traitId of traits!) {
+						expect(TRAIT_MAP.has(traitId)).toBe(true);
+					}
+				}
+			}
+		}
+	});
+
+	it('situation classRequiredTraits do not overlap with requiredTraits or availableTraits', () => {
+		for (const sit of SITUATIONS) {
+			if (sit.classRequiredTraits) {
+				const required = new Set(sit.requiredTraits);
+				const available = new Set(sit.availableTraits);
+				for (const traits of Object.values(sit.classRequiredTraits)) {
+					for (const traitId of traits!) {
+						expect(required.has(traitId)).toBe(false);
+						expect(available.has(traitId)).toBe(false);
+					}
+				}
+			}
 		}
 	});
 
@@ -263,6 +300,72 @@ describe('Churl situation', () => {
 	});
 });
 
+describe('Cleric situation', () => {
+	const cleric = SITUATION_MAP.get('cleric')!;
+
+	it('exists in the situation map', () => {
+		expect(cleric).toBeDefined();
+	});
+
+	it('requires purpose and lorefulness', () => {
+		expect(cleric.requiredTraits).toEqual(['purpose', 'lorefulness']);
+	});
+
+	it('has no required retainers', () => {
+		expect(cleric.requiredRetainers).toEqual([]);
+	});
+
+	it('allows retainers', () => {
+		expect(cleric.allowRetainers).toBe(true);
+	});
+
+	it('has acolyte and scribe as available retainers', () => {
+		expect(cleric.availableRetainers).toEqual(['acolyte', 'scribe']);
+	});
+
+	it('has a dice pool of [16, 14, 12, 10, 6]', () => {
+		expect(cleric.dicePool).toEqual([16, 14, 12, 10, 6]);
+	});
+
+	it('allows upper and middle class', () => {
+		expect(cleric.availableClasses).toEqual(['upper', 'middle']);
+	});
+
+	it('requires decorum for upper class and chastity for middle class', () => {
+		expect(cleric.classRequiredTraits).toEqual({
+			upper: ['decorum'],
+			middle: ['chastity']
+		});
+	});
+
+	it('has 4 available traits to choose from', () => {
+		expect(cleric.availableTraits).toHaveLength(4);
+		expect(cleric.availableTraits).toEqual(['argumentation', 'glibness', 'luck', 'valour']);
+	});
+
+	it('is indifferent to Wisdom in the Ways of Science', () => {
+		expect(cleric.indifferentTraits).toEqual({
+			type: 'fixed',
+			traitIds: ['wisdom_in_the_ways_of_science']
+		});
+	});
+
+	it('starts on Fine, Fine death status', () => {
+		expect(cleric.startingDeathStatus).toBe('fine_fine');
+	});
+
+	it('starts on Sensible loony status', () => {
+		expect(cleric.startingLoonyStatus).toBe('sensible');
+	});
+
+	it('starts with naughty pictures (1d30)', () => {
+		expect(cleric.startingCurrency).toEqual({
+			currency: 'naughty_pictures',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('getRequiredSlots', () => {
 	it('returns required trait and retainer slots for knight', () => {
 		const slots = getRequiredSlots('knight');
@@ -281,6 +384,31 @@ describe('getRequiredSlots', () => {
 			required: true,
 			name: ''
 		});
+	});
+
+	it('returns base required slots for cleric without class', () => {
+		const slots = getRequiredSlots('cleric');
+		expect(slots).toHaveLength(2);
+		expect(slots[0]).toEqual({ type: 'trait', traitId: 'purpose', required: true });
+		expect(slots[1]).toEqual({ type: 'trait', traitId: 'lorefulness', required: true });
+	});
+
+	it('includes decorum for cleric with upper class', () => {
+		const slots = getRequiredSlots('cleric', 'upper');
+		expect(slots).toHaveLength(3);
+		const traitIds = slots.filter((s) => s.type === 'trait').map((s) => s.traitId);
+		expect(traitIds).toContain('purpose');
+		expect(traitIds).toContain('lorefulness');
+		expect(traitIds).toContain('decorum');
+	});
+
+	it('includes chastity for cleric with middle class', () => {
+		const slots = getRequiredSlots('cleric', 'middle');
+		expect(slots).toHaveLength(3);
+		const traitIds = slots.filter((s) => s.type === 'trait').map((s) => s.traitId);
+		expect(traitIds).toContain('purpose');
+		expect(traitIds).toContain('lorefulness');
+		expect(traitIds).toContain('chastity');
 	});
 
 	it('returns empty array for unknown situation', () => {

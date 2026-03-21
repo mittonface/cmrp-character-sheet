@@ -93,19 +93,43 @@ export const SITUATIONS: SituationDef[] = [
 		startingDeathStatus: 'getting_better',
 		startingLoonyStatus: 'sensible',
 		startingCurrency: { currency: 'plague_dead_bodies', roll: { count: 1, sides: 30 } }
+	},
+	{
+		id: 'cleric',
+		label: 'Cleric',
+		requiredTraits: ['purpose', 'lorefulness'],
+		availableTraits: ['argumentation', 'glibness', 'luck', 'valour'],
+		requiredRetainers: [],
+		allowRetainers: true,
+		availableRetainers: ['acolyte', 'scribe'],
+		classRequiredTraits: {
+			upper: ['decorum'],
+			middle: ['chastity']
+		},
+		dicePool: [16, 14, 12, 10, 6],
+		availableClasses: ['upper', 'middle'],
+		indifferentTraits: { type: 'fixed', traitIds: ['wisdom_in_the_ways_of_science'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: { currency: 'naughty_pictures', roll: { count: 1, sides: 30 } }
 	}
 ];
 
 export const SITUATION_MAP = new Map<string, SituationDef>(SITUATIONS.map((s) => [s.id, s]));
 
-/** Get the required (locked-in) slots for a situation */
-export function getRequiredSlots(situationId: string): CharacterSlot[] {
+/** Get the required (locked-in) slots for a situation, optionally including class-required traits */
+export function getRequiredSlots(situationId: string, socialClass?: SocialClass): CharacterSlot[] {
 	const situation = SITUATION_MAP.get(situationId);
 	if (!situation) return [];
 
 	const slots: CharacterSlot[] = [];
 	for (const traitId of situation.requiredTraits) {
 		slots.push({ type: 'trait', traitId, required: true });
+	}
+	if (socialClass && situation.classRequiredTraits?.[socialClass]) {
+		for (const traitId of situation.classRequiredTraits[socialClass]!) {
+			slots.push({ type: 'trait', traitId, required: true });
+		}
 	}
 	for (const retainerId of situation.requiredRetainers) {
 		slots.push({ type: 'retainer', retainerId, required: true, name: '' });

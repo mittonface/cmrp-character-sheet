@@ -99,15 +99,15 @@ export function createCharacter(initial?: CharacterData) {
 		modifiers = removeBySource(modifiers, 'situation:');
 		situationId = id;
 
-		// Reset to just the required slots
-		slots = getRequiredSlots(id);
-		traitValues = {};
-		accoutrements = {};
-		indifferentTraitSelections = [];
-
 		// Auto-set class if only one option
 		const classes = getAvailableClasses(id);
 		socialClass = classes.length === 1 ? classes[0] : '';
+
+		// Reset to required slots (including class-required traits if class is auto-set)
+		slots = getRequiredSlots(id, socialClass || undefined);
+		traitValues = {};
+		accoutrements = {};
+		indifferentTraitSelections = [];
 
 		// Set starting status tracks and currency from the situation
 		const situation = SITUATION_MAP.get(id);
@@ -127,6 +127,15 @@ export function createCharacter(initial?: CharacterData) {
 	function setSocialClass(cls: SocialClass | '') {
 		if (cls && !availableClasses.includes(cls)) return;
 		socialClass = cls;
+
+		// Rebuild slots when class changes for situations with class-required traits
+		const situation = SITUATION_MAP.get(situationId);
+		if (situation?.classRequiredTraits) {
+			slots = getRequiredSlots(situationId, cls || undefined);
+			traitValues = {};
+			accoutrements = {};
+			indifferentTraitSelections = [];
+		}
 	}
 
 	// --- Death status management ---

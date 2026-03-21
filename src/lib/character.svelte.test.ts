@@ -178,6 +178,113 @@ describe('setSituation', () => {
 	});
 });
 
+describe('class-required traits', () => {
+	it('sets up base required slots for cleric without class', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		expect(char.slots).toHaveLength(2); // purpose + lorefulness
+		expect(char.socialClass).toBe('');
+	});
+
+	it('adds class-required trait when class is selected', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+
+		expect(char.slots).toHaveLength(3); // purpose + lorefulness + decorum
+		const traitIds = char.traitIds;
+		expect(traitIds).toContain('decorum');
+		expect(char.slots.every((s) => s.required)).toBe(true);
+	});
+
+	it('swaps class-required trait when class changes', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+		expect(char.traitIds).toContain('decorum');
+
+		char.setSocialClass('middle');
+		flushSync();
+		expect(char.traitIds).not.toContain('decorum');
+		expect(char.traitIds).toContain('chastity');
+		expect(char.slots).toHaveLength(3);
+	});
+
+	it('resets player-chosen slots when class changes', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+
+		char.addSlot({ type: 'trait', traitId: 'valour', required: false });
+		flushSync();
+		expect(char.slots).toHaveLength(4);
+
+		char.setSocialClass('middle');
+		flushSync();
+
+		// Player choices reset, only required slots remain
+		expect(char.slots).toHaveLength(3);
+		expect(char.traitIds).not.toContain('valour');
+	});
+
+	it('resets trait values and accoutrements when class changes', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+
+		char.setTraitValue('purpose', 16);
+		flushSync();
+
+		char.setSocialClass('middle');
+		flushSync();
+
+		expect(char.traitValues).toEqual({});
+		expect(char.accoutrements).toEqual({});
+	});
+
+	it('removes class-required trait when class is cleared', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+		expect(char.slots).toHaveLength(3);
+
+		char.setSocialClass('');
+		flushSync();
+		expect(char.slots).toHaveLength(2);
+		expect(char.traitIds).not.toContain('decorum');
+	});
+
+	it('has correct remaining choices after class is selected', () => {
+		const char = createCharacter();
+		char.setSituation('cleric');
+		flushSync();
+
+		char.setSocialClass('upper');
+		flushSync();
+
+		// 5 total - 3 required (purpose, lorefulness, decorum) = 2 free
+		expect(char.freeSlotCount).toBe(2);
+		expect(char.remainingChoices).toBe(2);
+	});
+});
+
 describe('slot management', () => {
 	it('adds a trait slot', () => {
 		const char = createCharacter();

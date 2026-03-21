@@ -24,6 +24,7 @@ export type SituationDef = {
 	requiredRetainers: string[]; // retainer IDs the character must have
 	allowRetainers: boolean; // whether the player can choose retainers for free slots
 	availableRetainers?: string[]; // if set, restricts which retainers can be chosen
+	classRequiredTraits?: Partial<Record<SocialClass, string[]>>; // traits required by social class choice
 	dicePool: DieSize[]; // dice available to distribute across traits (length = max trait slots)
 	availableClasses: SocialClass[]; // which social classes the player can pick
 	indifferentTraits: IndifferentTraitsDef; // how indifferent traits are determined
