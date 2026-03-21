@@ -40,7 +40,7 @@
 	}
 </script>
 
-<nav class="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-y-1 px-2 pt-4 pb-1 sm:px-4">
+<nav class="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-y-1 px-2 pt-4 pb-1 sm:flex-nowrap sm:px-4">
 	{#each STEPS as step, i (step.id)}
 		{@const isCurrent = step.id === current}
 		{@const isPast = i < currentIndex}
