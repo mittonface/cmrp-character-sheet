@@ -264,7 +264,16 @@
 			<div class="mb-6">
 				<h2 class="mb-3 text-xl font-semibold">Trait Dice</h2>
 
-				{#if character.dicePool.length > 0}
+				{#if character.mustRoll}
+				<div class="mb-4 rounded border border-indigo-200 bg-indigo-50 px-4 py-3">
+					<p class="text-sm text-indigo-800">
+						<span class="font-medium">Roll for each trait.</span>
+					</p>
+					<p class="mt-1 text-xs text-indigo-500">
+						Enter the rolled die size for each trait.
+					</p>
+				</div>
+			{:else if character.dicePool.length > 0}
 					<div class="mb-4 rounded border border-indigo-200 bg-indigo-50 px-4 py-3">
 						<p class="text-sm text-indigo-800">
 							<span class="font-medium">Dice pool:</span>

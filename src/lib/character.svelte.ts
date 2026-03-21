@@ -39,6 +39,7 @@ export function createCharacter(initial?: CharacterData) {
 
 	// --- Dice pool from the situation ---
 	let dicePool = $derived(SITUATION_MAP.get(situationId)?.dicePool ?? []);
+	let mustRoll = $derived(SITUATION_MAP.get(situationId)?.mustRoll ?? false);
 	let traitCount = $derived(traitSlots.length);
 
 	// --- Available social classes from the situation ---
@@ -363,6 +364,9 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		get dicePool() {
 			return dicePool;
+		},
+		get mustRoll() {
+			return mustRoll;
 		},
 		get traitCount() {
 			return traitCount;

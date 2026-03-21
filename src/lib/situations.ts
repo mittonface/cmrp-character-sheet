@@ -95,6 +95,27 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'plague_dead_bodies', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'enchanter',
+		label: 'Enchanter',
+		requiredTraits: ['sorcery'],
+		availableTraits: ['argumentation', 'luck', 'nimbleness', 'strategy', 'subtlety'],
+		requiredRetainers: [],
+		allowRetainers: true,
+		availableRetainers: ['apprentice', 'homunculus'],
+		classRequiredTraits: {
+			upper: ['lorefulness'],
+			middle: ['wisdom_in_the_ways_of_science'],
+			lower: ['druidry']
+		},
+		dicePool: [],
+		mustRoll: true,
+		availableClasses: ['upper', 'middle', 'lower'],
+		indifferentTraits: { type: 'fixed', traitIds: ['purpose'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'daft',
+		startingCurrency: { currency: 'gemstones', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],

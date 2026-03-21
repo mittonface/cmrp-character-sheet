@@ -192,11 +192,15 @@ describe('data integrity', () => {
 		}
 	});
 
-	it('dice pool length matches max trait slots', () => {
+	it('dice pool length matches max trait slots (unless mustRoll)', () => {
 		for (const sit of SITUATIONS) {
-			// dicePool length = max number of trait slots (total slots minus required retainers)
-			const maxTraitSlots = SLOT_COUNT - sit.requiredRetainers.length;
-			expect(sit.dicePool).toHaveLength(maxTraitSlots);
+			if (sit.mustRoll) {
+				expect(sit.dicePool).toHaveLength(0);
+			} else {
+				// dicePool length = max number of trait slots (total slots minus required retainers)
+				const maxTraitSlots = SLOT_COUNT - sit.requiredRetainers.length;
+				expect(sit.dicePool).toHaveLength(maxTraitSlots);
+			}
 		}
 	});
 });
@@ -361,6 +365,77 @@ describe('Cleric situation', () => {
 	it('starts with naughty pictures (1d30)', () => {
 		expect(cleric.startingCurrency).toEqual({
 			currency: 'naughty_pictures',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
+describe('Enchanter situation', () => {
+	const enchanter = SITUATION_MAP.get('enchanter')!;
+
+	it('exists in the situation map', () => {
+		expect(enchanter).toBeDefined();
+	});
+
+	it('requires sorcery', () => {
+		expect(enchanter.requiredTraits).toEqual(['sorcery']);
+	});
+
+	it('has no required retainers', () => {
+		expect(enchanter.requiredRetainers).toEqual([]);
+	});
+
+	it('allows retainers', () => {
+		expect(enchanter.allowRetainers).toBe(true);
+	});
+
+	it('has apprentice and homunculus as available retainers', () => {
+		expect(enchanter.availableRetainers).toEqual(['apprentice', 'homunculus']);
+	});
+
+	it('must roll for traits (no dice pool)', () => {
+		expect(enchanter.mustRoll).toBe(true);
+		expect(enchanter.dicePool).toEqual([]);
+	});
+
+	it('allows upper, middle, and lower class', () => {
+		expect(enchanter.availableClasses).toEqual(['upper', 'middle', 'lower']);
+	});
+
+	it('requires lorefulness for upper, wisdom for middle, druidry for lower', () => {
+		expect(enchanter.classRequiredTraits).toEqual({
+			upper: ['lorefulness'],
+			middle: ['wisdom_in_the_ways_of_science'],
+			lower: ['druidry']
+		});
+	});
+
+	it('has 5 available traits to choose from', () => {
+		expect(enchanter.availableTraits).toHaveLength(5);
+		expect(enchanter.availableTraits).toEqual([
+			'argumentation',
+			'luck',
+			'nimbleness',
+			'strategy',
+			'subtlety'
+		]);
+	});
+
+	it('is indifferent to purpose', () => {
+		expect(enchanter.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['purpose'] });
+	});
+
+	it('starts on Fine, Fine death status', () => {
+		expect(enchanter.startingDeathStatus).toBe('fine_fine');
+	});
+
+	it('starts on Daft loony status', () => {
+		expect(enchanter.startingLoonyStatus).toBe('daft');
+	});
+
+	it('starts with gemstones (1d30)', () => {
+		expect(enchanter.startingCurrency).toEqual({
+			currency: 'gemstones',
 			roll: { count: 1, sides: 30 }
 		});
 	});
