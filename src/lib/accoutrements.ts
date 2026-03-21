@@ -1106,6 +1106,114 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'Once per day, consult the book to produce a fact that causes all celibates, ascetics, and abstainers within hearing distance to be deeply depressed about what they\'re missing. They are unable to do anything but sit and pout for the rest of the day.',
 			'One-time use: rip out all the illustrations (destroying the book) to produce 100 Naughty Pictures (a Currency).'
 		]
+	},
+
+	// --- Luck accoutrements ---
+	// All luck accoutrements share a baseline +1 to luck
+	{
+		id: 'rabbits_foot',
+		label: "Rabbit's Foot",
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'luck', value: 1 },
+			{ target: 'animal_husbandry', value: -1 }
+		]
+	},
+	{
+		id: 'horseshoe',
+		label: 'Horseshoe',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'four_leaf_clover',
+		label: 'Four-Leaf Clover',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		]
+	},
+	{
+		id: 'pagan_goddess_figurine',
+		label: 'Pagan Goddess Figurine (tiny)',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'purpose', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: '+1 to all Trait rolls vs. Barbarians and other pagans' }
+		]
+	},
+	{
+		id: 'pouch_of_fine_salt',
+		label: 'Pouch of Fine Salt',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'garden_gnome',
+		label: 'Garden Gnome',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'authority', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: '+1 to all Trait rolls vs. Vikings' }
+		]
+	},
+	{
+		id: 'pouch_of_13_sacred_acorns',
+		label: 'Pouch of 13 Sacred Acorns',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'druidry', value: 1 }
+		],
+		specialEffects: ['You can spend these as Currency, but once one or more is removed from the pouch, the item loses its plus and all the Acorns are just Currency.']
+	},
+	{
+		id: 'deer_antler_hat',
+		label: 'Deer Antler Hat',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'subtlety', value: -1 }
+		],
+		conditionalModifiers: [
+			{ description: "+1 to all Trait rolls vs. Knights Who Say 'Ni'" }
+		]
+	},
+	{
+		id: 'amber',
+		label: 'Amber',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 }
+		]
+	},
+	{
+		id: 'stone_gargoyle',
+		label: 'Stone Gargoyle',
+		slotId: 'luck',
+		modifiers: [
+			{ target: 'luck', value: 1 },
+			{ target: 'purpose', value: 1 }
+		],
+		specialEffects: [
+			'Requires a cart to transport.',
+			'One-time use: the gargoyle wakes up and makes an extra-ugly face. One Monstrosity that sees it scarpers with the gargoyle in pursuit. Neither are ever seen again, and the Monstrosity is defeated, as if through Deeds.'
+		]
 	}
 ];
 

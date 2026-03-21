@@ -334,6 +334,57 @@ describe('specific accoutrements', () => {
 		const book = ACCOUTREMENT_MAP.get('book_of_armaments')!;
 		expect(book.modifiers.find((m) => m.target === 'strategy')!.value).toBe(1);
 	});
+
+	it('all luck accoutrements have +1 luck as first modifier', () => {
+		const luckAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'luck');
+		expect(luckAccs.length).toBe(10);
+		for (const acc of luckAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'luck', value: 1 });
+		}
+	});
+
+	it("Rabbit's Foot has +2 luck total and -1 animal husbandry", () => {
+		const foot = ACCOUTREMENT_MAP.get('rabbits_foot')!;
+		const luckTotal = foot.modifiers
+			.filter((m) => m.target === 'luck')
+			.reduce((sum, m) => sum + m.value, 0);
+		expect(luckTotal).toBe(2);
+		expect(foot.modifiers.find((m) => m.target === 'animal_husbandry')!.value).toBe(-1);
+	});
+
+	it('Pagan Goddess Figurine has conditional modifier vs Barbarians and -1 purpose', () => {
+		const figurine = ACCOUTREMENT_MAP.get('pagan_goddess_figurine')!;
+		expect(figurine.conditionalModifiers).toHaveLength(1);
+		expect(figurine.conditionalModifiers![0].description).toContain('Barbarians');
+		expect(figurine.modifiers.find((m) => m.target === 'purpose')!.value).toBe(-1);
+	});
+
+	it('Garden Gnome has conditional modifier vs Vikings and -1 authority', () => {
+		const gnome = ACCOUTREMENT_MAP.get('garden_gnome')!;
+		expect(gnome.conditionalModifiers).toHaveLength(1);
+		expect(gnome.conditionalModifiers![0].description).toContain('Vikings');
+		expect(gnome.modifiers.find((m) => m.target === 'authority')!.value).toBe(-1);
+	});
+
+	it("Deer Antler Hat has conditional modifier vs Knights Who Say 'Ni' and -1 subtlety", () => {
+		const hat = ACCOUTREMENT_MAP.get('deer_antler_hat')!;
+		expect(hat.conditionalModifiers).toHaveLength(1);
+		expect(hat.conditionalModifiers![0].description).toContain("Knights Who Say 'Ni'");
+		expect(hat.modifiers.find((m) => m.target === 'subtlety')!.value).toBe(-1);
+	});
+
+	it('Pouch of 13 Sacred Acorns has Currency special effect', () => {
+		const pouch = ACCOUTREMENT_MAP.get('pouch_of_13_sacred_acorns')!;
+		expect(pouch.specialEffects).toHaveLength(1);
+		expect(pouch.specialEffects![0]).toContain('Currency');
+	});
+
+	it('Stone Gargoyle has cart and Monstrosity special effects', () => {
+		const gargoyle = ACCOUTREMENT_MAP.get('stone_gargoyle')!;
+		expect(gargoyle.specialEffects).toHaveLength(2);
+		expect(gargoyle.specialEffects![0]).toContain('cart');
+		expect(gargoyle.specialEffects![1]).toContain('Monstrosity');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
