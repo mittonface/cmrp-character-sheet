@@ -42,9 +42,11 @@ This project prioritizes clean code and well-designed data structures. When impl
 
 - SvelteKit file-based routing in `src/routes/`
 - Svelte 5 runes mode is enforced for all non-node_modules files (see `svelte.config.js` `vitePlugin.dynamicCompileOptions`)
-- Global CSS entry point: `src/app.css` (imports Tailwind), loaded via `+layout.svelte`
+- Global CSS entry point: `src/app.css` (imports Tailwind + custom theme), loaded via `+layout.svelte`
 - Shared library code goes in `src/lib/` (aliased as `$lib`)
 - Tailwind is configured as a Vite plugin in `vite.config.ts`, not via PostCSS
+- **Wizard UI** — character creation is a multi-step wizard. Step components live in `src/lib/components/wizard/` and receive the `character` state object as a prop. The wizard orchestration (step routing, navigation) lives in `+page.svelte`.
+- **Visual theme** — medieval manuscript aesthetic. Fonts: Cinzel Decorative (display), Cinzel (headings), Cormorant Garamond (body) loaded via Google Fonts. Custom Tailwind theme colors defined in `app.css` via `@theme`: parchment, ink, crimson, gold, realm.
 
 ## Game System (CMRP)
 
@@ -85,3 +87,10 @@ Every character has exactly **5 slots**. Each slot holds either a Trait or a Ret
 - `src/lib/effects.ts` — effect registry mapping choices to modifiers
 - `src/lib/dice.ts` — dice rolling engine
 - `src/lib/character.svelte.ts` — reactive character state factory (createCharacter)
+- `src/lib/components/wizard/` — wizard step components (SituationStep, etc.)
+
+### Svelte Gotchas
+
+- `{@const}` can only appear as the immediate child of `{#each}`, `{#if}`, `{:else}`, `{#snippet}`, `<Component>`, etc. — **not** inside plain HTML elements. Inline the expression or restructure into a Svelte block.
+- Svelte `class:` directives don't support `/` in class names (e.g. `class:bg-gold/15={x}` fails). Use conditional string interpolation in `class=` instead: `class="... {x ? 'bg-gold/15' : ''}"`.
+- **Situation descriptions** are non-copyrighted paraphrases of the source material. Each `SituationDef` has a `description` field shown during situation selection.

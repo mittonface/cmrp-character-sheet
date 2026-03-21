@@ -394,6 +394,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'knight',
 		label: 'Knight',
+		description: 'The armour-plated icon of the age! Thundering across dale, through forest, and over bridge on noble errands and feats of derring-do. With gleaming steel in hand and a trusty manservant hauling everything else, you are the living embodiment of the Chivalric Code — which demands, among other things, that you fight fair and keep your naughty bits strictly to yourself.',
 		requiredTraits: ['valour', 'chastity'],
 		availableTraits: [
 			'animal_husbandry',
@@ -417,6 +418,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'churl',
 		label: 'Churl',
+		description: 'The common folk: mud-caked, flea-bitten, and absolutely essential to the realm\'s economy. You possess no titles, though you do possess a certain fragrance. Unburdened by destiny or social graces, you\'re free to become nearly anything — except invited to dinner.',
 		requiredTraits: ['animal_husbandry'],
 		availableTraits: [
 			'argumentation',
@@ -444,6 +446,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'enchanter',
 		label: 'Enchanter',
+		description: 'Be you a court alchemist with royal backing, a wild-eyed sorcerer hurling fireballs at geography, or a modest hedge wizard entertaining children with tricks involving inflated livestock organs — you command the arcane arts. Your trade is bending the forces of nature and chaos to your will, which means your own demise is seldom natural and almost always spectacularly chaotic.',
 		requiredTraits: ['sorcery'],
 		availableTraits: ['argumentation', 'luck', 'nimbleness', 'strategy', 'subtlety'],
 		requiredRetainers: [],
@@ -465,6 +468,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'eremite',
 		label: 'Eremite',
+		description: 'At some point you decided civilisation had too many people in it, so you retreated to the wilderness to live in quiet contemplation and staggering filth. Subsisting on foraged acorns in damp caves has its perks: you are remarkably hardy, possess fearsome mental resolve, and occasionally glimpse the future. The catch? You must remain naked, or very nearly so. A brief disguise is tolerable, but prolonged clothing is not.',
 		requiredTraits: ['lorefulness', 'heartiness'],
 		availableTraits: [
 			'animal_husbandry',
@@ -486,6 +490,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'knave',
 		label: 'Knave',
+		description: 'Not everyone can be a hero, and frankly you find the whole concept overrated. No silver spoon for you — and if there had been, you\'d have fenced it for something practical ages ago. You\'re a realist, possibly the only sensible person in a world gone completely mad. You survive on your wits, which is to say quick fingers, a silver tongue, and a reliable talent for not dying every time a plague, tyrant, or self-righteous knight rolls through.',
 		requiredTraits: ['subtlety', 'glibness', 'nimbleness'],
 		availableTraits: [
 			'animal_husbandry',
@@ -507,6 +512,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'monarch',
 		label: 'Monarch',
+		description: 'The age teems with crowned heads — some presiding over grand fortresses, others little more than jumped-up warlords scheming in swamp castles. Heavy is the head that wears the crown, but at least you\'ll have considerably less muck on you than most. Monarchs bear more required traits than other situations: such is the burden of exalted station. They do, however, get a charming eccentricity — all the best and most memorable majesties have one.',
 		requiredTraits: ['authority', 'purpose', 'strategy'],
 		availableTraits: [
 			'decorum',
@@ -531,6 +537,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'monk_nun',
 		label: 'Monk/Nun',
+		description: 'Devout ascetics more interested in serving the divine than pestering strangers about it. Your order\'s rules dictate your conduct and, frequently, how others react to you. Work with your HoLE to establish the specifics — or simply tell them how it\'s going to be. How dare anyone come between you and God! Who do they think they are? That\'s heresy! Or perhaps thinking that\'s heresy is itself heresy. Now you see why self-flagellation was such a popular monastic pastime, right alongside brewing beer.',
 		requiredTraits: ['purpose', 'chastity'],
 		availableTraits: [
 			'animal_husbandry',
@@ -556,6 +563,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'noble',
 		label: 'Noble',
+		description: 'Fancy garments, lavish banquets, and swanning about ballrooms with all the right people — how delightful for you. As a titled (and rather entitled) member of the aristocracy, you embody elegance, good breeding, and social cunning. A natural leader, though you have no interest whatsoever in Nature and its many inconveniences. You have fewer options during creation — yes, life is terribly hard — but your posh upbringing makes you considerably harder to kill or drive round the bend.',
 		requiredTraits: ['decorum', 'glibness'],
 		availableTraits: [
 			'argumentation',
@@ -580,6 +588,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'troubadour',
 		label: 'Troubadour',
+		description: 'However would history be transmitted to the future without you? You might be a warrior-poet, a soulful playwright, a dashing actor, a grand storyteller, a jaunty jongleur, or a historian but without the tweedy suit and halitosis. Whatever your art, you appeal to a Muse for inspiration and reward. On the bright side, people find you irresistibly attractive. On the downside, so do most things with teeth.',
 		requiredTraits: ['bardistry', 'luck'],
 		availableTraits: ['animal_husbandry', 'druidry', 'heartiness', 'valour'],
 		requiredRetainers: [],
@@ -615,6 +624,7 @@ export const SITUATIONS: SituationDef[] = [
 	{
 		id: 'cleric',
 		label: 'Cleric',
+		description: 'A servant of the divine, draped in fine vestments and radiating holy purpose from every pore. Whether a lofty bishop, a humble parish priest, or a righteously violent adventurer who solves theological disputes with a mace, your calling is to pry open the world and cram it full of salvation. You can probably read, too — perhaps even Latin — unless you\'re one of those appointed-by-favour types.',
 		requiredTraits: ['purpose', 'lorefulness'],
 		availableTraits: ['argumentation', 'glibness', 'luck', 'valour'],
 		requiredRetainers: [],

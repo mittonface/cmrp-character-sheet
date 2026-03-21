@@ -19,6 +19,7 @@ export type CharacterSlot =
 export type SituationDef = {
 	id: string;
 	label: string;
+	description: string; // flavour text shown during situation selection
 	requiredTraits: string[]; // trait IDs the character must have
 	availableTraits: string[]; // trait IDs the player can pick from for free slots
 	requiredRetainers: string[]; // retainer IDs the character must have
