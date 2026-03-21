@@ -158,6 +158,30 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'whizzo_butter', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'monarch',
+		label: 'Monarch',
+		requiredTraits: ['authority', 'purpose', 'strategy'],
+		availableTraits: [
+			'decorum',
+			'glibness',
+			'heartiness',
+			'lorefulness',
+			'luck',
+			'subtlety',
+			'valour',
+			'wisdom_in_the_ways_of_science'
+		],
+		requiredRetainers: ['manservant'],
+		allowRetainers: true,
+		availableRetainers: ['valet', 'jester'],
+		dicePool: [18, 14, 10, 18],
+		availableClasses: ['upper'],
+		indifferentTraits: { type: 'fixed', traitIds: ['argumentation'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: { currency: 'cheese', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],

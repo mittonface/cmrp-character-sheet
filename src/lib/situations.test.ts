@@ -488,6 +488,71 @@ describe('Knave situation', () => {
 	});
 });
 
+describe('Monarch situation', () => {
+	const monarch = SITUATION_MAP.get('monarch')!;
+
+	it('exists in the situation map', () => {
+		expect(monarch).toBeDefined();
+	});
+
+	it('requires authority, purpose, and strategy', () => {
+		expect(monarch.requiredTraits).toEqual(['authority', 'purpose', 'strategy']);
+	});
+
+	it('requires manservant retainer', () => {
+		expect(monarch.requiredRetainers).toEqual(['manservant']);
+	});
+
+	it('allows retainers', () => {
+		expect(monarch.allowRetainers).toBe(true);
+	});
+
+	it('has valet and jester as available retainers', () => {
+		expect(monarch.availableRetainers).toEqual(['valet', 'jester']);
+	});
+
+	it('has a dice pool of [18, 14, 10, 18]', () => {
+		expect(monarch.dicePool).toEqual([18, 14, 10, 18]);
+	});
+
+	it('only allows upper class', () => {
+		expect(monarch.availableClasses).toEqual(['upper']);
+	});
+
+	it('is indifferent to argumentation', () => {
+		expect(monarch.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['argumentation'] });
+	});
+
+	it('has 8 available traits to choose from', () => {
+		expect(monarch.availableTraits).toHaveLength(8);
+		expect(monarch.availableTraits).toEqual([
+			'decorum',
+			'glibness',
+			'heartiness',
+			'lorefulness',
+			'luck',
+			'subtlety',
+			'valour',
+			'wisdom_in_the_ways_of_science'
+		]);
+	});
+
+	it('starts on Fine, Fine death status', () => {
+		expect(monarch.startingDeathStatus).toBe('fine_fine');
+	});
+
+	it('starts on Sensible loony status', () => {
+		expect(monarch.startingLoonyStatus).toBe('sensible');
+	});
+
+	it('starts with cheese (1d30)', () => {
+		expect(monarch.startingCurrency).toEqual({
+			currency: 'cheese',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('Enchanter situation', () => {
 	const enchanter = SITUATION_MAP.get('enchanter')!;
 
