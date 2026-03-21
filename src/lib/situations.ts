@@ -116,6 +116,27 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'gemstones', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'eremite',
+		label: 'Eremite',
+		requiredTraits: ['lorefulness', 'heartiness'],
+		availableTraits: [
+			'animal_husbandry',
+			'argumentation',
+			'druidry',
+			'luck',
+			'nimbleness',
+			'subtlety'
+		],
+		requiredRetainers: [],
+		allowRetainers: false,
+		dicePool: [16, 14, 12, 12, 6],
+		availableClasses: ['lower'],
+		indifferentTraits: { type: 'fixed', traitIds: ['decorum'] },
+		startingDeathStatus: 'mr_neutron',
+		startingLoonyStatus: 'reginald_maudling',
+		startingCurrency: { currency: 'acorns', roll: { count: 1, sides: 30 } }
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],

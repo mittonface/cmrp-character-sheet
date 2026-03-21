@@ -304,6 +304,65 @@ describe('Churl situation', () => {
 	});
 });
 
+describe('Eremite situation', () => {
+	const eremite = SITUATION_MAP.get('eremite')!;
+
+	it('exists in the situation map', () => {
+		expect(eremite).toBeDefined();
+	});
+
+	it('requires lorefulness and heartiness', () => {
+		expect(eremite.requiredTraits).toEqual(['lorefulness', 'heartiness']);
+	});
+
+	it('has no required retainers', () => {
+		expect(eremite.requiredRetainers).toEqual([]);
+	});
+
+	it('does not allow retainers', () => {
+		expect(eremite.allowRetainers).toBe(false);
+	});
+
+	it('has a dice pool of [16, 14, 12, 12, 6]', () => {
+		expect(eremite.dicePool).toEqual([16, 14, 12, 12, 6]);
+	});
+
+	it('only allows lower class', () => {
+		expect(eremite.availableClasses).toEqual(['lower']);
+	});
+
+	it('is indifferent to decorum', () => {
+		expect(eremite.indifferentTraits).toEqual({ type: 'fixed', traitIds: ['decorum'] });
+	});
+
+	it('has 6 available traits to choose from', () => {
+		expect(eremite.availableTraits).toHaveLength(6);
+		expect(eremite.availableTraits).toEqual([
+			'animal_husbandry',
+			'argumentation',
+			'druidry',
+			'luck',
+			'nimbleness',
+			'subtlety'
+		]);
+	});
+
+	it('starts on Mr. Neutron death status', () => {
+		expect(eremite.startingDeathStatus).toBe('mr_neutron');
+	});
+
+	it('starts on Reginald Maudling loony status', () => {
+		expect(eremite.startingLoonyStatus).toBe('reginald_maudling');
+	});
+
+	it('starts with acorns (1d30)', () => {
+		expect(eremite.startingCurrency).toEqual({
+			currency: 'acorns',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+});
+
 describe('Cleric situation', () => {
 	const cleric = SITUATION_MAP.get('cleric')!;
 
