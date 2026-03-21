@@ -32,6 +32,13 @@ When adding or modifying a feature, **always** write or update unit tests to cov
 
 This project prioritizes clean code and well-designed data structures. When implementing a new feature, actively look for opportunities to refactor, generalize, or introduce abstractions that improve the codebase — don't just bolt new code onto existing patterns if a better structure exists. The application will grow significantly in complexity, so investing in good abstractions now pays off. Prefer generic, reusable solutions over one-off implementations. If you see a way to make existing code more maintainable while working on a feature, do the refactor.
 
+## Deployment
+
+- Hosted on **GitHub Pages** via `@sveltejs/adapter-static`
+- Auto-deploys on push to `main` via `.github/workflows/deploy.yml`
+- The `BASE_PATH` env var sets the subpath for GitHub Pages (e.g., `/cmrp-character-sheet`). Locally it defaults to `''`.
+- When building locally: `bun run build`. For GitHub Pages: the workflow sets `BASE_PATH` automatically.
+
 ## Architecture
 
 - SvelteKit file-based routing in `src/routes/`
