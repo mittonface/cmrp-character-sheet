@@ -34,10 +34,9 @@ This project prioritizes clean code and well-designed data structures. When impl
 
 ## Deployment
 
-- Hosted on **GitHub Pages** via `@sveltejs/adapter-static`
+- Hosted on **GitHub Pages** at `cmrp.mittn.ca` via `@sveltejs/adapter-static`
 - Auto-deploys on push to `main` via `.github/workflows/deploy.yml`
-- The `BASE_PATH` env var sets the subpath for GitHub Pages (e.g., `/cmrp-character-sheet`). Locally it defaults to `''`.
-- When building locally: `bun run build`. For GitHub Pages: the workflow sets `BASE_PATH` automatically.
+- Custom domain configured via `static/CNAME`
 
 ## Architecture
 
