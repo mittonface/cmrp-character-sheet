@@ -20,8 +20,8 @@ describe('data integrity', () => {
 		expect(ALL_TRAITS).toHaveLength(18);
 	});
 
-	it('has 12 retainers', () => {
-		expect(ALL_RETAINERS).toHaveLength(12);
+	it('has 26 retainers', () => {
+		expect(ALL_RETAINERS).toHaveLength(26);
 	});
 
 	it('all traits have unique IDs', () => {

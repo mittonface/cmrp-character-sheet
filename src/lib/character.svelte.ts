@@ -2,8 +2,8 @@ import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, Indi
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
-import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, getSituationChoices, SITUATION_MAP, TRAIT_MAP } from './situations';
-import { ACCOUTREMENT_MAP, getAvailableAccoutrements } from './accoutrements';
+import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, getSituationChoices, SITUATION_MAP, TRAIT_MAP, RETAINER_MAP } from './situations';
+import { ACCOUTREMENT_MAP, getAvailableAccoutrements, getRetainerAvailableAccoutrements } from './accoutrements';
 
 /**
  * Rebuild modifiers from serialized character data.
@@ -249,16 +249,43 @@ export function createCharacter(initial?: CharacterData) {
 		)
 	);
 
+	/** Check if a slotId belongs to a retainer (vs a trait) */
+	function isRetainerSlot(slotId: string): boolean {
+		return retainerSlots.some((s) => s.retainerId === slotId);
+	}
+
 	function setAccoutrement(slotId: string, accoutrementId: string, index: number = 0) {
+		// Enforce retainer accoutrement slot limits
+		if (isRetainerSlot(slotId)) {
+			const retainer = RETAINER_MAP.get(slotId);
+			if (!retainer || retainer.accoutrementSlots === 0) return;
+
+			if (accoutrementId) {
+				const existing = accoutrements[slotId] ?? [];
+				if (index < retainer.accoutrementSlots) {
+					const copy = [...existing];
+					copy[index] = accoutrementId;
+					accoutrements[slotId] = copy;
+				}
+			} else {
+				// Clear at index — remove and compact
+				const existing = accoutrements[slotId];
+				if (!existing) return;
+				const copy = existing.filter((_, i) => i !== index);
+				if (copy.length === 0) {
+					delete accoutrements[slotId];
+				} else {
+					accoutrements[slotId] = copy;
+				}
+			}
+			return;
+		}
+
+		// Trait accoutrement logic (primary + bonus from grantsExtra)
 		if (index === 0) {
 			if (accoutrementId) {
-				const existing = accoutrements[slotId];
 				// When changing primary, clear any bonus accoutrements that depended on it
-				if (existing && existing.length > 1) {
-					accoutrements[slotId] = [accoutrementId];
-				} else {
-					accoutrements[slotId] = [accoutrementId];
-				}
+				accoutrements[slotId] = [accoutrementId];
 			} else {
 				delete accoutrements[slotId];
 			}

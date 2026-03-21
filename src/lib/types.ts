@@ -41,10 +41,37 @@ export type TraitDef = {
 	label: string;
 };
 
+/** Accoutrement type restrictions for a retainer */
+export type RetainerAccoutrementTypes =
+	| { type: 'specific'; traitIds: string[] }
+	| { type: 'any' }
+	| { type: 'employerChoice'; count: number };
+
+/** Who can employ a retainer */
+export type EmploymentRequirement = {
+	situations?: string[];
+	classes?: SocialClass[];
+	traitMinimums?: { traitId: string; minSize: DieSize }[];
+	sameReligion?: boolean;
+};
+
+/** What a retainer can promote to */
+export type PromotionPath =
+	| { type: 'specific'; situationIds: string[] }
+	| { type: 'anyOfClass'; classes: SocialClass[]; also?: string[] }
+	| { type: 'matchesEmployer' }
+	| { type: 'random' }
+	| { type: 'none'; reason: string };
+
 /** A Retainer definition */
 export type RetainerDef = {
 	id: string;
 	label: string;
+	accoutrementSlots: number;
+	accoutrementTypes?: RetainerAccoutrementTypes;
+	employmentRequirement: EmploymentRequirement;
+	perDiem: string;
+	promotion: PromotionPath;
 };
 
 /** A simple trait modifier from an accoutrement */

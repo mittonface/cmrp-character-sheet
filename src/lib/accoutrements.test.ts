@@ -4,8 +4,10 @@ import {
 	ACCOUTREMENTS_BY_SLOT,
 	ACCOUTREMENT_MAP,
 	getAvailableAccoutrements,
-	getExtraAccoutrementOptions
+	getExtraAccoutrementOptions,
+	getRetainerAvailableAccoutrements
 } from './accoutrements';
+import type { RetainerAccoutrementTypes } from './types';
 
 describe('data integrity', () => {
 	it('all accoutrements have unique IDs', () => {
@@ -677,5 +679,67 @@ describe('getExtraAccoutrementOptions', () => {
 		const withoutRetainer = getExtraAccoutrementOptions('cloth_sack', false);
 		expect(withoutRetainer.length).toBeLessThanOrEqual(withRetainer.length);
 		expect(withoutRetainer.find((a) => a.requires?.retainer)).toBeUndefined();
+	});
+});
+
+describe('getRetainerAvailableAccoutrements', () => {
+	it('returns accoutrements from all specified trait pools for specific type', () => {
+		const types: RetainerAccoutrementTypes = {
+			type: 'specific',
+			traitIds: ['valour', 'strategy']
+		};
+		const result = getRetainerAvailableAccoutrements(types, true);
+		expect(result.length).toBeGreaterThan(0);
+		// Every returned accoutrement should belong to one of the allowed traits
+		for (const acc of result) {
+			expect(['valour', 'strategy']).toContain(acc.slotId);
+		}
+	});
+
+	it('returns accoutrements from all trait pools for any type', () => {
+		const types: RetainerAccoutrementTypes = { type: 'any' };
+		const result = getRetainerAvailableAccoutrements(types, true);
+		// Should include accoutrements from multiple traits
+		const slotIds = new Set(result.map((a) => a.slotId));
+		expect(slotIds.size).toBeGreaterThan(1);
+	});
+
+	it('returns accoutrements only from employer traits for employerChoice type', () => {
+		const types: RetainerAccoutrementTypes = { type: 'employerChoice', count: 2 };
+		const result = getRetainerAvailableAccoutrements(types, true, [
+			'valour',
+			'heartiness'
+		]);
+		expect(result.length).toBeGreaterThan(0);
+		for (const acc of result) {
+			expect(['valour', 'heartiness']).toContain(acc.slotId);
+		}
+	});
+
+	it('returns empty for employerChoice when no employer traits provided', () => {
+		const types: RetainerAccoutrementTypes = { type: 'employerChoice', count: 2 };
+		const result = getRetainerAvailableAccoutrements(types, true);
+		expect(result).toEqual([]);
+	});
+
+	it('excludes retainer-required accoutrements when no retainer', () => {
+		const types: RetainerAccoutrementTypes = {
+			type: 'specific',
+			traitIds: ['valour']
+		};
+		const withRetainer = getRetainerAvailableAccoutrements(types, true);
+		const withoutRetainer = getRetainerAvailableAccoutrements(types, false);
+		expect(withoutRetainer.length).toBeLessThanOrEqual(withRetainer.length);
+		expect(withoutRetainer.find((a) => a.requires?.retainer)).toBeUndefined();
+	});
+
+	it('does not return duplicate accoutrements across trait pools', () => {
+		const types: RetainerAccoutrementTypes = {
+			type: 'specific',
+			traitIds: ['valour', 'strategy']
+		};
+		const result = getRetainerAvailableAccoutrements(types, true);
+		const ids = result.map((a) => a.id);
+		expect(new Set(ids).size).toBe(ids.length);
 	});
 });

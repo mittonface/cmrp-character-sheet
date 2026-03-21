@@ -1,4 +1,4 @@
-import type { AccoutrementDef } from './types';
+import type { AccoutrementDef, RetainerAccoutrementTypes } from './types';
 
 /** All accoutrements in the system, keyed by trait */
 export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
@@ -1864,6 +1864,43 @@ export function getAvailableAccoutrements(
 		if (a.requires?.retainer && !hasRetainer) return false;
 		return true;
 	});
+}
+
+/**
+ * Get available accoutrements for a retainer, based on their accoutrement types.
+ * Retainers draw from the pools of their allowed trait types rather than having their own pool.
+ * Pass the retainer's accoutrementTypes directly to avoid circular imports.
+ */
+export function getRetainerAvailableAccoutrements(
+	accoutrementTypes: RetainerAccoutrementTypes,
+	hasRetainer: boolean,
+	employerTraitIds?: string[]
+): AccoutrementDef[] {
+	let traitIds: string[];
+	switch (accoutrementTypes.type) {
+		case 'specific':
+			traitIds = accoutrementTypes.traitIds;
+			break;
+		case 'any':
+			traitIds = [...ACCOUTREMENTS_BY_SLOT.keys()];
+			break;
+		case 'employerChoice':
+			traitIds = employerTraitIds ?? [];
+			break;
+	}
+
+	const seen = new Set<string>();
+	const result: AccoutrementDef[] = [];
+	for (const traitId of traitIds) {
+		const pool = ACCOUTREMENTS_BY_SLOT.get(traitId) ?? [];
+		for (const acc of pool) {
+			if (seen.has(acc.id)) continue;
+			if (acc.requires?.retainer && !hasRetainer) continue;
+			seen.add(acc.id);
+			result.push(acc);
+		}
+	}
+	return result;
 }
 
 /** Get available extra accoutrements granted by a primary accoutrement (e.g. Cloth Sack) */

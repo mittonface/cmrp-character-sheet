@@ -810,6 +810,119 @@ describe('accoutrement management', () => {
 	});
 });
 
+describe('retainer accoutrement management', () => {
+	it('allows setting accoutrements on a retainer slot', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		// Knight has required manservant — manservant has 2 accoutrement slots
+		// and can carry animal_husbandry, heartiness, strategy, valour accoutrements
+		char.setAccoutrement('manservant', 'knightly_armour', 0); // valour accoutrement
+		flushSync();
+
+		expect(char.accoutrements['manservant']).toEqual(['knightly_armour']);
+	});
+
+	it('allows up to accoutrementSlots picks on a retainer', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		// Manservant has 2 slots
+		char.setAccoutrement('manservant', 'knightly_armour', 0);
+		char.setAccoutrement('manservant', 'shield', 1);
+		flushSync();
+
+		expect(char.accoutrements['manservant']).toEqual(['knightly_armour', 'shield']);
+	});
+
+	it('rejects accoutrements beyond the retainer slot limit', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		char.setAccoutrement('manservant', 'knightly_armour', 0);
+		char.setAccoutrement('manservant', 'shield', 1);
+		char.setAccoutrement('manservant', 'knightly_helmet', 2); // over limit
+		flushSync();
+
+		expect(char.accoutrements['manservant']).toEqual(['knightly_armour', 'shield']);
+	});
+
+	it('rejects accoutrements on retainers with 0 slots', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		// Add a leech slot manually (leech has 0 accoutrement slots)
+		char.addSlot({ type: 'retainer', retainerId: 'leech', required: false, name: '' });
+		flushSync();
+
+		char.setAccoutrement('leech', 'knightly_armour', 0);
+		flushSync();
+
+		expect(char.accoutrements['leech']).toBeUndefined();
+	});
+
+	it('clears a retainer accoutrement by setting empty string', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		char.setAccoutrement('manservant', 'knightly_armour', 0);
+		char.setAccoutrement('manservant', 'shield', 1);
+		flushSync();
+
+		char.setAccoutrement('manservant', '', 0);
+		flushSync();
+
+		// Should compact: only shield remains
+		expect(char.accoutrements['manservant']).toEqual(['shield']);
+	});
+
+	it('deletes the record when last retainer accoutrement is cleared', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		char.setAccoutrement('manservant', 'knightly_armour', 0);
+		flushSync();
+
+		char.setAccoutrement('manservant', '', 0);
+		flushSync();
+
+		expect(char.accoutrements['manservant']).toBeUndefined();
+	});
+
+	it('computes roll modifiers from retainer accoutrements', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		// knightly_armour gives +1 valour, +1 authority
+		char.setAccoutrement('manservant', 'knightly_armour', 0);
+		flushSync();
+
+		expect(char.rollModifiers['valour']).toBe(1);
+		expect(char.rollModifiers['authority']).toBe(1);
+	});
+
+	it('cleans up retainer accoutrements when removing a retainer slot', () => {
+		const char = createCharacter();
+		char.setSituation('knight');
+		flushSync();
+		// Add a squire in an available slot
+		char.addSlot({ type: 'retainer', retainerId: 'squire', required: false, name: '' });
+		flushSync();
+		char.setAccoutrement('squire', 'knightly_armour', 0);
+		flushSync();
+		expect(char.accoutrements['squire']).toEqual(['knightly_armour']);
+
+		// Remove the squire slot (index 4, since knight has 2 required traits + 1 required manservant + squire is last)
+		const squireIndex = char.slots.findIndex(
+			(s) => s.type === 'retainer' && s.retainerId === 'squire'
+		);
+		char.removeSlot(squireIndex);
+		flushSync();
+
+		expect(char.accoutrements['squire']).toBeUndefined();
+	});
+});
+
 describe('final values with modifiers', () => {
 	it('accoutrement modifiers do not change die size', () => {
 		const char = createCharacter();

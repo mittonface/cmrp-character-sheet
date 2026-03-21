@@ -1,4 +1,11 @@
-import type { SituationDef, TraitDef, RetainerDef, CharacterSlot, SocialClass, SituationChoiceDef } from './types';
+import type {
+	SituationDef,
+	TraitDef,
+	RetainerDef,
+	CharacterSlot,
+	SocialClass,
+	SituationChoiceDef
+} from './types';
 import { SLOT_COUNT } from './types';
 
 /** All traits in the system */
@@ -25,18 +32,358 @@ export const ALL_TRAITS: TraitDef[] = [
 
 /** All retainers in the system */
 export const ALL_RETAINERS: RetainerDef[] = [
-	{ id: 'acolyte', label: 'Acolyte' },
-	{ id: 'apprentice', label: 'Apprentice' },
-	{ id: 'herald', label: 'Herald' },
-	{ id: 'homunculus', label: 'Homunculus' },
-	{ id: 'jester', label: 'Jester' },
-	{ id: 'manservant', label: 'Manservant (with coconuts)' },
-	{ id: 'minstrel', label: 'Minstrel' },
-	{ id: 'poet', label: 'Poet' },
-	{ id: 'scribe', label: 'Scribe' },
-	{ id: 'squire', label: 'Squire' },
-	{ id: 'torchbearer', label: 'Torchbearer' },
-	{ id: 'valet', label: 'Valet/Handmaid' }
+	{
+		id: 'acolyte',
+		label: 'Acolyte',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['chastity', 'lorefulness', 'nimbleness', 'purpose']
+		},
+		employmentRequirement: { situations: ['cleric'], sameReligion: true },
+		perDiem: '1 Earnest Mutual Prayer',
+		promotion: { type: 'specific', situationIds: ['cleric'] }
+	},
+	{
+		id: 'apprentice',
+		label: 'Apprentice',
+		accoutrementSlots: 2,
+		accoutrementTypes: { type: 'employerChoice', count: 2 },
+		employmentRequirement: { classes: ['middle'] },
+		perDiem: '1 Deed',
+		promotion: { type: 'matchesEmployer' }
+	},
+	{
+		id: 'cook',
+		label: 'Cook',
+		accoutrementSlots: 2,
+		accoutrementTypes: { type: 'specific', traitIds: ['heartiness'] },
+		employmentRequirement: {},
+		perDiem: '1 Hearty Belch',
+		promotion: { type: 'anyOfClass', classes: ['lower'] }
+	},
+	{
+		id: 'crone',
+		label: 'Crone',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['druidry', 'lorefulness', 'sorcery']
+		},
+		employmentRequirement: {},
+		perDiem: '1 Apple',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'enchanter', 'eremite', 'knave']
+		}
+	},
+	{
+		id: 'fortune_teller',
+		label: 'Fortune Teller',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['druidry', 'sorcery', 'wisdom_in_the_ways_of_science']
+		},
+		employmentRequirement: {},
+		perDiem: '1 Fortune',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'enchanter', 'eremite', 'knave']
+		}
+	},
+	{
+		id: 'groom',
+		label: 'Groom',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['animal_husbandry', 'heartiness', 'druidry']
+		},
+		employmentRequirement: {},
+		perDiem: 'Just be nice to animals',
+		promotion: { type: 'anyOfClass', classes: ['lower'] }
+	},
+	{
+		id: 'herald',
+		label: 'Herald',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['authority', 'bardistry', 'decorum', 'glibness', 'strategy']
+		},
+		employmentRequirement: { classes: ['upper'] },
+		perDiem: '1 Announcement',
+		promotion: { type: 'specific', situationIds: ['noble', 'troubadour'] }
+	},
+	{
+		id: 'homunculus',
+		label: 'Homunculus',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['druidry', 'sorcery', 'subtlety', 'wisdom_in_the_ways_of_science']
+		},
+		employmentRequirement: { situations: ['enchanter'] },
+		perDiem: '1 Dollop of Something Nasty',
+		promotion: {
+			type: 'none',
+			reason: 'It disappears in a puff of foul-smelling vapour if its employer croaks'
+		}
+	},
+	{
+		id: 'jester',
+		label: 'Jester',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: [
+				'argumentation',
+				'bardistry',
+				'glibness',
+				'luck',
+				'nimbleness',
+				'subtlety'
+			]
+		},
+		employmentRequirement: {},
+		perDiem: '1 Jolly',
+		promotion: { type: 'random' }
+	},
+	{
+		id: 'leech',
+		label: 'Leech',
+		accoutrementSlots: 0,
+		employmentRequirement: {},
+		perDiem: "None. They're thrilled to have a patient to experim…er…treat",
+		promotion: {
+			type: 'specific',
+			situationIds: ['cleric', 'enchanter', 'knave', 'noble']
+		}
+	},
+	{
+		id: 'manservant',
+		label: 'Manservant (with coconuts)',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['animal_husbandry', 'heartiness', 'strategy', 'valour']
+		},
+		employmentRequirement: { situations: ['knight', 'monarch', 'noble'] },
+		perDiem: '1 Chicken',
+		promotion: { type: 'specific', situationIds: ['knave'] }
+	},
+	{
+		id: 'merchant',
+		label: 'Merchant',
+		accoutrementSlots: 1,
+		accoutrementTypes: { type: 'any' },
+		employmentRequirement: {},
+		perDiem: '1 Opportunity to do Business',
+		promotion: { type: 'anyOfClass', classes: ['middle'] }
+	},
+	{
+		id: 'minstrel',
+		label: 'Minstrel',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: [
+				'bardistry',
+				'decorum',
+				'glibness',
+				'heartiness',
+				'lorefulness',
+				'luck'
+			]
+		},
+		employmentRequirement: {},
+		perDiem: '1 Coin',
+		promotion: {
+			type: 'specific',
+			situationIds: ['enchanter', 'knave', 'troubadour']
+		}
+	},
+	{
+		id: 'outlaw',
+		label: 'Outlaw',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['heartiness', 'strategy', 'subtlety', 'valour']
+		},
+		employmentRequirement: { classes: ['lower'] },
+		perDiem: '1 Opportunity',
+		promotion: { type: 'anyOfClass', classes: ['lower'], also: ['monarch'] }
+	},
+	{
+		id: 'page',
+		label: 'Page',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['authority', 'argumentation', 'lorefulness']
+		},
+		employmentRequirement: { classes: ['upper'] },
+		perDiem: "None. Happy to serve, m'lord!",
+		promotion: { type: 'anyOfClass', classes: ['upper'] }
+	},
+	{
+		id: 'poet',
+		label: 'Poet',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['bardistry', 'chastity', 'decorum', 'glibness', 'lorefulness', 'luck']
+		},
+		employmentRequirement: {},
+		perDiem: '1 Romantic Scene',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'enchanter', 'eremite', 'knave', 'troubadour']
+		}
+	},
+	{
+		id: 'porter',
+		label: 'Porter',
+		accoutrementSlots: 1,
+		accoutrementTypes: { type: 'any' },
+		employmentRequirement: {},
+		perDiem: "Scrap of food'll do. Ain't particular.",
+		promotion: { type: 'anyOfClass', classes: ['lower'] }
+	},
+	{
+		id: 'priest',
+		label: 'Priest',
+		accoutrementSlots: 0,
+		employmentRequirement: {
+			classes: ['middle', 'upper'],
+			traitMinimums: [{ traitId: 'purpose', minSize: 14 }],
+			sameReligion: true
+		},
+		perDiem: 'Tithing',
+		promotion: {
+			type: 'specific',
+			situationIds: ['cleric', 'eremite', 'monk_nun', 'monarch', 'noble']
+		}
+	},
+	{
+		id: 'sage',
+		label: 'Sage',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['lorefulness', 'sorcery', 'wisdom_in_the_ways_of_science']
+		},
+		employmentRequirement: {
+			traitMinimums: [{ traitId: 'lorefulness', minSize: 14 }]
+		},
+		perDiem: '1 Lecture (delivered or received)',
+		promotion: {
+			type: 'specific',
+			situationIds: ['enchanter', 'eremite', 'monk_nun']
+		}
+	},
+	{
+		id: 'scribe',
+		label: 'Scribe',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: [
+				'argumentation',
+				'bardistry',
+				'lorefulness',
+				'strategy',
+				'wisdom_in_the_ways_of_science'
+			]
+		},
+		employmentRequirement: { classes: ['middle', 'upper'] },
+		perDiem: '1 Something to Write on or with',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'cleric', 'eremite', 'monk_nun', 'noble', 'troubadour']
+		}
+	},
+	{
+		id: 'smith',
+		label: 'Smith',
+		accoutrementSlots: 0,
+		employmentRequirement: {},
+		perDiem: '1 Ale',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'knave', 'knight']
+		}
+	},
+	{
+		id: 'spy',
+		label: 'Spy',
+		accoutrementSlots: 0,
+		employmentRequirement: {},
+		perDiem: '1 Gemstone',
+		promotion: { type: 'specific', situationIds: ['knave', 'noble'] }
+	},
+	{
+		id: 'squire',
+		label: 'Squire',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['authority', 'decorum', 'heartiness', 'strategy', 'valour']
+		},
+		employmentRequirement: { situations: ['knight'] },
+		perDiem: "None. Happy to serve, m'lord!",
+		promotion: {
+			type: 'specific',
+			situationIds: ['knight', 'monarch', 'noble']
+		}
+	},
+	{
+		id: 'torchbearer',
+		label: 'Torchbearer',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['heartiness', 'nimbleness', 'luck', 'subtlety']
+		},
+		employmentRequirement: { situations: ['monk_nun'] },
+		perDiem: '1 Torch',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'knave', 'monk_nun']
+		}
+	},
+	{
+		id: 'valet',
+		label: 'Valet/Handmaid',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['chastity', 'decorum', 'glibness', 'nimbleness', 'strategy']
+		},
+		employmentRequirement: { classes: ['upper'] },
+		perDiem: '1 Flower',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'knave', 'noble']
+		}
+	},
+	{
+		id: 'woodsman',
+		label: 'Woodsman',
+		accoutrementSlots: 2,
+		accoutrementTypes: {
+			type: 'specific',
+			traitIds: ['druidry', 'heartiness', 'strategy']
+		},
+		employmentRequirement: { classes: ['middle', 'lower'] },
+		perDiem: '1 Dead Animal',
+		promotion: {
+			type: 'specific',
+			situationIds: ['churl', 'knave', 'knight', 'monk_nun']
+		}
+	}
 ];
 
 export const TRAIT_MAP = new Map<string, TraitDef>(ALL_TRAITS.map((t) => [t.id, t]));

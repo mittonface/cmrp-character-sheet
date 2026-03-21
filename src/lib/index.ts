@@ -9,7 +9,10 @@ export type {
 	CharacterData,
 	SituationDef,
 	TraitDef,
-	RetainerDef
+	RetainerDef,
+	RetainerAccoutrementTypes,
+	EmploymentRequirement,
+	PromotionPath
 } from './types';
 export { SLOT_COUNT } from './types';
 export {
