@@ -434,6 +434,142 @@ describe('specific accoutrements', () => {
 		expect(pouch.specialEffects![0]).toContain('talcum powder');
 		expect(pouch.specialEffects![1]).toContain('One-time use');
 	});
+
+	it('all purpose accoutrements have +1 purpose as first modifier', () => {
+		const purposeAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'purpose');
+		expect(purposeAccs.length).toBe(10);
+		for (const acc of purposeAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'purpose', value: 1 });
+		}
+	});
+
+	it('Pate Plank has conditional modifier vs clergy, -1 wisdom, and one-time use', () => {
+		const plank = ACCOUTREMENT_MAP.get('pate_plank')!;
+		expect(plank.conditionalModifiers).toHaveLength(1);
+		expect(plank.conditionalModifiers![0].description).toContain('clergy');
+		expect(plank.modifiers.find((m) => m.target === 'wisdom_in_the_ways_of_science')!.value).toBe(-1);
+		expect(plank.specialEffects).toHaveLength(1);
+		expect(plank.specialEffects![0]).toContain('One-time use');
+		expect(plank.specialEffects![0]).toContain('Purpose');
+	});
+
+	it('Papal Bull has conditional modifier vs Catholic persons, -1 glibness, and one-time use', () => {
+		const bull = ACCOUTREMENT_MAP.get('papal_bull')!;
+		expect(bull.conditionalModifiers).toHaveLength(1);
+		expect(bull.conditionalModifiers![0].description).toContain('Catholic');
+		expect(bull.modifiers.find((m) => m.target === 'glibness')!.value).toBe(-1);
+		expect(bull.specialEffects).toHaveLength(1);
+		expect(bull.specialEffects![0]).toContain('One-time use');
+		expect(bull.specialEffects![0]).toContain('Luck roll');
+	});
+
+	it('A Halo and Two Cherubs has conditional modifier vs painters and -1 subtlety', () => {
+		const halo = ACCOUTREMENT_MAP.get('a_halo_and_two_cherubs')!;
+		expect(halo.conditionalModifiers).toHaveLength(1);
+		expect(halo.conditionalModifiers![0].description).toContain('painters');
+		expect(halo.modifiers.find((m) => m.target === 'subtlety')!.value).toBe(-1);
+	});
+
+	it('Holy Hand Grenade of Antioch has +1 strategy, -1 valour, and one-time use', () => {
+		const grenade = ACCOUTREMENT_MAP.get('holy_hand_grenade_of_antioch')!;
+		expect(grenade.modifiers.find((m) => m.target === 'strategy')!.value).toBe(1);
+		expect(grenade.modifiers.find((m) => m.target === 'valour')!.value).toBe(-1);
+		expect(grenade.specialEffects).toHaveLength(1);
+		expect(grenade.specialEffects![0]).toContain('One-time use');
+		expect(grenade.specialEffects![0]).toContain('Strategy roll');
+	});
+
+	it('all sorcery accoutrements have +1 sorcery as first modifier', () => {
+		const sorcAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'sorcery');
+		expect(sorcAccs.length).toBe(10);
+		for (const acc of sorcAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'sorcery', value: 1 });
+		}
+	});
+
+	it('Wand has +2 sorcery total', () => {
+		const wand = ACCOUTREMENT_MAP.get('wand')!;
+		const sorcTotal = wand.modifiers
+			.filter((m) => m.target === 'sorcery')
+			.reduce((sum, m) => sum + m.value, 0);
+		expect(sorcTotal).toBe(2);
+	});
+
+	it('Cauldron has conditional modifier vs Witches and cooks and -1 nimbleness', () => {
+		const cauldron = ACCOUTREMENT_MAP.get('cauldron')!;
+		expect(cauldron.conditionalModifiers).toHaveLength(1);
+		expect(cauldron.conditionalModifiers![0].description).toContain('Witches');
+		expect(cauldron.modifiers.find((m) => m.target === 'nimbleness')!.value).toBe(-1);
+	});
+
+	it('Staff has sheep special effect', () => {
+		const staff = ACCOUTREMENT_MAP.get('staff')!;
+		expect(staff.specialEffects).toHaveLength(1);
+		expect(staff.specialEffects![0]).toContain('Sheep');
+	});
+
+	it('Crystal Ball has fortune-telling special effect', () => {
+		const ball = ACCOUTREMENT_MAP.get('crystal_ball')!;
+		expect(ball.specialEffects).toHaveLength(1);
+		expect(ball.specialEffects![0]).toContain('fortune');
+	});
+
+	it('Interspace Toothbrush has conditional modifier vs Møøses, -1 decorum, and attack special effect', () => {
+		const brush = ACCOUTREMENT_MAP.get('interspace_toothbrush')!;
+		expect(brush.conditionalModifiers).toHaveLength(1);
+		expect(brush.conditionalModifiers![0].description).toContain('Møøses');
+		expect(brush.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
+		expect(brush.specialEffects).toHaveLength(1);
+		expect(brush.specialEffects![0]).toContain('Møøses attack');
+	});
+
+	it('all strategy accoutrements have +1 strategy as first modifier', () => {
+		const stratAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'strategy');
+		expect(stratAccs.length).toBe(10);
+		for (const acc of stratAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'strategy', value: 1 });
+		}
+	});
+
+	it('Longbow has conditional modifier vs French persons and -1 subtlety', () => {
+		const bow = ACCOUTREMENT_MAP.get('longbow')!;
+		expect(bow.conditionalModifiers).toHaveLength(1);
+		expect(bow.conditionalModifiers![0].description).toContain('French');
+		expect(bow.modifiers.find((m) => m.target === 'subtlety')!.value).toBe(-1);
+	});
+
+	it('Fetchez la Vache Set has conditional modifier and -1 animal husbandry', () => {
+		const set = ACCOUTREMENT_MAP.get('fetchez_la_vache_set')!;
+		expect(set.conditionalModifiers).toHaveLength(1);
+		expect(set.conditionalModifiers![0].description).toContain('Fetchez la Vache');
+		expect(set.modifiers.find((m) => m.target === 'animal_husbandry')!.value).toBe(-1);
+	});
+
+	it('Crossbow has conditional modifier vs armoured persons and -1 nimbleness', () => {
+		const xbow = ACCOUTREMENT_MAP.get('crossbow')!;
+		expect(xbow.conditionalModifiers).toHaveLength(1);
+		expect(xbow.conditionalModifiers![0].description).toContain('armoured');
+		expect(xbow.modifiers.find((m) => m.target === 'nimbleness')!.value).toBe(-1);
+	});
+
+	it('Siege Engine has conditional modifier vs becastled persons and d6 type special effects', () => {
+		const engine = ACCOUTREMENT_MAP.get('siege_engine')!;
+		expect(engine.conditionalModifiers).toHaveLength(1);
+		expect(engine.conditionalModifiers![0].description).toContain('becastled');
+		expect(engine.specialEffects).toHaveLength(2);
+		expect(engine.specialEffects![0]).toContain('d6');
+		expect(engine.specialEffects![1]).toContain('one-time use');
+	});
+
+	it('Police Wand has +1 authority, +3 conditional vs outlaws, and one-time use d6 effect', () => {
+		const pw = ACCOUTREMENT_MAP.get('police_wand')!;
+		expect(pw.modifiers.find((m) => m.target === 'authority')!.value).toBe(1);
+		expect(pw.conditionalModifiers).toHaveLength(1);
+		expect(pw.conditionalModifiers![0].description).toContain('outlaws');
+		expect(pw.specialEffects).toHaveLength(1);
+		expect(pw.specialEffects![0]).toContain('One-time use');
+		expect(pw.specialEffects![0]).toContain('d6');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {
@@ -453,7 +589,7 @@ describe('getAvailableAccoutrements', () => {
 	});
 
 	it('returns empty for a trait with no accoutrements', () => {
-		expect(getAvailableAccoutrements('sorcery', true)).toEqual([]);
+		expect(getAvailableAccoutrements('subtlety', true)).toEqual([]);
 	});
 
 	it('returns empty for unknown trait', () => {

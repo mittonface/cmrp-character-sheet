@@ -1317,6 +1317,312 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 			'A talcum powder for grip enhancement.',
 			'One-time use: cover body with the entire contents of the pouch to repel all small woodland creatures, rodents, and rodential persons within a mile, for one day.'
 		]
+	},
+
+	// --- Purpose accoutrements ---
+	// All purpose accoutrements share a baseline +1 to purpose
+	{
+		id: 'pate_plank',
+		label: 'Pate Plank',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. clergy' }],
+		specialEffects: [
+			'One-time use: whilst chanting in Latin, break it over your head. Suffer 1 bit of Death, move Purpose four degrees towards Serious, and move all other Traits one degree towards Silly.'
+		]
+	},
+	{
+		id: 'hair_shirt',
+		label: 'Hair Shirt',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'animal_husbandry', value: 1 }
+		]
+	},
+	{
+		id: 'self_scourge',
+		label: 'Self-Scourge',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'chastity', value: 1 }
+		]
+	},
+	{
+		id: 'ceremonial_robes',
+		label: 'Ceremonial Robes',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'censer_with_incense',
+		label: 'Censer with Incense',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		]
+	},
+	{
+		id: 'hymnal',
+		label: 'Hymnal',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		]
+	},
+	{
+		id: 'mitre',
+		label: 'Mitre',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'authority', value: 1 }
+		]
+	},
+	{
+		id: 'papal_bull',
+		label: 'Papal Bull',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'glibness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Catholic persons' }],
+		specialEffects: [
+			'One-time use: break the seal and read the contents. Make a Luck roll (Strewthing/Spamming as normal). If the result is 4+, your sins are forgiven. Return all your Demerits. If the result is 2-3, it\'s just some spilled wine. Maybe blood. Whatever. If it\'s a 1, you are declared a heretic!'
+		]
+	},
+	{
+		id: 'a_halo_and_two_cherubs',
+		label: 'A Halo and Two Cherubs',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'subtlety', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. painters' }]
+	},
+	{
+		id: 'holy_hand_grenade_of_antioch',
+		label: 'Holy Hand Grenade of Antioch',
+		slotId: 'purpose',
+		modifiers: [
+			{ target: 'purpose', value: 1 },
+			{ target: 'strategy', value: 1 },
+			{ target: 'valour', value: -1 }
+		],
+		specialEffects: [
+			"One-time use: make a Strategy roll (Strewthing/Spamming as normal). If the result is 3 or 5, you've miscounted; it explodes in your hand, and you take 1 bit of Death. Otherwise (assuming it's not a Spam), you lobbeth the grenade, yea verily, with much accuracy, and cause a single person or creature to snuff it."
+		]
+	},
+
+	// --- Sorcery accoutrements ---
+	// All sorcery accoutrements share a baseline +1 to sorcery
+	{
+		id: 'staff',
+		label: 'Staff',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		],
+		specialEffects: ['Sheep tend to follow you around.']
+	},
+	{
+		id: 'wand',
+		label: 'Wand',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'sorcery', value: 1 }
+		]
+	},
+	{
+		id: 'shrunken_head',
+		label: 'Shrunken Head',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'pointy_hat',
+		label: 'Pointy Hat',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 }
+		]
+	},
+	{
+		id: 'cauldron',
+		label: 'Cauldron',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'nimbleness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Witches and cooks' }]
+	},
+	{
+		id: 'feather_boa',
+		label: 'Feather Boa',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'glibness', value: 1 }
+		]
+	},
+	{
+		id: 'starry_robes',
+		label: 'Starry Robes',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'purpose', value: 1 }
+		]
+	},
+	{
+		id: 'crystal_ball',
+		label: 'Crystal Ball',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'strategy', value: 1 }
+		],
+		specialEffects: ['If anyone sees it, they ask you to tell their fortune.']
+	},
+	{
+		id: 'interspace_toothbrush',
+		label: 'Interspace Toothbrush',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'decorum', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. Møøses' }],
+		specialEffects: ['Møøses attack you on sight.']
+	},
+	{
+		id: 'police_wand',
+		label: 'Police Wand',
+		slotId: 'sorcery',
+		modifiers: [
+			{ target: 'sorcery', value: 1 },
+			{ target: 'authority', value: 1 }
+		],
+		conditionalModifiers: [{ description: '+3 to all Trait rolls vs. outlaws, criminals, bandits, and the like' }],
+		specialEffects: [
+			'One-time use (roll a d6 to see which effect you get). 1 = Turn yourself invisible for the day. 2 = Commit one act of time-travelling or teleportation. 3 = Turn all nearby bandits and other violent criminals into frogs. 4 = Make your whole party invisible for the day. 5 = Must help all old ladies you encounter across the road. For the rest of your life. 6 = Choose one from 1-5.'
+		]
+	},
+
+	// --- Strategy accoutrements ---
+	// All strategy accoutrements share a baseline +1 to strategy
+	{
+		id: 'book_of_trojan_woodland_creatures',
+		label: 'Book of Trojan Woodland Creatures',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'sling',
+		label: 'Sling',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'druidry', value: 1 }
+		]
+	},
+	{
+		id: 'dice',
+		label: 'Dice',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'luck', value: 1 }
+		]
+	},
+	{
+		id: 'ladder',
+		label: 'Ladder',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'authority', value: 1 }
+		]
+	},
+	{
+		id: 'longbow',
+		label: 'Longbow',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'subtlety', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all rolls vs. French persons' }]
+	},
+	{
+		id: 'chessboard',
+		label: 'Chessboard',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'fetchez_la_vache_set',
+		label: 'Fetchez la Vache Set (travel size)',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'animal_husbandry', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls while playing (life-size) Fetchez la Vache' }]
+	},
+	{
+		id: 'crossbow',
+		label: 'Crossbow',
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'nimbleness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all rolls vs. armoured persons' }]
+	},
+	{
+		id: 'maurices_strategikon',
+		label: "Maurice's Strategikon",
+		slotId: 'strategy',
+		modifiers: [
+			{ target: 'strategy', value: 1 },
+			{ target: 'heartiness', value: 1 }
+		]
+	},
+	{
+		id: 'siege_engine',
+		label: 'Siege Engine',
+		slotId: 'strategy',
+		modifiers: [{ target: 'strategy', value: 1 }],
+		conditionalModifiers: [{ description: '+1 to all Trait rolls vs. becastled persons' }],
+		specialEffects: [
+			'Requires four people to haul and operate. Roll a d6 to determine type. 1 = Battering ram. 2 = Ballista. 3 = Catapult. 4 = Trebuchet. 5 = Portable drawbridge. 6 = Siege tower.',
+			"All types have a one-time use: bring down or bypass a castle's fortifications. The Siege Engine is destroyed in the process, but you're in!"
+		]
 	}
 ];
 
