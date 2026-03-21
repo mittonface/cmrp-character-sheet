@@ -156,6 +156,50 @@ describe('specific accoutrements', () => {
 		expect(mc.specialEffects).toHaveLength(1);
 		expect(mc.specialEffects![0]).toContain('sovereign');
 	});
+
+	it('all authority accoutrements have +1 authority as first modifier', () => {
+		const authAccs = ALL_ACCOUTREMENTS.filter((a) => a.slotId === 'authority');
+		expect(authAccs.length).toBe(10);
+		for (const acc of authAccs) {
+			expect(acc.modifiers[0]).toEqual({ target: 'authority', value: 1 });
+		}
+	});
+
+	it('Gonfalon requires a retainer', () => {
+		const gonfalon = ACCOUTREMENT_MAP.get('gonfalon')!;
+		expect(gonfalon.requires).toEqual({ retainer: true });
+	});
+
+	it('Buisine requires a retainer', () => {
+		const buisine = ACCOUTREMENT_MAP.get('buisine')!;
+		expect(buisine.requires).toEqual({ retainer: true });
+	});
+
+	it('Letter of the Marque has conditional modifier vs pirates and -1 decorum', () => {
+		const letter = ACCOUTREMENT_MAP.get('letter_of_the_marque')!;
+		expect(letter.conditionalModifiers).toHaveLength(1);
+		expect(letter.conditionalModifiers![0].description).toContain('pirates');
+		expect(letter.modifiers.find((m) => m.target === 'decorum')!.value).toBe(-1);
+	});
+
+	it('Applause/Laughs Pennon has studio audience special effect', () => {
+		const pennon = ACCOUTREMENT_MAP.get('applause_laughs_pennon')!;
+		expect(pennon.specialEffects).toHaveLength(1);
+		expect(pennon.specialEffects![0]).toContain('studio audience');
+	});
+
+	it('Crown has conditional modifier vs upper-class and -1 luck', () => {
+		const crown = ACCOUTREMENT_MAP.get('crown')!;
+		expect(crown.conditionalModifiers).toHaveLength(1);
+		expect(crown.conditionalModifiers![0].description).toContain('upper-class');
+		expect(crown.modifiers.find((m) => m.target === 'luck')!.value).toBe(-1);
+	});
+
+	it('Domesday Book has tax levy special effect', () => {
+		const book = ACCOUTREMENT_MAP.get('domesday_book')!;
+		expect(book.specialEffects).toHaveLength(1);
+		expect(book.specialEffects![0]).toContain('levy a tax');
+	});
 });
 
 describe('getAvailableAccoutrements', () => {

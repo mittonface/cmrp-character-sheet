@@ -294,6 +294,106 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			'One-time use: defeat a sovereign. No roll required; the Sovereign is immediately overcome as if the required number of Deeds to defeat them had been met. They remain on the throne, but they\u2019ve lost a great deal of authority and respect\u2026 and they are no longer an obstacle to your aims.'
 		]
+	},
+	// --- Authority accoutrements ---
+	// All authority accoutrements share a baseline +1 to authority
+	{
+		id: 'gonfalon',
+		label: 'Gonfalon',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'strategy', value: 1 }
+		],
+		requires: { retainer: true }
+	},
+	{
+		id: 'buisine',
+		label: 'Buisine',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'bardistry', value: 1 }
+		],
+		requires: { retainer: true }
+	},
+	{
+		id: 'sheaf_of_pedigree_parchments',
+		label: 'Sheaf of Pedigree Parchments',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'ancestors_framed_portrait',
+		label: "Ancestor's Framed Portrait",
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'purpose', value: 1 }
+		]
+	},
+	{
+		id: 'shield_with_coat_of_arms',
+		label: 'Shield Emblazoned with Coat of Arms',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'signet_ring',
+		label: 'Signet Ring',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'decorum', value: 1 }
+		]
+	},
+	{
+		id: 'letter_of_the_marque',
+		label: 'Letter of the Marque',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'decorum', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs pirates' }]
+	},
+	{
+		id: 'applause_laughs_pennon',
+		label: 'Applause/Laughs Pennon',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'luck', value: 1 }
+		],
+		specialEffects: ['Can be waved to appease an unhappy studio audience']
+	},
+	{
+		id: 'crown',
+		label: 'Crown',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'luck', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs upper-class persons' }]
+	},
+	{
+		id: 'domesday_book',
+		label: 'The Domesday Book',
+		slotId: 'authority',
+		modifiers: [
+			{ target: 'authority', value: 1 },
+			{ target: 'wisdom_in_the_ways_of_science', value: 1 }
+		],
+		specialEffects: [
+			'Once per day, wield the book to levy a tax. Make an Authority roll (Strewthing/Spamming as normal). Shoppekeepers in the area must hand over d10 pieces of currency each. If carried openly, Shoppekeepers and merchants will show great disdain, or they\u2019ll be really nice and later hire someone to kill you.'
+		]
 	}
 ];
 
