@@ -285,7 +285,7 @@
 				<div class="flex w-full items-stretch">
 					<!-- Clickable expand area -->
 					<button
-						class="flex flex-1 cursor-pointer items-center gap-0 text-left transition-colors duration-200
+						class="flex min-w-0 flex-1 cursor-pointer items-center gap-0 overflow-hidden text-left transition-colors duration-200
 							{canCarry ? 'hover:bg-gold/5' : 'cursor-default'}"
 						onclick={() => canCarry && toggleSlot(sid)}
 						disabled={!canCarry}
@@ -308,31 +308,47 @@
 						</div>
 
 						<!-- Slot info -->
-						<div class="flex min-h-[3.5rem] flex-1 items-center gap-3 px-4 py-2.5">
-							<!-- Type badge -->
-							<span
-								class="font-heading shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium
-									{isRetainer
-									? 'bg-gold/15 text-gold-dark'
-									: 'bg-crimson/10 text-crimson'}"
-							>
-								{isRetainer ? 'Retainer' : 'Trait'}
-							</span>
+						<div class="min-h-[3.5rem] min-w-0 flex-1 px-4 py-2.5">
+							<div class="flex items-center gap-2">
+								<!-- Type badge -->
+								<span
+									class="font-heading shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium
+										{isRetainer
+										? 'bg-gold/15 text-gold-dark'
+										: 'bg-crimson/10 text-crimson'}"
+								>
+									{isRetainer ? 'Retainer' : 'Trait'}
+								</span>
 
-							<!-- Slot name -->
-							<span class="font-heading text-sm font-semibold tracking-wide text-ink">
-								{label}
-							</span>
+								<!-- Slot name -->
+								<span class="font-heading min-w-0 truncate text-sm font-semibold tracking-wide text-ink">
+									{label}
+								</span>
 
-							<span class="flex-1"></span>
+								<span class="flex-1"></span>
 
-							<!-- Status -->
+								<!-- Expand chevron -->
+								{#if canCarry}
+									<svg
+										class="h-4 w-4 shrink-0 text-ink-faint/40 transition-transform duration-200
+											{isExpanded ? 'rotate-180' : ''}"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+									>
+										<polyline points="6 9 12 15 18 9" />
+									</svg>
+								{/if}
+							</div>
+
+							<!-- Status — on its own line so long names don't overflow -->
 							{#if !canCarry}
-								<span class="font-heading text-xs tracking-wide text-ink-faint/40">
+								<span class="font-heading mt-1 block text-xs tracking-wide text-ink-faint/40">
 									No accoutrement slots
 								</span>
 							{:else if hasPick}
-								<span class="flex flex-wrap items-center gap-1.5">
+								<div class="mt-1 flex flex-wrap items-center gap-1.5">
 									{#each accIds as accId, ai}
 										{#if ai > 0}
 											<span class="text-gold-dark/30">&middot;</span>
@@ -341,25 +357,11 @@
 											{ACCOUTREMENT_MAP.get(accId)?.label ?? accId}
 										</span>
 									{/each}
-								</span>
+								</div>
 							{:else}
-								<span class="font-heading text-xs tracking-wide text-crimson/50">
+								<span class="font-heading mt-1 block text-xs tracking-wide text-crimson/50">
 									Not yet outfitted
 								</span>
-							{/if}
-
-							<!-- Expand chevron -->
-							{#if canCarry}
-								<svg
-									class="h-4 w-4 text-ink-faint/40 transition-transform duration-200
-										{isExpanded ? 'rotate-180' : ''}"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-								>
-									<polyline points="6 9 12 15 18 9" />
-								</svg>
 							{/if}
 						</div>
 					</button>
