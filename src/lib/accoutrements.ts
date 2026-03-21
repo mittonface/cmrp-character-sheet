@@ -605,6 +605,101 @@ export const ALL_ACCOUTREMENTS: AccoutrementDef[] = [
 		specialEffects: [
 			'Once per day, wield the book to levy a tax. Make an Authority roll (Strewthing/Spamming as normal). Shoppekeepers in the area must hand over d10 pieces of currency each. If carried openly, Shoppekeepers and merchants will show great disdain, or they\u2019ll be really nice and later hire someone to kill you.'
 		]
+	},
+	// --- Decorum accoutrements ---
+	// All decorum accoutrements share a baseline +1 to decorum
+	{
+		id: 'phrygian_cap',
+		label: 'Phrygian Cap',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'nimbleness', value: 1 }
+		]
+	},
+	{
+		id: 'wimple',
+		label: 'Wimple',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'purpose', value: 1 }
+		]
+	},
+	{
+		id: 'barbette',
+		label: 'Barbette',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'luck', value: 1 }
+		]
+	},
+	{
+		id: 'surcoat',
+		label: 'Surcoat',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'valour', value: 1 }
+		]
+	},
+	{
+		id: 'hennin',
+		label: 'Hennin',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'decorum', value: 1 } // extra +1 decorum (total +2)
+		],
+		specialEffects: ['Decorated with precious stones. Roll 1d30 to see how many gemstones are attached.']
+	},
+	{
+		id: 'twelve_small_apparel_bells',
+		label: '12 Small Apparel Bells',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'subtlety', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. children' }]
+	},
+	{
+		id: 'poulaines',
+		label: 'Poulaines',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'nimbleness', value: -1 }
+		],
+		conditionalModifiers: [{ description: '+1 to all trait rolls vs. Upper-Class persons' }]
+	},
+	{
+		id: 'silk_cotte',
+		label: 'Silk Cotte',
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'glibness', value: 1 }
+		]
+	},
+	{
+		id: 'observers_book_of_princes',
+		label: "The Observer's Book of Princes",
+		slotId: 'decorum',
+		modifiers: [
+			{ target: 'decorum', value: 1 },
+			{ target: 'lorefulness', value: 1 }
+		]
+	},
+	{
+		id: 'book_of_etiquette',
+		label: 'The Book of Etiquette',
+		slotId: 'decorum',
+		modifiers: [{ target: 'decorum', value: 1 }],
+		specialEffects: [
+			'One-time use: burn, shred or otherwise thoroughly destroy the book. All Upper-Class persons who see you do it faint dramatically from the shock. When they come to, they\u2019ll think you\u2019re the most vile, abhorrent knave and tell all their friends about you\u2026 but you\u2019ll be long gone by then, surely.'
+		]
 	}
 ];
 
