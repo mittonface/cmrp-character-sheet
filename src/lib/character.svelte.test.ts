@@ -23,6 +23,7 @@ describe('createCharacter', () => {
 			traitValues: { valour: 12 },
 			accoutrements: {},
 			currencies: {},
+			choiceSelections: {},
 			selections: {}
 		});
 		expect(char.name).toBe('Sir Lancelot');
@@ -282,6 +283,213 @@ describe('class-required traits', () => {
 		// 5 total - 3 required (purpose, lorefulness, decorum) = 2 free
 		expect(char.freeSlotCount).toBe(2);
 		expect(char.remainingChoices).toBe(2);
+	});
+});
+
+describe('situation choices (e.g. muse)', () => {
+	it('sets up base required slots for troubadour without muse', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.slots).toHaveLength(2); // bardistry + luck
+		expect(char.situationChoices).toHaveLength(1);
+		expect(char.situationChoices[0].id).toBe('muse');
+	});
+
+	it('adds choice-required trait when muse is selected', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+
+		expect(char.slots).toHaveLength(3); // bardistry + luck + argumentation
+		expect(char.traitIds).toContain('argumentation');
+		expect(char.slots.every((s) => s.required)).toBe(true);
+	});
+
+	it('swaps choice-required trait when muse changes', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+		expect(char.traitIds).toContain('argumentation');
+
+		char.setChoice('muse', 'clio');
+		flushSync();
+		expect(char.traitIds).not.toContain('argumentation');
+		expect(char.traitIds).toContain('lorefulness');
+		expect(char.slots).toHaveLength(3);
+	});
+
+	it('resets player-chosen slots when muse changes', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+
+		char.addSlot({ type: 'trait', traitId: 'valour', required: false });
+		flushSync();
+		expect(char.slots).toHaveLength(4);
+
+		char.setChoice('muse', 'clio');
+		flushSync();
+
+		expect(char.slots).toHaveLength(3);
+		expect(char.traitIds).not.toContain('valour');
+	});
+
+	it('resets trait values and accoutrements when muse changes', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+
+		char.setTraitValue('bardistry', 16);
+		flushSync();
+
+		char.setChoice('muse', 'clio');
+		flushSync();
+
+		expect(char.traitValues).toEqual({});
+		expect(char.accoutrements).toEqual({});
+	});
+
+	it('removes choice-required trait when muse is cleared', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+		expect(char.slots).toHaveLength(3);
+
+		char.setChoice('muse', '');
+		flushSync();
+		expect(char.slots).toHaveLength(2);
+		expect(char.traitIds).not.toContain('argumentation');
+	});
+
+	it('has correct remaining choices after muse is selected', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+
+		// 5 total - 3 required (bardistry, luck, argumentation) = 2 free
+		expect(char.freeSlotCount).toBe(2);
+		expect(char.remainingChoices).toBe(2);
+	});
+
+	it('resets choices when situation changes', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'calliope');
+		flushSync();
+
+		char.setSituation('knight');
+		flushSync();
+
+		expect(char.choiceSelections).toEqual({});
+		expect(char.situationChoices).toHaveLength(0);
+	});
+
+	it('serializes choice selections', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		char.setChoice('muse', 'thalia');
+		flushSync();
+
+		const data = char.serialize();
+		expect(data.choiceSelections).toEqual({ muse: 'thalia' });
+	});
+});
+
+describe('troubadour situation', () => {
+	it('has correct starting statuses', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.deathStatus).toBe('fine_fine');
+		expect(char.loonyStatus).toBe('sensible');
+	});
+
+	it('has correct dice pool', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.dicePool).toEqual([16, 16, 10, 6, 6]);
+	});
+
+	it('is indifferent to chastity', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.indifferentTraits).toEqual(['chastity']);
+	});
+
+	it('has correct starting currency', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.startingCurrency).toEqual({
+			currency: 'upper_class_twit_trading_cards',
+			roll: { count: 1, sides: 30 }
+		});
+	});
+
+	it('allows all social classes', () => {
+		const char = createCharacter();
+		char.setSituation('troubadour');
+		flushSync();
+
+		expect(char.availableClasses).toEqual(['upper', 'middle', 'lower']);
+		expect(char.socialClass).toBe('');
+	});
+
+	it('all nine muses map to correct traits', () => {
+		const museTraitMap: Record<string, string> = {
+			calliope: 'argumentation',
+			clio: 'lorefulness',
+			erato: 'decorum',
+			euterpe: 'subtlety',
+			melpomene: 'authority',
+			polyhymnia: 'strategy',
+			terpsichore: 'nimbleness',
+			thalia: 'glibness',
+			urania: 'wisdom_in_the_ways_of_science'
+		};
+
+		for (const [museId, traitId] of Object.entries(museTraitMap)) {
+			const char = createCharacter();
+			char.setSituation('troubadour');
+			flushSync();
+
+			char.setChoice('muse', museId);
+			flushSync();
+
+			expect(char.traitIds).toContain(traitId);
+			expect(char.traitIds).toContain('bardistry');
+			expect(char.traitIds).toContain('luck');
+		}
 	});
 });
 
@@ -621,6 +829,7 @@ describe('currency management', () => {
 			traitValues: {},
 			accoutrements: {},
 			currencies: { gold: 5, cheese: 3 },
+			choiceSelections: {},
 			selections: {}
 		});
 

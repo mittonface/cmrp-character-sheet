@@ -89,6 +89,27 @@
 			</div>
 		{/if}
 
+		<!-- Situation Choices (e.g. Muse) -->
+		{#each character.situationChoices as choice}
+			<div class="mb-6">
+				<label class="mb-1 block text-sm font-medium" for="choice-{choice.id}">{choice.label}</label>
+				<select
+					id="choice-{choice.id}"
+					value={character.choiceSelections[choice.id] ?? ''}
+					onchange={(e) => {
+						const select = e.target as HTMLSelectElement;
+						character.setChoice(choice.id, select.value);
+					}}
+					class="w-full rounded border border-gray-300 px-3 py-2"
+				>
+					<option value="">— Choose a {choice.label} —</option>
+					{#each choice.options as option}
+						<option value={option.id}>{option.label}</option>
+					{/each}
+				</select>
+			</div>
+		{/each}
+
 		<!-- Death Status -->
 		{#if character.deathStatus}
 			<div class="mb-6">

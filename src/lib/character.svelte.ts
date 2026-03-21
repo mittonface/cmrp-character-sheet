@@ -1,8 +1,8 @@
-import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, IndifferentTraitsDef, LoonyStatus, Modifier, SheetContext, SocialClass } from './types';
+import type { CharacterData, CharacterSlot, Currency, DeathStatus, DieSize, IndifferentTraitsDef, LoonyStatus, Modifier, SheetContext, SocialClass, SituationChoiceDef } from './types';
 import { SLOT_COUNT } from './types';
 import { applyModifiers, removeBySource } from './modifiers';
 import { getEffects } from './effects';
-import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, SITUATION_MAP, TRAIT_MAP } from './situations';
+import { getRequiredSlots, getPickableTraits, getPickableRetainers, getAvailableClasses, getSituationChoices, SITUATION_MAP, TRAIT_MAP } from './situations';
 import { ACCOUTREMENT_MAP, getAvailableAccoutrements } from './accoutrements';
 
 /**
@@ -25,6 +25,7 @@ export function createCharacter(initial?: CharacterData) {
 	let indifferentTraitSelections = $state<string[]>(initial?.indifferentTraits ?? []);
 	let accoutrements = $state<Record<string, string>>(initial?.accoutrements ?? {});
 	let currencies = $state<Partial<Record<Currency, number>>>(initial?.currencies ?? {});
+	let choiceSelections = $state<Record<string, string>>(initial?.choiceSelections ?? {});
 	let selections = $state<Record<string, string>>(initial?.selections ?? {});
 	let modifiers = $state<Modifier[]>([]);
 
@@ -44,6 +45,9 @@ export function createCharacter(initial?: CharacterData) {
 
 	// --- Available social classes from the situation ---
 	let availableClasses = $derived(getAvailableClasses(situationId));
+
+	// --- Situation choices (e.g. muse) ---
+	let situationChoices = $derived(getSituationChoices(situationId));
 
 	// --- Indifferent traits ---
 	let indifferentTraitsDef = $derived<IndifferentTraitsDef | null>(
@@ -104,6 +108,9 @@ export function createCharacter(initial?: CharacterData) {
 		const classes = getAvailableClasses(id);
 		socialClass = classes.length === 1 ? classes[0] : '';
 
+		// Reset choices
+		choiceSelections = {};
+
 		// Reset to required slots (including class-required traits if class is auto-set)
 		slots = getRequiredSlots(id, socialClass || undefined);
 		traitValues = {};
@@ -124,6 +131,18 @@ export function createCharacter(initial?: CharacterData) {
 		}
 	}
 
+	// --- Rebuild required slots from current state ---
+	function rebuildSlots() {
+		slots = getRequiredSlots(
+			situationId,
+			socialClass || undefined,
+			Object.keys(choiceSelections).length > 0 ? choiceSelections : undefined
+		);
+		traitValues = {};
+		accoutrements = {};
+		indifferentTraitSelections = [];
+	}
+
 	// --- Social class management ---
 	function setSocialClass(cls: SocialClass | '') {
 		if (cls && !availableClasses.includes(cls)) return;
@@ -132,11 +151,19 @@ export function createCharacter(initial?: CharacterData) {
 		// Rebuild slots when class changes for situations with class-required traits
 		const situation = SITUATION_MAP.get(situationId);
 		if (situation?.classRequiredTraits) {
-			slots = getRequiredSlots(situationId, cls || undefined);
-			traitValues = {};
-			accoutrements = {};
-			indifferentTraitSelections = [];
+			rebuildSlots();
 		}
+	}
+
+	// --- Situation choice management ---
+	function setChoice(choiceId: string, optionId: string) {
+		if (optionId) {
+			choiceSelections = { ...choiceSelections, [choiceId]: optionId };
+		} else {
+			const { [choiceId]: _, ...rest } = choiceSelections;
+			choiceSelections = rest;
+		}
+		rebuildSlots();
 	}
 
 	// --- Death status management ---
@@ -285,6 +312,7 @@ export function createCharacter(initial?: CharacterData) {
 			traitValues: { ...traitValues },
 			accoutrements: { ...accoutrements },
 			currencies: { ...currencies },
+			choiceSelections: { ...choiceSelections },
 			selections: { ...selections }
 		};
 	}
@@ -310,6 +338,12 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		get availableClasses() {
 			return availableClasses;
+		},
+		get situationChoices() {
+			return situationChoices;
+		},
+		get choiceSelections() {
+			return choiceSelections;
 		},
 		get indifferentTraits() {
 			return indifferentTraits;
@@ -400,6 +434,7 @@ export function createCharacter(initial?: CharacterData) {
 		},
 		setSituation,
 		setSocialClass,
+		setChoice,
 		addIndifferentTrait,
 		removeIndifferentTrait,
 		setDeathStatus,

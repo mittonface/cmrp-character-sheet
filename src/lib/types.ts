@@ -25,6 +25,7 @@ export type SituationDef = {
 	allowRetainers: boolean; // whether the player can choose retainers for free slots
 	availableRetainers?: string[]; // if set, restricts which retainers can be chosen
 	classRequiredTraits?: Partial<Record<SocialClass, string[]>>; // traits required by social class choice
+	choices?: SituationChoiceDef[]; // named choices that can add required traits (e.g. muse selection)
 	dicePool: DieSize[]; // dice available to distribute across traits (length = max trait slots, empty if mustRoll)
 	mustRoll?: boolean; // if true, player must roll for each trait (no dice pool to distribute)
 	availableClasses: SocialClass[]; // which social classes the player can pick
@@ -66,6 +67,19 @@ export type AccoutrementDef = {
 	conditionalModifiers?: ConditionalModifier[]; // display-only conditional effects
 	specialEffects?: string[]; // narrative/one-time effects
 	requires?: { retainer: boolean }; // prerequisites
+};
+
+/** A named choice a Situation offers the player, where each option can add required traits */
+export type SituationChoiceDef = {
+	id: string; // e.g. 'muse'
+	label: string; // e.g. 'Muse'
+	options: SituationChoiceOption[];
+};
+
+export type SituationChoiceOption = {
+	id: string; // e.g. 'calliope'
+	label: string; // e.g. 'Calliope'
+	requiredTraits?: string[]; // trait IDs added as required when this option is chosen
 };
 
 /** Indifferent traits definition — fixed by the Situation or selected by the player */
@@ -192,5 +206,6 @@ export type CharacterData = {
 	indifferentTraits?: string[]; // player-selected or fixed indifferent trait IDs
 	accoutrements: Record<string, string>; // trait ID → accoutrement ID
 	currencies: Partial<Record<Currency, number>>; // currency amounts
+	choiceSelections: Record<string, string>; // situation choice ID → selected option ID (e.g. muse → calliope)
 	selections: Record<string, string>; // other selections
 };

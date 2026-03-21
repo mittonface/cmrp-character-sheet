@@ -1,4 +1,4 @@
-import type { SituationDef, TraitDef, RetainerDef, CharacterSlot, SocialClass } from './types';
+import type { SituationDef, TraitDef, RetainerDef, CharacterSlot, SocialClass, SituationChoiceDef } from './types';
 import { SLOT_COUNT } from './types';
 
 /** All traits in the system */
@@ -231,6 +231,41 @@ export const SITUATIONS: SituationDef[] = [
 		startingCurrency: { currency: 'lupins', roll: { count: 1, sides: 30 } }
 	},
 	{
+		id: 'troubadour',
+		label: 'Troubadour',
+		requiredTraits: ['bardistry', 'luck'],
+		availableTraits: ['animal_husbandry', 'druidry', 'heartiness', 'valour'],
+		requiredRetainers: [],
+		allowRetainers: true,
+		availableRetainers: ['minstrel', 'poet'],
+		choices: [
+			{
+				id: 'muse',
+				label: 'Muse',
+				options: [
+					{ id: 'calliope', label: 'Calliope', requiredTraits: ['argumentation'] },
+					{ id: 'clio', label: 'Clio', requiredTraits: ['lorefulness'] },
+					{ id: 'erato', label: 'Erato', requiredTraits: ['decorum'] },
+					{ id: 'euterpe', label: 'Euterpe', requiredTraits: ['subtlety'] },
+					{ id: 'melpomene', label: 'Melpomene', requiredTraits: ['authority'] },
+					{ id: 'polyhymnia', label: 'Polyhymnia', requiredTraits: ['strategy'] },
+					{ id: 'terpsichore', label: 'Terpsichore', requiredTraits: ['nimbleness'] },
+					{ id: 'thalia', label: 'Thalia', requiredTraits: ['glibness'] },
+					{ id: 'urania', label: 'Urania', requiredTraits: ['wisdom_in_the_ways_of_science'] }
+				]
+			}
+		],
+		dicePool: [16, 16, 10, 6, 6],
+		availableClasses: ['upper', 'middle', 'lower'],
+		indifferentTraits: { type: 'fixed', traitIds: ['chastity'] },
+		startingDeathStatus: 'fine_fine',
+		startingLoonyStatus: 'sensible',
+		startingCurrency: {
+			currency: 'upper_class_twit_trading_cards',
+			roll: { count: 1, sides: 30 }
+		}
+	},
+	{
 		id: 'cleric',
 		label: 'Cleric',
 		requiredTraits: ['purpose', 'lorefulness'],
@@ -253,8 +288,12 @@ export const SITUATIONS: SituationDef[] = [
 
 export const SITUATION_MAP = new Map<string, SituationDef>(SITUATIONS.map((s) => [s.id, s]));
 
-/** Get the required (locked-in) slots for a situation, optionally including class-required traits */
-export function getRequiredSlots(situationId: string, socialClass?: SocialClass): CharacterSlot[] {
+/** Get the required (locked-in) slots for a situation, optionally including class-required and choice-required traits */
+export function getRequiredSlots(
+	situationId: string,
+	socialClass?: SocialClass,
+	choiceSelections?: Record<string, string>
+): CharacterSlot[] {
 	const situation = SITUATION_MAP.get(situationId);
 	if (!situation) return [];
 
@@ -267,10 +306,28 @@ export function getRequiredSlots(situationId: string, socialClass?: SocialClass)
 			slots.push({ type: 'trait', traitId, required: true });
 		}
 	}
+	if (choiceSelections && situation.choices) {
+		for (const choice of situation.choices) {
+			const selectedOptionId = choiceSelections[choice.id];
+			if (!selectedOptionId) continue;
+			const option = choice.options.find((o) => o.id === selectedOptionId);
+			if (option?.requiredTraits) {
+				for (const traitId of option.requiredTraits) {
+					slots.push({ type: 'trait', traitId, required: true });
+				}
+			}
+		}
+	}
 	for (const retainerId of situation.requiredRetainers) {
 		slots.push({ type: 'retainer', retainerId, required: true, name: '' });
 	}
 	return slots;
+}
+
+/** Get the choices available for a situation */
+export function getSituationChoices(situationId: string): SituationChoiceDef[] {
+	const situation = SITUATION_MAP.get(situationId);
+	return situation?.choices ?? [];
 }
 
 /** Get the number of free slots the player needs to fill */
