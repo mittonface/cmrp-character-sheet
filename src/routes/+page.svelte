@@ -343,13 +343,12 @@
 			</div>
 		{/if}
 
-		<!-- Accoutrements (for required slots — traits and retainers) -->
-		{@const requiredSlots = character.slots.filter((s) => character.requiredSlotIds.has(s.type === 'trait' ? s.traitId : s.retainerId))}
-		{#if requiredSlots.length > 0}
+		<!-- Accoutrements (for all filled slots — traits and retainers) -->
+		{#if character.slots.length > 0}
 			<div class="mb-6">
 				<h2 class="mb-3 text-xl font-semibold">Accoutrements</h2>
 				<div class="space-y-4">
-					{#each requiredSlots as slot}
+					{#each character.slots as slot}
 						{@const slotId = slot.type === 'trait' ? slot.traitId : slot.retainerId}
 						{@const label = slotLabel(slot)}
 						{@const available = getAvailableAccoutrements(slotId, character.hasRetainer)}
