@@ -23,6 +23,34 @@ bun run dev
 bun run dev -- --open
 ```
 
+## Testing
+
+Unit tests (Vitest):
+
+```sh
+bun run test
+bun run test:watch
+```
+
+E2E tests (Playwright — builds & previews the app automatically):
+
+```sh
+bun run test:e2e
+```
+
+To install/update Playwright browsers:
+
+```sh
+bunx playwright install
+```
+
+To run in headed mode or debug:
+
+```sh
+bunx playwright test --headed
+bunx playwright test --ui
+```
+
 ## Building
 
 To create a production version of your app:
