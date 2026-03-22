@@ -40,6 +40,7 @@ export type SituationDef = {
 export type TraitDef = {
 	id: string;
 	label: string;
+	description: string;
 };
 
 /** Accoutrement type restrictions for a retainer */

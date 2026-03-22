@@ -2,6 +2,7 @@
 	import { SITUATION_MAP, TRAIT_MAP, RETAINER_MAP } from '$lib/situations';
 	import type { createCharacter } from '$lib/character.svelte';
 	import type { CharacterSlot } from '$lib/types';
+	import TraitTooltip from '$lib/components/TraitTooltip.svelte';
 
 	type Character = ReturnType<typeof createCharacter>;
 
@@ -120,7 +121,7 @@
 				{@const isRequired = slot?.required ?? false}
 
 				<div
-					class="group relative flex items-stretch gap-0 overflow-hidden rounded-sm border-2 transition-all duration-300
+					class="group relative flex items-stretch gap-0 rounded-sm border-2 transition-all duration-300
 						{isFilled
 						? isRequired
 							? 'parchment-bg border-parchment-300/80'
@@ -162,9 +163,20 @@
 							</span>
 
 							<!-- Name -->
-							<span class="font-heading text-sm font-semibold tracking-wide text-ink">
-								{slotLabel(slot)}
-							</span>
+							{#if slot.type === 'trait'}
+								{@const traitDef = TRAIT_MAP.get(slot.traitId)}
+								{#if traitDef}
+									<TraitTooltip description={traitDef.description}>
+										<span class="font-heading text-sm font-semibold tracking-wide text-ink underline decoration-ink/20 decoration-dotted underline-offset-4">
+											{traitDef.label}
+										</span>
+									</TraitTooltip>
+								{/if}
+							{:else}
+								<span class="font-heading text-sm font-semibold tracking-wide text-ink">
+									{slotLabel(slot)}
+								</span>
+							{/if}
 
 							<span class="flex-1"></span>
 
@@ -241,21 +253,23 @@
 						<div class="flex flex-wrap justify-center gap-2">
 							{#each character.pickableTraits as trait (trait.id)}
 								{@const isHovered = hoveredPickable === trait.id}
-								<button
-									class="cursor-pointer rounded-sm border border-crimson/20 px-3.5 py-2 text-sm transition-all duration-200
-										{isHovered
-										? 'border-crimson/50 bg-crimson/12 shadow-[0_0_10px_rgba(122,26,26,0.15)]'
-										: 'bg-crimson/5 hover:border-crimson/40 hover:bg-crimson/10'}"
-									onmouseenter={() => (hoveredPickable = trait.id)}
-									onmouseleave={() => (hoveredPickable = null)}
-									onclick={() => addTrait(trait.id)}
-								>
-									<span
-										class="font-heading font-medium tracking-wide {isHovered ? 'text-crimson-dark' : 'text-crimson'}"
+								<TraitTooltip description={trait.description}>
+									<button
+										class="cursor-pointer rounded-sm border border-crimson/20 px-3.5 py-2 text-sm transition-all duration-200
+											{isHovered
+											? 'border-crimson/50 bg-crimson/12 shadow-[0_0_10px_rgba(122,26,26,0.15)]'
+											: 'bg-crimson/5 hover:border-crimson/40 hover:bg-crimson/10'}"
+										onmouseenter={() => (hoveredPickable = trait.id)}
+										onmouseleave={() => (hoveredPickable = null)}
+										onclick={() => addTrait(trait.id)}
 									>
-										{trait.label}
-									</span>
-								</button>
+										<span
+											class="font-heading font-medium tracking-wide {isHovered ? 'text-crimson-dark' : 'text-crimson'}"
+										>
+											{trait.label}
+										</span>
+									</button>
+								</TraitTooltip>
 							{/each}
 						</div>
 					</div>

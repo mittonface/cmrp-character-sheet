@@ -10,24 +10,114 @@ import { SLOT_COUNT } from './types';
 
 /** All traits in the system */
 export const ALL_TRAITS: TraitDef[] = [
-	{ id: 'animal_husbandry', label: 'Animal Husbandry' },
-	{ id: 'argumentation', label: 'Argumentation' },
-	{ id: 'authority', label: 'Authority' },
-	{ id: 'bardistry', label: 'Bardistry' },
-	{ id: 'chastity', label: 'Chastity' },
-	{ id: 'decorum', label: 'Decorum' },
-	{ id: 'druidry', label: 'Druidry' },
-	{ id: 'glibness', label: 'Glibness' },
-	{ id: 'heartiness', label: 'Heartiness' },
-	{ id: 'lorefulness', label: 'Lorefulness' },
-	{ id: 'luck', label: 'Luck' },
-	{ id: 'nimbleness', label: 'Nimbleness' },
-	{ id: 'purpose', label: 'Purpose' },
-	{ id: 'sorcery', label: 'Sorcery' },
-	{ id: 'strategy', label: 'Strategy' },
-	{ id: 'subtlety', label: 'Subtlety' },
-	{ id: 'valour', label: 'Valour' },
-	{ id: 'wisdom_in_the_ways_of_science', label: 'Wisdom in the Ways of Science' }
+	{
+		id: 'animal_husbandry',
+		label: 'Animal Husbandry',
+		description:
+			'Your knack for befriending, taming, and not being eaten by the beasts of the realm. Handy for riding horses, calming oxen, and convincing geese you mean them no harm (you do).'
+	},
+	{
+		id: 'argumentation',
+		label: 'Argumentation',
+		description:
+			'The fine art of being right, or at least louder than whoever disagrees. Useful in debates, legal disputes, and tavern rows about whose round it is.'
+	},
+	{
+		id: 'authority',
+		label: 'Authority',
+		description:
+			'How convincingly you can tell people what to do and have them actually do it. Essential for leading troops, commanding servants, and queue-jumping at the bakery.'
+	},
+	{
+		id: 'bardistry',
+		label: 'Bardistry',
+		description:
+			'Your talent for song, verse, and dramatic recitation. Roll this when performing, inspiring allies, or attempting to rhyme something with "Camelot" (it\'s quite a lot).'
+	},
+	{
+		id: 'chastity',
+		label: 'Chastity',
+		description:
+			'Your resistance to temptations of the flesh and other morally questionable diversions. Higher values indicate either genuine virtue or simply never being asked.'
+	},
+	{
+		id: 'decorum',
+		label: 'Decorum',
+		description:
+			'Knowing which fork to use, how to address a bishop, and when not to mention the prawns. Your grasp of etiquette, manners, and not embarrassing yourself at court.'
+	},
+	{
+		id: 'druidry',
+		label: 'Druidry',
+		description:
+			'Command over the ancient nature magics — talking to trees, summoning weather, and knowing exactly which mushrooms will kill you versus merely make the trees talk back.'
+	},
+	{
+		id: 'glibness',
+		label: 'Glibness',
+		description:
+			'The silver-tongued ability to talk your way into (and occasionally out of) absolutely anything. For charm, persuasion, and selling bridges you don\'t technically own.'
+	},
+	{
+		id: 'heartiness',
+		label: 'Heartiness',
+		description:
+			'How much punishment your body can absorb before it files a formal complaint. Governs stamina, constitution, and surviving whatever the cook put in the stew.'
+	},
+	{
+		id: 'lorefulness',
+		label: 'Lorefulness',
+		description:
+			'The accumulated knowledge rattling about in your skull — history, legends, and obscure facts about the mating habits of dragons. Roll when you need to know things.'
+	},
+	{
+		id: 'luck',
+		label: 'Luck',
+		description:
+			'The inexplicable favour of the universe. When skill fails, preparation fails, and common sense has long since departed, Luck is what stands between you and catastrophe.'
+	},
+	{
+		id: 'nimbleness',
+		label: 'Nimbleness',
+		description:
+			'Agility, dexterity, and the ability to dodge things thrown at your head. Covers acrobatics, sleight of hand, and running away with considerable elegance.'
+	},
+	{
+		id: 'purpose',
+		label: 'Purpose',
+		description:
+			'Sheer bloody-minded determination. When the quest is hopeless, the odds impossible, and everyone else has gone home, Purpose is what keeps you trudging forward.'
+	},
+	{
+		id: 'sorcery',
+		label: 'Sorcery',
+		description:
+			'Your grasp of the arcane arts — casting spells, reading magical texts, and not accidentally turning yourself into a newt. The flashier, more explosion-prone cousin of Druidry.'
+	},
+	{
+		id: 'strategy',
+		label: 'Strategy',
+		description:
+			'Tactical thinking for combat and beyond — whether you play the long game or charge in headlong. Also covers launching pointy projectiles from a sensible distance.'
+	},
+	{
+		id: 'subtlety',
+		label: 'Subtlety',
+		description:
+			'The art of not being noticed when you\'d rather not be. Sneaking, skulking, hiding, and pretending you were definitely somewhere else when the pie went missing.'
+	},
+	{
+		id: 'valour',
+		label: 'Valour',
+		description:
+			'Raw fighting prowess — swinging swords, bashing shields, and generally making a nuisance of yourself in melee. The trait of choice for those who prefer problems they can stab.'
+	},
+	{
+		id: 'wisdom_in_the_ways_of_science',
+		label: 'Wisdom in the Ways of Science',
+		description:
+			'Do you know what also floats in water? If yes, this is your trait. Covers scientific reasoning, alchemy, engineering, and determining whether someone is in fact a witch.'
+	}
 ];
 
 /** All retainers in the system */
