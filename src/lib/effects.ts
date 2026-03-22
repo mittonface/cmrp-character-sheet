@@ -10,12 +10,12 @@ import type { Modifier } from './types';
  */
 
 export const situationEffects: Record<string, Modifier[]> = {
-	// Placeholder — situations may grant modifiers to traits or other fields
+  // Placeholder — situations may grant modifiers to traits or other fields
 };
 
 /** All effect registries keyed by selection category */
 export const effectRegistries: Record<string, Record<string, Modifier[]>> = {
-	situation: situationEffects
+  situation: situationEffects,
 };
 
 /**
@@ -23,12 +23,12 @@ export const effectRegistries: Record<string, Record<string, Modifier[]>> = {
  * Returns empty array if the category or choice doesn't exist.
  */
 export function getEffects(category: string, choice: string): Modifier[] {
-	return effectRegistries[category]?.[choice] ?? [];
+  return effectRegistries[category]?.[choice] ?? [];
 }
 
 /**
  * Get available options for a given category.
  */
 export function getOptions(category: string): string[] {
-	return Object.keys(effectRegistries[category] ?? {});
+  return Object.keys(effectRegistries[category] ?? {});
 }

@@ -11,58 +11,67 @@ import type { Modifier } from './types';
  *  5. 'max' operations — clamp to maximum
  */
 export function applyModifiers(
-	baseValues: Record<string, number | string>,
-	modifiers: Modifier[]
+  baseValues: Record<string, number | string>,
+  modifiers: Modifier[],
 ): Record<string, number | string> {
-	const result: Record<string, number | string> = { ...baseValues };
+  const result: Record<string, number | string> = { ...baseValues };
 
-	// Group modifiers by target
-	const byTarget = new Map<string, Modifier[]>();
-	for (const mod of modifiers) {
-		const list = byTarget.get(mod.target) ?? [];
-		list.push(mod);
-		byTarget.set(mod.target, list);
-	}
+  // Group modifiers by target
+  const byTarget = new Map<string, Modifier[]>();
+  for (const mod of modifiers) {
+    const list = byTarget.get(mod.target) ?? [];
+    list.push(mod);
+    byTarget.set(mod.target, list);
+  }
 
-	for (const [target, mods] of byTarget) {
-		let value = typeof result[target] === 'number' ? (result[target] as number) : 0;
+  for (const [target, mods] of byTarget) {
+    let value =
+      typeof result[target] === 'number' ? (result[target] as number) : 0;
 
-		// Sort by priority (lower first), stable within same priority
-		const sorted = [...mods].sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
+    // Sort by priority (lower first), stable within same priority
+    const sorted = [...mods].sort(
+      (a, b) => (a.priority ?? 0) - (b.priority ?? 0),
+    );
 
-		for (const mod of sorted.filter((m) => m.operation === 'set')) {
-			value = mod.value;
-		}
-		for (const mod of sorted.filter((m) => m.operation === 'add')) {
-			value += mod.value;
-		}
-		for (const mod of sorted.filter((m) => m.operation === 'multiply')) {
-			value *= mod.value;
-		}
-		for (const mod of sorted.filter((m) => m.operation === 'min')) {
-			value = Math.max(value, mod.value);
-		}
-		for (const mod of sorted.filter((m) => m.operation === 'max')) {
-			value = Math.min(value, mod.value);
-		}
+    for (const mod of sorted.filter((m) => m.operation === 'set')) {
+      value = mod.value;
+    }
+    for (const mod of sorted.filter((m) => m.operation === 'add')) {
+      value += mod.value;
+    }
+    for (const mod of sorted.filter((m) => m.operation === 'multiply')) {
+      value *= mod.value;
+    }
+    for (const mod of sorted.filter((m) => m.operation === 'min')) {
+      value = Math.max(value, mod.value);
+    }
+    for (const mod of sorted.filter((m) => m.operation === 'max')) {
+      value = Math.min(value, mod.value);
+    }
 
-		result[target] = value;
-	}
+    result[target] = value;
+  }
 
-	return result;
+  return result;
 }
 
 /** Remove all modifiers whose source starts with the given prefix */
-export function removeBySource(modifiers: Modifier[], sourcePrefix: string): Modifier[] {
-	return modifiers.filter((m) => !m.source.startsWith(sourcePrefix));
+export function removeBySource(
+  modifiers: Modifier[],
+  sourcePrefix: string,
+): Modifier[] {
+  return modifiers.filter((m) => !m.source.startsWith(sourcePrefix));
 }
 
 /** Get all modifiers affecting a specific target */
-export function getModifiersForTarget(modifiers: Modifier[], target: string): Modifier[] {
-	return modifiers.filter((m) => m.target === target);
+export function getModifiersForTarget(
+  modifiers: Modifier[],
+  target: string,
+): Modifier[] {
+  return modifiers.filter((m) => m.target === target);
 }
 
 /** Format a modifier value as a signed string: +2, -1, etc. */
 export function formatModifier(value: number): string {
-	return value >= 0 ? `+${value}` : `${value}`;
+  return value >= 0 ? `+${value}` : `${value}`;
 }
