@@ -165,62 +165,14 @@
       {/if}
 
       <!-- Indifferent Traits -->
-      {#if character.indifferentTraitsDef}
+      {#if character.indifferentTraits.length > 0}
         <div class="mb-6">
-          {#if character.indifferentTraitsDef.type === 'fixed'}
-            <p class="text-sm text-ink">
-              <span class="font-heading font-medium">Indifferent to:</span>
-              {character.indifferentTraits
-                .map((id) => TRAIT_MAP.get(id)?.label ?? id)
-                .join(', ')}
-            </p>
-          {:else}
-            <h2 class="font-heading mb-2 text-sm font-medium text-ink">
-              Indifferent Traits
-            </h2>
-            {#if character.indifferentTraits.length > 0}
-              <div class="mb-2 flex flex-wrap gap-2">
-                {#each character.indifferentTraits as traitId}
-                  <span
-                    class="inline-flex items-center gap-1 rounded bg-parchment-200 px-2 py-1 text-sm text-ink"
-                  >
-                    {TRAIT_MAP.get(traitId)?.label ?? traitId}
-                    <button
-                      class="cursor-pointer text-crimson hover:text-crimson-light"
-                      onclick={() => character.removeIndifferentTrait(traitId)}
-                      >&times;</button
-                    >
-                  </span>
-                {/each}
-              </div>
-            {/if}
-            {#if character.indifferentTraitsNeeded > 0 && character.slotsComplete}
-              <div
-                class="rounded border border-dashed border-parchment-300 p-3"
-              >
-                <p class="mb-2 text-sm text-ink-faint">
-                  Choose {character.indifferentTraitsNeeded} trait{character.indifferentTraitsNeeded >
-                  1
-                    ? 's'
-                    : ''} to be indifferent to:
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  {#each character.pickableIndifferentTraits as trait}
-                    <button
-                      class="cursor-pointer rounded bg-parchment-50 px-3 py-1 text-sm text-ink-light hover:bg-parchment-200"
-                      onclick={() => character.addIndifferentTrait(trait.id)}
-                    >
-                      {trait.label}
-                    </button>
-                  {/each}
-                </div>
-              </div>
-            {:else if !character.slotsComplete && character.indifferentTraitsNeeded > 0}
-              <p class="text-xs text-ink-faint">
-                Fill all slots first to choose indifferent traits.
-              </p>
-            {/if}
-          {/if}
+          <p class="text-sm text-ink">
+            <span class="font-heading font-medium">Indifferent to:</span>
+            {character.indifferentTraits
+              .map((id) => TRAIT_MAP.get(id)?.label ?? id)
+              .join(', ')}
+          </p>
         </div>
       {/if}
 

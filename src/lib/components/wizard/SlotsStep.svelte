@@ -37,6 +37,46 @@
 
   /** Which slot index is being hovered for the "drop" preview */
   let hoveredPickable = $state<string | null>(null);
+
+  // --- Indifferent trait rolling ---
+  let rollingIndifferent = $state(false);
+
+  /** Randomly select indifferent traits with a cycling animation */
+  function rollIndifferentTraits() {
+    const def = character.indifferentTraitsDef;
+    if (!def || def.type !== 'select') return;
+
+    rollingIndifferent = true;
+
+    // Clear existing selections first
+    for (const id of [...character.indifferentTraits]) {
+      character.removeIndifferentTrait(id);
+    }
+
+    const steps = 5 + Math.floor(Math.random() * 3);
+    let step = 0;
+
+    const interval = setInterval(() => {
+      // Clear previous cycle's picks
+      for (const id of [...character.indifferentTraits]) {
+        character.removeIndifferentTrait(id);
+      }
+
+      // Pick N random traits from the full pickable pool
+      const pool = character.pickableIndifferentTraits;
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const count = Math.min(def.count, shuffled.length);
+      for (let i = 0; i < count; i++) {
+        character.addIndifferentTrait(shuffled[i].id);
+      }
+
+      step++;
+      if (step >= steps) {
+        clearInterval(interval);
+        rollingIndifferent = false;
+      }
+    }, 100);
+  }
 </script>
 
 <div class="mx-auto max-w-4xl px-4">
@@ -355,23 +395,155 @@
     </div>
   {/if}
 
-  <!-- All slots filled — success message + continue -->
+  <!-- All slots filled -->
   {#if character.slotsComplete}
-    <div class="mx-auto mt-10 max-w-lg text-center">
-      <div class="mb-6">
-        <span class="font-display text-2xl text-gold/70">&#10033;</span>
-        <p
-          class="font-heading mt-1 text-sm tracking-wide text-parchment-300/70"
+    <!-- Indifferent Trait Selection (Churl: roll for N traits) -->
+    {#if character.indifferentTraitsDef?.type === 'select'}
+      <div class="mx-auto mt-10 max-w-md">
+        <div
+          class="parchment-bg rounded-sm border-2 p-6 text-center transition-colors duration-300
+          {character.indifferentTraitsComplete
+            ? 'border-gold/50'
+            : 'border-crimson/40 shadow-[0_0_16px_rgba(122,26,26,0.15)]'}"
         >
-          Your ledger is complete. All five slots are filled.
-        </p>
+          <h3
+            class="font-heading mb-1 text-lg font-semibold tracking-wide text-crimson"
+          >
+            Indifferent Traits
+          </h3>
+          <p
+            class="mx-auto mb-5 max-w-xs text-sm leading-relaxed text-ink-faint"
+          >
+            As a Churl, {character.indifferentTraitsDef.count} traits are randomly
+            deemed beneath your concern. Roll to find out which.
+          </p>
+
+          <!-- Roll button -->
+          <div class="mb-5">
+            <button
+              class="group/roll font-heading inline-flex cursor-pointer items-center gap-2.5 rounded-sm border-2 border-gold bg-gold/10 px-6 py-2.5 text-sm font-bold tracking-wider text-gold uppercase transition-all duration-300 hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(184,152,68,0.25)]"
+              onclick={rollIndifferentTraits}
+            >
+              <svg
+                class="h-4.5 w-4.5 transition-transform duration-300 group-hover/roll:rotate-[30deg] {rollingIndifferent
+                  ? 'roll-spinning'
+                  : ''}"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <circle
+                  cx="8.5"
+                  cy="8.5"
+                  r="1.5"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="15.5"
+                  cy="8.5"
+                  r="1.5"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="1.5"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="8.5"
+                  cy="15.5"
+                  r="1.5"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="15.5"
+                  cy="15.5"
+                  r="1.5"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </svg>
+              {character.indifferentTraitsComplete ? 'Re-roll' : 'Roll'}
+            </button>
+          </div>
+
+          <!-- Result display -->
+          {#if character.indifferentTraits.length > 0}
+            <div class="flex flex-wrap justify-center gap-2">
+              {#each character.indifferentTraits as traitId}
+                {@const traitDef = TRAIT_MAP.get(traitId)}
+                {#if traitDef}
+                  <TraitTooltip description={traitDef.description}>
+                    <span
+                      class="inline-flex items-center rounded-sm border border-crimson/30 bg-crimson/8 px-3 py-1.5"
+                    >
+                      <span
+                        class="font-heading text-sm font-medium tracking-wide text-crimson line-through decoration-crimson/40"
+                      >
+                        {traitDef.label}
+                      </span>
+                    </span>
+                  </TraitTooltip>
+                {/if}
+              {/each}
+            </div>
+          {:else}
+            <p class="text-xs italic text-parchment-300/60">
+              No traits dismissed yet — roll to find out.
+            </p>
+          {/if}
+        </div>
       </div>
-      <button
-        class="font-heading cursor-pointer rounded-sm border-2 border-gold bg-gold px-10 py-3 text-lg font-semibold tracking-wider text-realm uppercase transition-all duration-200 hover:bg-gold-light hover:shadow-[0_0_24px_rgba(184,152,68,0.4)]"
-        onclick={onadvance}
-      >
-        Continue
-      </button>
-    </div>
+    {/if}
+
+    <!-- Success message + continue -->
+    {#if character.indifferentTraitsComplete}
+      <div class="mx-auto mt-10 max-w-lg text-center">
+        <div class="mb-6">
+          <span class="font-display text-2xl text-gold/70">&#10033;</span>
+          <p
+            class="font-heading mt-1 text-sm tracking-wide text-parchment-300/70"
+          >
+            Your ledger is complete. All five slots are filled.
+          </p>
+        </div>
+        <button
+          class="font-heading cursor-pointer rounded-sm border-2 border-gold bg-gold px-10 py-3 text-lg font-semibold tracking-wider text-realm uppercase transition-all duration-200 hover:bg-gold-light hover:shadow-[0_0_24px_rgba(184,152,68,0.4)]"
+          onclick={onadvance}
+        >
+          Continue
+        </button>
+      </div>
+    {/if}
   {/if}
 </div>
+
+<style>
+  @keyframes dice-tumble {
+    0% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(90deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    75% {
+      transform: rotate(270deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  :global(.roll-spinning) {
+    animation: dice-tumble 0.32s linear infinite;
+  }
+</style>
