@@ -14,109 +14,109 @@ export const ALL_TRAITS: TraitDef[] = [
     id: 'animal_husbandry',
     label: 'Animal Husbandry',
     description:
-      'Your knack for befriending, taming, and not being eaten by the beasts of the realm. Handy for riding horses, calming oxen, and convincing geese you mean them no harm (you do).',
+      'Your mastery over the four-legged, two-legged, and no-legged creatures of the realm — be it through charm, intimidation, or a firm hand on the reins. Covers riding, taming, and preventing the livestock from organizing against you. Coconuts remain the superior mode of transport.',
   },
   {
     id: 'argumentation',
     label: 'Argumentation',
     description:
-      'The fine art of being right, or at least louder than whoever disagrees. Useful in debates, legal disputes, and tavern rows about whose round it is.',
+      "The undisputed champion of traits — and no, we won't be taking questions. Measures how effectively you can browbeat, debate, and verbally bulldoze your way to victory, whether or not you have a single fact on your side.",
   },
   {
     id: 'authority',
     label: 'Authority',
     description:
-      'How convincingly you can tell people what to do and have them actually do it. Essential for leading troops, commanding servants, and queue-jumping at the bakery.',
+      'Are you the one giving orders, or the one scrambling to obey them? Measures your ability to project commanding presence, cow the insubordinate, and make people do what you say through sheer force of personality. Stand up straight and speak clearly.',
   },
   {
     id: 'bardistry',
     label: 'Bardistry',
     description:
-      'Your talent for song, verse, and dramatic recitation. Roll this when performing, inspiring allies, or attempting to rhyme something with "Camelot" (it\'s quite a lot).',
+      'For those blessed with musical talent — and decidedly not for those without it, so please stop. Covers performing, storytelling, and charming audiences from royal courts to flea-ridden taverns. Fair warning: audiences have been known to eat the entertainment.',
   },
   {
     id: 'chastity',
     label: 'Chastity',
     description:
-      'Your resistance to temptations of the flesh and other morally questionable diversions. Higher values indicate either genuine virtue or simply never being asked.',
+      'A bulwark against temptation in all its sweaty, medieval forms. Primarily a defensive trait for keeping your virtue intact when the world conspires to separate you from it, though the truly chaste can turn their purity into a weapon of withering shame.',
   },
   {
     id: 'decorum',
     label: 'Decorum',
     description:
-      'Knowing which fork to use, how to address a bishop, and when not to mention the prawns. Your grasp of etiquette, manners, and not embarrassing yourself at court.',
+      'Blood may be shed on battlefields, but reputations are destroyed at banquets. Your command of etiquette, propriety, and the thousand unwritten rules of polite society — plus your ability to keep your composure when someone is doing their level best to make you lose it. The backbone of civilisation, and quite foreign to the French.',
   },
   {
     id: 'druidry',
     label: 'Druidry',
     description:
-      'Command over the ancient nature magics — talking to trees, summoning weather, and knowing exactly which mushrooms will kill you versus merely make the trees talk back.',
+      'Your connection to the natural world and everything growing, crawling, or festering in it. Encompasses herbalism, healing, wilderness survival, and brewing remedies from plants and dubious metal shavings. Handwashing after the procedure is encouraged — doing so beforehand is just eccentric.',
   },
   {
     id: 'glibness',
     label: 'Glibness',
     description:
-      "The silver-tongued ability to talk your way into (and occasionally out of) absolutely anything. For charm, persuasion, and selling bridges you don't technically own.",
+      'The difference between a silver tongue and a lead one. Covers oratory, flattery, verbal acrobatics, and the delicate art of making an insult sound like a compliment. Indispensable for talking your way out of trouble, and for following unusual walking instructions from household staff.',
   },
   {
     id: 'heartiness',
     label: 'Heartiness',
     description:
-      'How much punishment your body can absorb before it files a formal complaint. Governs stamina, constitution, and surviving whatever the cook put in the stew.',
+      'Your bodily constitution — or as certain continental physicians insist on calling it, your physique. Determines how well you endure disease, bad weather, physical abuse, and questionable dairy products. Especially relevant when someone suggests a friendly drinking competition.',
   },
   {
     id: 'lorefulness',
     label: 'Lorefulness',
     description:
-      'The accumulated knowledge rattling about in your skull — history, legends, and obscure facts about the mating habits of dragons. Roll when you need to know things.',
+      "Everything worth knowing was written down centuries ago by people with better penmanship than you. Covers your familiarity with ancient knowledge, dusty manuscripts, and oral traditions — essentially, how much dead-people wisdom you've managed to absorb. If 'primogenitor' isn't in your vocabulary, you could use more of this.",
   },
   {
     id: 'luck',
     label: 'Luck',
     description:
-      'The inexplicable favour of the universe. When skill fails, preparation fails, and common sense has long since departed, Luck is what stands between you and catastrophe.',
+      "When preparation, talent, and good intentions all come up short, this is what's left. Not something you can actively wield — it either favours you or it doesn't. A certain island nation built their entire identity around having it; without it, they'd just be their neighbours.",
   },
   {
     id: 'nimbleness',
     label: 'Nimbleness',
     description:
-      'Agility, dexterity, and the ability to dodge things thrown at your head. Covers acrobatics, sleight of hand, and running away with considerable elegance.',
+      'The spectrum between graceful acrobat and catastrophic butterfingers. Covers agility, dexterity, and fine motor control — from dodging traps and crossing rickety bridges to picking pockets, performing provocative dances, and successfully eating individual peas.',
   },
   {
     id: 'purpose',
     label: 'Purpose',
     description:
-      'Sheer bloody-minded determination. When the quest is hopeless, the odds impossible, and everyone else has gone home, Purpose is what keeps you trudging forward.',
+      'Willpower, conviction, and the unshakeable belief that you were put on this earth for something — or, failing that, the energy to at least get out of bed. Fuels perseverance in the face of terror, righteous confrontation of opposing beliefs, and the occasional faith-powered miracle.',
   },
   {
     id: 'sorcery',
     label: 'Sorcery',
     description:
-      'Your grasp of the arcane arts — casting spells, reading magical texts, and not accidentally turning yourself into a newt. The flashier, more explosion-prone cousin of Druidry.',
+      "The eldritch arts of bending reality to your whims — fireballs, flight, vanishing acts, and sundry impossibilities. Tremendously versatile, provided you don't mind the occasional catastrophic magical backfire known as a Beshrewment.",
   },
   {
     id: 'strategy',
     label: 'Strategy',
     description:
-      'Tactical thinking for combat and beyond — whether you play the long game or charge in headlong. Also covers launching pointy projectiles from a sensible distance.',
+      "Thinking before acting — a radical concept. Covers tactical planning, ranged weaponry, siege operations, and outmanoeuvring opponents who rely on brawn over brains. The game of choice matters not, so long as you're three moves ahead (and the game hasn't got too rude a name).",
   },
   {
     id: 'subtlety',
     label: 'Subtlety',
     description:
-      "The art of not being noticed when you'd rather not be. Sneaking, skulking, hiding, and pretending you were definitely somewhere else when the pie went missing.",
+      'The fine art of being elsewhere, or at least appearing to be. Covers stealth, lockcraft, sleight-of-hand, poisoning, and the discreet application of sharp objects — for those who consider open combat rather vulgar and prefer their violence with a touch of class.',
   },
   {
     id: 'valour',
     label: 'Valour',
     description:
-      'Raw fighting prowess — swinging swords, bashing shields, and generally making a nuisance of yourself in melee. The trait of choice for those who prefer problems they can stab.',
+      'For the bold, the brave, and the recklessly enthusiastic. Covers melee combat, feats of raw strength, and heroic physical endeavours like scaling fortifications and booting open doors. When something terrifying looms before you, this trait determines whether you charge forward or need a change of armour.',
   },
   {
     id: 'wisdom_in_the_ways_of_science',
     label: 'Wisdom in the Ways of Science',
     description:
-      'Do you know what also floats in water? If yes, this is your trait. Covers scientific reasoning, alchemy, engineering, and determining whether someone is in fact a witch.',
+      'Ahead of your time by several centuries, you dabble in reason, logic, and the experimental method — or at least in alchemy, star charts, and whatever phlogiston is supposed to be. Essential for philosophical inquiry, conducted ideally from a cluttered tower room reeking of formaldehyde and ambition.',
   },
 ];
 
