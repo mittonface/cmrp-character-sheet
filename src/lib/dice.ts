@@ -41,3 +41,4 @@ export function formatRollResult(result: RollResult): string {
   const rolls = result.rolls.join(', ');
   return `${expr} → [${rolls}]${result.modifier ? ` ${result.modifier >= 0 ? '+' : ''}${result.modifier}` : ''} = ${result.total}`;
 }
+test;
