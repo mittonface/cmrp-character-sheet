@@ -103,6 +103,29 @@
             </span>
           {/if}
         </div>
+
+        <!-- Indifferent traits -->
+        <div class="mt-2 flex flex-wrap items-center gap-1.5">
+          <span
+            class="font-heading text-[0.65rem] tracking-wide text-crimson/50 uppercase"
+            >Indifferent to</span
+          >
+          {#if situation.indifferentTraits.type === 'fixed'}
+            {#each situation.indifferentTraits.traitIds as traitId}
+              <span
+                class="rounded-sm bg-crimson/8 px-1.5 py-0.5 text-xs text-ink-light/70 line-through decoration-crimson/40"
+              >
+                {TRAIT_MAP.get(traitId)?.label}
+              </span>
+            {/each}
+          {:else}
+            <span
+              class="rounded-sm border border-dashed border-crimson/30 px-1.5 py-0.5 text-xs text-ink-light/70"
+            >
+              choose {situation.indifferentTraits.count}
+            </span>
+          {/if}
+        </div>
       </button>
     {/each}
   </div>
